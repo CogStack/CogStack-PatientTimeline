@@ -95,10 +95,8 @@ function prepareSearchData()
 	}
 
 	var results = searchData(searchParams);
-
+	console.log(results)
 }
-
-
 
 
 
