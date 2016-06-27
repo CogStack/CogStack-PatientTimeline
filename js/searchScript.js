@@ -1,3 +1,18 @@
+/* 
+ * TODO: 
+ *
+*/
+
+var debug = true;
+
+var url = "http://timeline-silverash.rhcloud.com";
+
+var client = new $.es.Client({
+	host: url,
+	log: "info"
+});
+
+
 $(document).ready(function() {
 	doSetup();
 });
@@ -16,12 +31,11 @@ function doSetup() {
 	    maxDate: new Date() 
 	});
 	$("#containingKeywords").on("keydown", function(e){
-	if (e.keyCode == 13) {
-		e.preventDefault();
-		$("#searchButton").click();
-	}
-});
-
+		if (e.keyCode == 13) {
+			e.preventDefault();
+			$("#searchButton").click();
+		}
+	});
 }
 
 $("#datePickerFrom").on("dp.change", function (e) {
@@ -34,8 +48,8 @@ $("#datePickerTo").on("dp.change", function (e) {
 
 
 
-function startSearch()
-{
+function startSearch() {
+	testCollapse();
 	prepareSearchData();
 }
 
@@ -44,10 +58,11 @@ function prepareSearchData()
 {
 	var startDate = $('#datePickerFrom').data('date');
 	var endDate = $('#datePickerTo').data('date');
-	var numberOfResults = $('#numberResults').val();
+	var resultsPerPage = $('#numberResults').val();
 
 	var containingKeywords = "";
-	console.log(containingKeywords);
+	if(debug)
+		console.log(containingKeywords);
 
 	if(startDate) {
 		var splitStartDate = startDate.split("/");
@@ -66,12 +81,18 @@ function prepareSearchData()
 	if($('#containingKeywords').val())
 		containingKeywords = $('#containingKeywords').val();
 
+	if(debug)
+		console.log(startDate);
+	if(debug)
+		console.log(endDate);
 
-	console.log(startDate);
-	console.log(endDate);
+	prepareSearchJSON(resultsPerPage, startDate, endDate, containingKeywords)
+}
 
+
+function prepareSearchJSON(resultsPerPage, startDate, endDate, containingKeywords) {
 	var searchParams = {
-		size : numberOfResults, // temp
+		size : resultsPerPage, // temp
 		index : "mock", // temp
 		type : "patient", //temp
 		body : {
@@ -94,29 +115,32 @@ function prepareSearchData()
 		}
 	}
 
-	var results = searchData(searchParams);
-	console.log(results)
+	searchData(searchParams);
+}
+
+function parseResult(searchResult) {
+	if(debug) 
+		console.log(searchResult);
+
+
+
+}
+
+function testCollapse() {
+		$("#test_collapse2").append( "<p>Test</p>" );
+		$("#test_collapse").collapse("toggle");
 }
 
 
-
-var url = "http://timeline-silverash.rhcloud.com";
-
-var client = new $.es.Client({
-	host: url,
-	log: "info"
-});
-
-
-
 function searchData(searchParams) {
-	// $("#test_collapse").collapse("hide");
 	client.search(searchParams).then(function(response) {
-		console.log(response.hits.hits)
-		return response.hits.hits;
+		// console.log(response.hits.hits);
+		parseResult(response.hits.hits);
 	}, function(jqXHR, textStatus, errorThrown) {
-		console.log(textStatus);
-		console.log(errorThrown);
+		if(debug) {
+			console.log(textStatus);
+			console.log(errorThrown);
+		}
 	});
 }
 
