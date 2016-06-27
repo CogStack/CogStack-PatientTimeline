@@ -1,8 +1,12 @@
-/* 
- * TODO: 
- *
+/*
+TODO:
+- display thumbnails/icon for text
+- generation of PDFs for the text
+- collapsable items on the timeline
+- if 2 or more elements on the timeline have same month: make them use same header
+- download PDF
+- choose patient at the beginning, then search for same bcoid in the docs
 */
-
 var debug = true;
 
 var url = "http://timeline-silverash.rhcloud.com";
@@ -59,8 +63,14 @@ function doSetup() {
 
 function startSearch() {
 	// testCollapse();
+	clearTimeline()
 	prepareSearchData();
 }
+
+function clearTimeline() {
+	$("#timelineList").empty();
+}
+
 
 
 function prepareSearchData()
@@ -110,6 +120,7 @@ function prepareSearchJSON(resultsPerPage, startDate, endDate, containingKeyword
 	}
 	var searchParams = {
 		size : resultsPerPage, // temp
+		//from : startingIndex, // TODO
 		index : "mock", // temp
 		type : "doc", //temp
 		body : {
@@ -161,19 +172,48 @@ function getShortMonth(num) {
 	}
 }
 
+function createPDF(sourceText) {
+	var doc = new jsPDF();
+
+	var splitText = doc.splitTextToSize(sourceText,180);
+ 	doc.text(10,10,sourceText);
+	// var x = 10;
+	// pageHeight= doc.internal.pageSize.height;
+	// var y = 500 
+	// for(i = 0; i < splitText.length; i++) {
+	// 	if (y >= pageHeight) {
+	// 	  doc.addPage();
+	// 	  y = 0 
+	// 	}
+	// 	doc.text(x, y, splitText);
+	// }
+	doc.output('save', 'Download.pdf');
+}
+
+
 function processResults(searchResult) {
 	if(debug) 
 		console.log(searchResult);
 	searchResult = searchResult.sort(resultsCompararison)
 
+	var presentMonths;
 	$.each(searchResult, function(index, value){
 		var exactDate = new Date(value._source.created);
-		var timelineEntry = "<dt>"+getShortMonth(exactDate.getMonth())+" "+exactDate.getFullYear()+"</dt>"; // Month-Year Tag
+		var monthYear = getShortMonth(exactDate.getMonth())+" "+exactDate.getFullYear();
+		var timelineEntry = "";
+		// if(!presentMonths[monthYear]) {
+			timelineEntry += "<dt>"+monthYear+"</dt>"; // Month-Year Tag
+		// 	presentMonths[monthYear] = true;
+		// }
 		timelineEntry += '<div class="collapse in">';   //TODO: INSERT id=something
 		timelineEntry += '<dd class="pos-right clearfix"><div class="circ"></div><div class="time">'+getShortMonth(exactDate.getMonth())+' '+exactDate.getDate()+'</div>'; // circle with exact date on the side
 		timelineEntry += '<div class="events"><div class="pull-left"><img class="events-object img-rounded" src="img/Icon-Placeholder.png"></div>'; // TODO: REPLACE PLACEHOLDER IMAGE
 		timelineEntry += '<div class="events-body"><h4 class="events-heading">Sample Document</h4>'; // heading
-		timelineEntry += '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean felis elit, imperdiet id tortor quis, luctus ultricies quam.</p>'; // BODY
+		timelineEntry += '<p>'+getSnippet(value._source.text,100)+'</p>'; // BODY
+		// createPDF(value._source.text+value._source.text+value._source.text+value._source.text);
+
+
+		timelineEntry += '<a href="">Download Full PDF</a>'; //TODO
 		timelineEntry += '</div></div></div></dd>'; // closing tags
 
 		$("#timelineList").append(timelineEntry);
