@@ -55,6 +55,13 @@
 		        </div>
 		    </div>
 		
+		    <div class='col-md-5'>
+		        <div class="form-group">
+			        <label for="containingKeywords">Patient ID:</label>
+			        <input class="form-control input-sm" id="containingKeywords" type="text" placeholder="Type patient ID">
+		        </div>
+            </div>
+		
             <div class='col-md-5'>
 		        <div class="form-group">
 			         <label for="numberResults">Number of Results to Display:</label>
@@ -66,7 +73,6 @@
 				           <option>50</option>
 			          </select>
 		         </div>
-		         
             </div>
 
             <div class='col-md-5'>
@@ -75,11 +81,12 @@
 			        <input class="form-control input-sm" id="containingKeywords" type="text" placeholder="Key words, phrases, etc.">
 		        </div>
             </div>
-		    <div class="container">
-		        <div class='col-md-5'>
-			        <button type="button" class="btn btn-primary" id="searchButton" onclick="startSearch()">Search Documents</button>
-			    </div>
-	        </div>	
+			
+		    <div class='col-md-5'>
+			<label for="searchButton">&nbsp;</label>
+			    <br><button type="button" class="btn btn-primary" id="searchButton" onclick="startSearch()">Search Documents</button>
+	        </div>
+	        
         </div>
 		
 	</form>
