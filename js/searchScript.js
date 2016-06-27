@@ -133,12 +133,19 @@ function parseResult(searchResult) {
 		console.log(searchResult);
 
 	$.each(searchResult, function(index, value){
- 		var testString = "<h3>"+new Date(value._source.created).toISOString().substring(0, 10)+"</h3> <p>"+value._source.text+"</p>"; 
- 		$("#test_collapse2").append(testString);
+ 		var testString = "<h3>"+new Date(value._source.created).toISOString().substring(0, 10)+"</h3> <p>"+getSnippet(value._source.text,100)+"</p>"; 
+ 		$("#searchButton").after(testString);
 	});
 
 
 }
+
+
+function getSnippet(text, length) {
+    var rx = new RegExp("^.{" + length + "}[^ ]*");
+    return rx.exec(text)[0]+"...";
+}
+
 
 function testCollapse() {
 		$("#test_collapse").collapse("toggle");
