@@ -18,21 +18,27 @@ $(document).ready(function() {
 });
 
 function doSetup() {
+
 	$('#datePickerFrom').datetimepicker({
 		viewMode: 'years',
 		format: 'YYYY-MM-DD',
 		useCurrent: false,
 		defaultDate : new Date(0),
 		// minDate : new Date("1-1-1970"),
-		maxDate : new Date()
+		maxDate : new Date(),
+		allowInputToggle : true
 	});
+
 	$('#datePickerTo').datetimepicker({
 		viewMode: 'years',
 		format: 'YYYY-MM-DD',
 	    defaultDate : new Date(),
 		// minDate : new Date("1-1-1970"),
-	    maxDate: new Date() 
+	    maxDate: new Date() ,
+		allowInputToggle : true
 	});
+
+
 	$("#containingKeywords").on("keydown", function(e){
 		if (e.keyCode == 13) {
 			e.preventDefault();
@@ -163,12 +169,12 @@ function processResults(searchResult) {
 	$.each(searchResult, function(index, value){
 		var exactDate = new Date(value._source.created);
 		var timelineEntry = "<dt>"+getShortMonth(exactDate.getMonth())+" "+exactDate.getFullYear()+"</dt>"; // Month-Year Tag
-		timelineEntry = timelineEntry + '<div class="collapse in">';   //TODO: INSERT id=something
-		timelineEntry = timelineEntry + '<dd class="pos-right clearfix"><div class="circ"></div><div class="time">'+getShortMonth(exactDate.getMonth())+' '+exactDate.getDate()+'</div>'; // circle with exact date on the side
-		timelineEntry = timelineEntry + '<div class="events"><div class="pull-left"><img class="events-object img-rounded" src="img/Icon-Placeholder.png"></div>'; // TODO: REPLACE PLACEHOLDER IMAGE
-		timelineEntry = timelineEntry + '<div class="events-body"><h4 class="events-heading">Sample Document</h4>'; // heading
-		timelineEntry = timelineEntry + '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean felis elit, imperdiet id tortor quis, luctus ultricies quam.</p>'; // BODY
-		timelineEntry = timelineEntry + '</div></div></div></dd>'; // closing tags
+		timelineEntry += '<div class="collapse in">';   //TODO: INSERT id=something
+		timelineEntry += '<dd class="pos-right clearfix"><div class="circ"></div><div class="time">'+getShortMonth(exactDate.getMonth())+' '+exactDate.getDate()+'</div>'; // circle with exact date on the side
+		timelineEntry += '<div class="events"><div class="pull-left"><img class="events-object img-rounded" src="img/Icon-Placeholder.png"></div>'; // TODO: REPLACE PLACEHOLDER IMAGE
+		timelineEntry += '<div class="events-body"><h4 class="events-heading">Sample Document</h4>'; // heading
+		timelineEntry += '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean felis elit, imperdiet id tortor quis, luctus ultricies quam.</p>'; // BODY
+		timelineEntry += '</div></div></div></dd>'; // closing tags
 
 		$("#timelineList").append(timelineEntry);
 	});
