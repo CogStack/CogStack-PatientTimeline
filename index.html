@@ -10,6 +10,7 @@
     <link rel="stylesheet" type="text/css" href="css/bootflat.css" />
 	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css" />
+	<link rel="stylesheet" type="text/css" href="css/main.css" />
 
 
 
@@ -35,7 +36,7 @@
 		    <div class='col-md-5'>
 		        <div class="form-group">
 		            <div class='input-group date' id='datePickerFrom'>
-		                <input type='text' class="form-control" placeholder="Date from.." />
+		                <input type='text' class="form-control" placeholder="Date From..." />
 		                <span class="input-group-addon">
 		                    <span class="glyphicon glyphicon-calendar"></span>
 		                </span>
@@ -45,7 +46,7 @@
 		    <div class='col-md-5'>
 		        <div class="form-group">
 		            <div class='input-group date' id='datePickerTo'>
-		                <input type='text' class="form-control" />
+		                <input type='text' class="form-control" placeholder="Date To..."/>
 		                <span class="input-group-addon">
 		                    <span class="glyphicon glyphicon-calendar"></span>
 		                </span>
@@ -61,6 +62,7 @@
 				           <option>2</option>
 				           <option>5</option>
 				           <option>10</option>
+				           <option>50</option>
 			          </select>
 		         </div>
 		         <button type="button" class="btn btn-primary" id="searchButton" onclick="startSearch()">Search Documents</button>
@@ -69,7 +71,7 @@
             <div class='col-md-5'>
 		        <div class="form-group">
 			        <label for="containingKeywords">Containing:</label>
-			        <input class="form-control input-sm" id="containingKeywords" type="text" placeholder="words, phrases and etc..">
+			        <input class="form-control input-sm" id="containingKeywords" type="text" placeholder="Key words, phrases, etc.">
 		        </div>
             </div>
 			
@@ -78,73 +80,11 @@
 	</form>
 
 
-	<div class="mycustomclass">
+	<div class="timelineContainer">
 	  <div class="timeline">
-	    <dl>
-	      <dt>Apr 2014</dt>
-	 	       <div class="collapse in" id="test_collapse">
-
-		      <dd class="pos-right clearfix">
-		        <div class="circ"></div>
-		        <div class="time">Apr 14</div>
-		        <div class="events">
-		          <div class="pull-left">
-		            <img class="events-object img-rounded" src="img/Icon-Placeholder.png">
-		          </div>
-		          <div class="events-body">
-		            <h4 class="events-heading">Sample Document</h4>
-		            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean felis elit, imperdiet id tortor quis, luctus ultricies quam.</p>
-		          </div>
-		        </div>
-		        </div>
-	      </dd>
-	      <dd class="pos-right clearfix">
-	        <div class="circ"></div>
-	        <div class="time">Apr 10</div>
-	        <div class="events">
-	          <div class="pull-left">
-	            <img class="events-object img-rounded" src="img/Icon-Placeholder.png">
-	          </div>
-	          <div class="events-body">
-	            <h4 class="events-heading">Sample Document</h4>
-	            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean felis elit, imperdiet id tortor quis, luctus ultricies quam.</p>
-	          </div>
-	        </div>
-	      </dd>
-	      <dt>Mar 2014</dt>
-	      <dd class="pos-right clearfix">
-	        <div class="circ"></div>
-	        <div class="time">Mar 15</div>
-	        <div class="events">
-	          <div class="pull-left">
-	            <img class="events-object img-rounded" src="img/Icon-Placeholder.png">
-	          </div>
-	          <div class="events-body">
-	            <h4 class="events-heading">Sample Document</h4>
-	            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean felis elit, imperdiet id tortor quis, luctus ultricies quam.</p>
-	          </div>
-	        </div>
-	      </dd>
-	      <dd class="pos-right clearfix">
-	        <div class="circ"></div>
-	        <div class="time">Mar 8</div>
-	        <div class="events">
-	          <div class="pull-left">
-	            <img class="events-object img-rounded" src="img/Icon-Placeholder.png">
-	          </div>
-	          <div class="events-body">
-	            <h4 class="events-heading">Sample Document</h4>
-	            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean felis elit, imperdiet id tortor quis, luctus ultricies quam.</p>
-	          </div>
-	        </div>
-	      </dd>
-
+	    <dl id=timelineList>
 	    </dl>
 	  </div>
 	</div>
-	
-	
-	
-	
   </body>
 </html>

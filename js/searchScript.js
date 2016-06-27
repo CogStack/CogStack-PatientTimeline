@@ -22,6 +22,7 @@ function doSetup() {
 		viewMode: 'years',
 		format: 'YYYY-MM-DD',
 		useCurrent: false,
+		defaultDate : new Date(0),
 		// minDate : new Date("1-1-1970"),
 		maxDate : new Date()
 	});
@@ -38,20 +39,20 @@ function doSetup() {
 			$("#searchButton").click();
 		}
 	});
+
+
+	$("#datePickerFrom").on("dp.change", function (e) {
+	    $('#datePickerTo').data("DateTimePicker").minDate(e.date);
+	});
+
+	$("#datePickerTo").on("dp.change", function (e) {
+	    $('#datePickerFrom').data("DateTimePicker").maxDate(e.date);
+	});
+
 }
 
-$("#datePickerFrom").on("dp.change", function (e) {
-    $('#datePickerTo').data("DateTimePicker").minDate(e.date);
-});
-
-$("#datePickerTo").on("dp.change", function (e) {
-    $('#datePickerFrom').data("DateTimePicker").maxDate(e.date);
-});
-
-
-
 function startSearch() {
-	testCollapse();
+	// testCollapse();
 	prepareSearchData();
 }
 
@@ -128,15 +129,49 @@ function prepareSearchJSON(resultsPerPage, startDate, endDate, containingKeyword
 	searchData(searchParams);
 }
 
-function parseResult(searchResult) {
+function resultsCompararison(a,b) {
+	if(a._source.created > b._source.created)
+		return -1;
+	if(a._source.created == b._source.created)
+		return 0;
+	else
+		return 1;
+}
+
+function getShortMonth(num) {
+	switch(num) {
+		case 0: return 'Jan';
+		case 1: return 'Feb';
+		case 2: return 'Mar';
+		case 3: return 'Apr';
+		case 4: return 'May';
+		case 5: return 'Jun';
+		case 6: return 'Jul';
+		case 7: return 'Aug';
+		case 8: return 'Sep';
+		case 9: return 'Oct';
+		case 10: return 'Nov';
+		case 11: return 'Dec';																				
+	}
+}
+
+function processResults(searchResult) {
 	if(debug) 
 		console.log(searchResult);
+	searchResult = searchResult.sort(resultsCompararison)
 
 	$.each(searchResult, function(index, value){
- 		var testString = "<h3>"+new Date(value._source.created).toISOString().substring(0, 10)+"</h3> <p>"+getSnippet(value._source.text,100)+"</p>"; 
- 		$("#searchButton").after(testString);
-	});
+		var exactDate = new Date(value._source.created);
+		var timelineEntry = "<dt>"+getShortMonth(exactDate.getMonth())+" "+exactDate.getFullYear()+"</dt>"; // Month-Year Tag
+		timelineEntry = timelineEntry + '<div class="collapse in">';   //TODO: INSERT id=something
+		timelineEntry = timelineEntry + '<dd class="pos-right clearfix"><div class="circ"></div><div class="time">'+getShortMonth(exactDate.getMonth())+' '+exactDate.getDate()+'</div>'; // circle with exact date on the side
+		timelineEntry = timelineEntry + '<div class="events"><div class="pull-left"><img class="events-object img-rounded" src="img/Icon-Placeholder.png"></div>'; // TODO: REPLACE PLACEHOLDER IMAGE
+		timelineEntry = timelineEntry + '<div class="events-body"><h4 class="events-heading">Sample Document</h4>'; // heading
+		timelineEntry = timelineEntry + '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean felis elit, imperdiet id tortor quis, luctus ultricies quam.</p>'; // BODY
+		timelineEntry = timelineEntry + '</div></div></div></dd>'; // closing tags
 
+		$("#timelineList").append(timelineEntry);
+	});
 
 }
 
@@ -154,7 +189,7 @@ function testCollapse() {
 
 function searchData(searchParams) {
 	client.search(searchParams).then(function(response) {
-		parseResult(response.hits.hits);
+		processResults(response.hits.hits);
 	}, function(jqXHR, textStatus, errorThrown) {
 		if(debug) {
 			console.log(textStatus);
