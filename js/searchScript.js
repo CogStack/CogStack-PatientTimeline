@@ -110,6 +110,7 @@ var client = new $.es.Client({
 
 
 function searchData(searchParams) {
+	// $("#test_collapse").collapse("hide");
 	client.search(searchParams).then(function(response) {
 		console.log(response.hits.hits)
 		return response.hits.hits;
