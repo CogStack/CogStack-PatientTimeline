@@ -20,14 +20,16 @@ $(document).ready(function() {
 function doSetup() {
 	$('#datePickerFrom').datetimepicker({
 		viewMode: 'years',
-		format: 'DD/MM/YYYY',
+		format: 'YYYY-MM-DD',
 		useCurrent: false,
+		// minDate : new Date("1-1-1970"),
 		maxDate : new Date()
 	});
 	$('#datePickerTo').datetimepicker({
 		viewMode: 'years',
-		format: 'DD/MM/YYYY',
+		format: 'YYYY-MM-DD',
 	    defaultDate : new Date(),
+		// minDate : new Date("1-1-1970"),
 	    maxDate: new Date() 
 	});
 	$("#containingKeywords").on("keydown", function(e){
@@ -64,19 +66,21 @@ function prepareSearchData()
 	if(debug)
 		console.log(containingKeywords);
 
-	if(startDate) {
-		var splitStartDate = startDate.split("/");
-		startDate = splitStartDate[2]+"-"+splitStartDate[1]+"-"+splitStartDate[0];
-	}
-	else
-		return;
+    // below was converting DD/MM/YYYY into YYYY-MM-DD
+    //
+	// if(startDate) {
+	// 	var splitStartDate = startDate.split("/");
+	// 	startDate = splitStartDate[2]+"-"+splitStartDate[1]+"-"+splitStartDate[0];
+	// }
+	// else
+	// 	return;
 
-	if(endDate) {
-		var splitEndDate = endDate.split("/");
-		endDate = splitEndDate[2]+"-"+splitEndDate[1]+"-"+splitEndDate[0];
-	}
-	else
-		return;
+	// if(endDate) {
+	// 	var splitEndDate = endDate.split("/");
+	// 	endDate = splitEndDate[2]+"-"+splitEndDate[1]+"-"+splitEndDate[0];
+	// }
+	// else
+	// 	return;
 
 	if($('#containingKeywords').val())
 		containingKeywords = $('#containingKeywords').val();
@@ -91,17 +95,23 @@ function prepareSearchData()
 
 
 function prepareSearchJSON(resultsPerPage, startDate, endDate, containingKeywords) {
+	startDate = new Date(startDate).getTime();
+	endDate = new Date(endDate).getTime();
+	if(debug) {
+		console.log(startDate);
+		console.log(endDate);
+	}
 	var searchParams = {
 		size : resultsPerPage, // temp
 		index : "mock", // temp
-		type : "patient", //temp
+		type : "doc", //temp
 		body : {
 			query : {
 				bool : {
 					must : [{
 						//{term : {gender : "male"} },
 						range:	{
-							dob : {
+							created : {
 								"gte" : startDate,
 								"lte" : endDate
 							}
@@ -122,19 +132,21 @@ function parseResult(searchResult) {
 	if(debug) 
 		console.log(searchResult);
 
+	$.each(searchResult, function(index, value){
+ 		var testString = "<h3>"+new Date(value._source.created).toISOString().substring(0, 10)+"</h3> <p>"+value._source.text+"</p>"; 
+ 		$("#test_collapse2").append(testString);
+	});
 
 
 }
 
 function testCollapse() {
-		$("#test_collapse2").append( "<p>Test</p>" );
 		$("#test_collapse").collapse("toggle");
 }
 
 
 function searchData(searchParams) {
 	client.search(searchParams).then(function(response) {
-		// console.log(response.hits.hits);
 		parseResult(response.hits.hits);
 	}, function(jqXHR, textStatus, errorThrown) {
 		if(debug) {
