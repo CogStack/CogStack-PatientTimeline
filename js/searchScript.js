@@ -212,6 +212,38 @@ function createPDF(sourceText) {
 	doc.output('save', 'Download.pdf');
 }
 
+function pdfToHTML(source){
+var pdf = new jsPDF('p', 'pt', 'a4');
+//source = $('#pdf2htmldiv')[0];
+specialElementHandlers = {
+	'#bypassme': function(element, renderer){
+		return true
+	}
+}
+margins = {
+    top: 50,
+    left: 60,
+    width: 480
+  };
+pdf.fromHTML(
+  	source // HTML string or DOM elem ref.
+  	, margins.left // x coord
+  	, margins.top // y coord
+  	, {
+  		'width': margins.width // max width of content on PDF 
+  		, 'elementHandlers': specialElementHandlers
+  	},
+  	function (dispose) {
+  	  // dispose: object with X, Y of the last line add to the PDF
+  	  //          this allow the insertion of new lines after html
+        pdf.save('html2pdf.pdf');
+      },
+	  {
+		top : 70,
+		bottom : 70
+	  }
+  )		
+}
 
 function processResults(searchResult) {
 	if(debug) 
@@ -240,7 +272,7 @@ function processResults(searchResult) {
 
 
 		// createPDF(value._source.text+value._source.text+value._source.text+value._source.text);
-
+		pdfToHTML(value._source.text+value._source.text+value._source.text+value._source.text+value._source.text+value._source.text+value._source.text+value._source.text+value._source.text+value._source.text+value._source.text+value._source.text);
 
 		timelineEntry += '<a href="">Download Full PDF</a>'; //TODO
 		timelineEntry += '</div></div></div></dd>'; // closing tags
