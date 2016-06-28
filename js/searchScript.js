@@ -80,8 +80,6 @@ function prepareSearchData()
 	var resultsPerPage = $('#numberResults').val();
 
 	var containingKeywords = "";
-	if(debug)
-		console.log(containingKeywords);
 
     // below was converting DD/MM/YYYY into YYYY-MM-DD
     //
@@ -102,11 +100,11 @@ function prepareSearchData()
 	if($('#containingKeywords').val())
 		containingKeywords = $('#containingKeywords').val();
 
-	if(debug)
+	if(debug) {
 		console.log(startDate);
-	if(debug)
 		console.log(endDate);
-
+		console.log(containingKeywords);
+	}
 	prepareSearchJSON(resultsPerPage, startDate, endDate, containingKeywords)
 }
 
@@ -117,6 +115,7 @@ function prepareSearchJSON(resultsPerPage, startDate, endDate, containingKeyword
 	if(debug) {
 		console.log(startDate);
 		console.log(endDate);
+		console.log(containingKeywords);
 	}
 	var searchParams = {
 		size : resultsPerPage, // temp
