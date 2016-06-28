@@ -2,11 +2,13 @@
 TODO:
 - display thumbnails/icon for text
 - generation of PDFs for the text
-- collapsable items on the timeline
-- if 2 or more elements on the timeline have same month: make them use same header
 - download PDF
 - choose patient at the beginning, then search for same bcoid in the docs
+- code cleanup + refactor
+- code documentation
 */
+const SNIPPET_LENGTH = 100;
+
 var debug = true;
 
 var url = "http://timeline-silverash.rhcloud.com";
@@ -15,8 +17,6 @@ var client = new $.es.Client({
 	host: url,
 	log: "info"
 });
-
-var numberOfVisibleEntries = 0;
 
 $(document).ready(function() {
 	doSetup();
@@ -78,7 +78,11 @@ function startSearch() {
 function toggleCollapse() {
 	var buttonHandle = $('#collapseButton');
 	var collapsableHandle = $("[id^=" + "collapsableEntry" + "]");
-	var numberOfCollapsable = collapsableHandle.length;
+	var numberOfVisibleEntries = 0;
+	$.each(collapsableHandle, function(index, value){
+		if($(value).attr("aria-expanded"))
+			numberOfVisibleEntries += 1;  //TODO: FINISH THAT
+	});
 	
 	if(buttonHandle.text() == "Collapse all") {
 		collapsableHandle.collapse("hide");
@@ -194,55 +198,37 @@ function getShortMonth(num) {
 	}
 }
 
-function createPDF(sourceText) {
-	var doc = new jsPDF();
-
-	var splitText = doc.splitTextToSize(sourceText,180);
- 	doc.text(10,10,splitText);
-	// var x = 10;
-	// pageHeight= doc.internal.pageSize.height;
-	// var y = 500 
-	// for(i = 0; i < splitText.length; i++) {
-	// 	if (y >= pageHeight) {
-	// 	  doc.addPage();
-	// 	  y = 0 
-	// 	}
-	// 	doc.text(x, y, splitText);
-	// }
-	doc.output('save', 'Download.pdf');
-}
-
-function pdfToHTML(source){
-var pdf = new jsPDF('p', 'pt', 'a4');
-//source = $('#pdf2htmldiv')[0];
-specialElementHandlers = {
-	'#bypassme': function(element, renderer){
-		return true
+function createPDF(source) {
+	var pdf = new jsPDF('p', 'pt', 'a4');
+	//source = $('#pdf2htmldiv')[0];
+	specialElementHandlers = {
+		'#bypassme': function(element, renderer) {
+			return true
+		}
 	}
-}
-margins = {
-    top: 50,
-    left: 60,
-    width: 480
-  };
-pdf.fromHTML(
-  	source // HTML string or DOM elem ref.
-  	, margins.left // x coord
-  	, margins.top // y coord
-  	, {
-  		'width': margins.width // max width of content on PDF 
-  		, 'elementHandlers': specialElementHandlers
-  	},
-  	function (dispose) {
-  	  // dispose: object with X, Y of the last line add to the PDF
-  	  //          this allow the insertion of new lines after html
-        pdf.save('html2pdf.pdf');
-      },
-	  {
-		top : 70,
-		bottom : 70
-	  }
-  )		
+	margins = {
+	    top: 50,
+	    left: 60,
+	    width: 480
+	  };
+	pdf.fromHTML(
+	  	source // HTML string or DOM elem ref.
+	  	, margins.left // x coord
+	  	, margins.top // y coord
+	  	, {
+	  		'width': margins.width // max width of content on PDF 
+	  		, 'elementHandlers': specialElementHandlers
+	  	},
+	  	function (dispose) {
+	  	  // dispose: object with X, Y of the last line add to the PDF
+	  	  //          this allow the insertion of new lines after html
+	        pdf.save('html2pdf.pdf');
+	      },
+		  {
+			top : 70,
+			bottom : 70
+		  }
+	)		
 }
 
 function processResults(searchResult) {
@@ -260,19 +246,20 @@ function processResults(searchResult) {
 		var monthYear = getShortMonth(exactDate.getMonth())+" "+exactDate.getFullYear();
 		var monthYearNoSpaces = monthYear.replace(/ /g,'');
 		var timelineEntry = "";
+		var textSnippet = getSnippet(value._source.text,SNIPPET_LENGTH);
 		if(!(presentMonths[monthYearNoSpaces])) {
 			timelineEntry += "<dt id="+monthYearNoSpaces+">"+monthYear+"</dt>"; // Month-Year Tag
 			presentMonths[monthYearNoSpaces] = true;
 		}
-		timelineEntry += '<div class="collapse in" id=collapsableEntry'+value._source.brcid+'>';   //TODO: INSERT id=something
+		timelineEntry += '<div class="collapse in" id=collapsableEntry'+value._id+'>';   //TODO: INSERT id=something
 		timelineEntry += '<dd class="pos-right clearfix"><div class="circ"></div><div class="time">'+getShortMonth(exactDate.getMonth())+' '+exactDate.getDate()+'</div>'; // circle with exact date on the side
 		timelineEntry += '<div class="events"><div class="pull-left"><img class="events-object img-rounded" src="img/Icon-Placeholder.png"></div>'; // TODO: REPLACE PLACEHOLDER IMAGE
 		timelineEntry += '<div class="events-body"><h4 class="events-heading">Sample Document</h4>'; // heading
-		timelineEntry += '<p>'+getSnippet(value._source.text,100)+'</p>'; // BODY
+		timelineEntry += '<p id=text'+value._id+'>'+textSnippet+'</p>'; // BODY
 
 
 		// createPDF(value._source.text+value._source.text+value._source.text+value._source.text);
-		pdfToHTML(value._source.text+value._source.text+value._source.text+value._source.text+value._source.text+value._source.text+value._source.text+value._source.text+value._source.text+value._source.text+value._source.text+value._source.text);
+
 
 		timelineEntry += '<a href="">Download Full PDF</a>'; //TODO
 		timelineEntry += '</div></div></div></dd>'; // closing tags
@@ -280,12 +267,20 @@ function processResults(searchResult) {
 		$("#timelineList").append(timelineEntry);
 
 		$("#"+monthYearNoSpaces).on("click", function(){
-			
-			$("#collapsableEntry"+value._source.brcid).collapse("toggle");
+			var collapsableEntryHandle = $("#collapsableEntry"+value._id);
+			collapsableEntryHandle.collapse("toggle");
+		});
+
+		$("#text"+value._id).on("click",function(){
+			if($(this).text().length > textSnippet.length)
+				$(this).text(textSnippet);
+			else
+				$(this).text(value._source.text);
 		});
 
 	});
-	console.log(presentMonths)
+	if(debug)
+		console.log(presentMonths)
 	$('#collapseButton').show();
 }
 
