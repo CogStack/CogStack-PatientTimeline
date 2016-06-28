@@ -16,6 +16,7 @@ var client = new $.es.Client({
 	log: "info"
 });
 
+var numberOfVisibleEntries = 0;
 
 $(document).ready(function() {
 	doSetup();
@@ -59,7 +60,13 @@ function doSetup() {
 	    $('#datePickerFrom').data("DateTimePicker").maxDate(e.date);
 	});
 
+
+
+
 	$('#collapseButton').hide();
+
+
+
 }
 
 function startSearch() {
@@ -70,12 +77,15 @@ function startSearch() {
 
 function toggleCollapse() {
 	var buttonHandle = $('#collapseButton');
+	var collapsableHandle = $("[id^=" + "collapsableEntry" + "]");
+	var numberOfCollapsable = collapsableHandle.length;
+	
 	if(buttonHandle.text() == "Collapse all") {
-		$("[id^=" + "collapsableEntry" + "]").collapse("hide");
+		collapsableHandle.collapse("hide");
 		buttonHandle.text('Expand all');
 	}
 	else {
-		$("[id^=" + "collapsableEntry" + "]").collapse("show");
+		collapsableHandle.collapse("show");
 		buttonHandle.text("Collapse all")
 	}
 }
@@ -216,10 +226,11 @@ function processResults(searchResult) {
 	$.each(searchResult, function(index, value){
 		var exactDate = new Date(value._source.created);
 		var monthYear = getShortMonth(exactDate.getMonth())+" "+exactDate.getFullYear();
+		var monthYearNoSpaces = monthYear.replace(/ /g,'');
 		var timelineEntry = "";
-		if(!(presentMonths[monthYear.replace(/ /g,'')])) {
-			timelineEntry += "<dt>"+monthYear+"</dt>"; // Month-Year Tag
-			presentMonths[monthYear.replace(/ /g,'')] = true;
+		if(!(presentMonths[monthYearNoSpaces])) {
+			timelineEntry += "<dt id="+monthYearNoSpaces+">"+monthYear+"</dt>"; // Month-Year Tag
+			presentMonths[monthYearNoSpaces] = true;
 		}
 		timelineEntry += '<div class="collapse in" id=collapsableEntry'+value._source.brcid+'>';   //TODO: INSERT id=something
 		timelineEntry += '<dd class="pos-right clearfix"><div class="circ"></div><div class="time">'+getShortMonth(exactDate.getMonth())+' '+exactDate.getDate()+'</div>'; // circle with exact date on the side
@@ -235,6 +246,12 @@ function processResults(searchResult) {
 		timelineEntry += '</div></div></div></dd>'; // closing tags
 
 		$("#timelineList").append(timelineEntry);
+
+		$("#"+monthYearNoSpaces).on("click", function(){
+			
+			$("#collapsableEntry"+value._source.brcid).collapse("toggle");
+		});
+
 	});
 	console.log(presentMonths)
 	$('#collapseButton').show();
