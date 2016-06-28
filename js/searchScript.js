@@ -1,11 +1,10 @@
 /*
 TODO:
 - display thumbnails/icon for text
-- generation of PDFs for the text
-- download PDF
 - choose patient at the beginning, then search for same bcoid in the docs
 - code cleanup + refactor
 - code documentation
+- divide this js into seperate ones with different functionalities
 */
 const SHORT_SNIPPET_LENGTH = 100;
 
@@ -67,7 +66,10 @@ function doSetup() {
 
 	$('#collapseButton').hide();
 
-
+	$(document).delegate('*[data-toggle="lightbox"]', 'click', function(event) {
+	    event.preventDefault();
+	    $(this).ekkoLightbox();
+	}); 
 
 }
 
@@ -256,9 +258,16 @@ function processResults(searchResult) {
 			presentMonths[monthYearNoSpaces] = true;
 		}
 
+		var imageSource = "img/Icon-Placeholder.png";
+
 		timelineEntry += '<div class="collapse in" id=collapsableEntry'+value._id+'>';   //TODO: INSERT id=something
-		timelineEntry += '<dd class="pos-right clearfix"><div class="circ"></div><div class="time">'+getShortMonth(exactDate.getMonth())+' '+exactDate.getDate()+'</div>'; // circle with exact date on the side
-		timelineEntry += '<div class="events"><div class="pull-left"><img class="events-object img-rounded" src="img/Icon-Placeholder.png"></div>'; // TODO: REPLACE PLACEHOLDER IMAGE
+		timelineEntry += '<dd class="pos-right clearfix"><div class="circ"></div><div class="time">'+getShortMonth(exactDate.getMonth())+' '+exactDate.getDate()+'</div><div class="events">'; // circle with exact date on the side
+		timelineEntry += '<div class="pull-left"><a href='+imageSource+' data-toggle="lightbox"><img class="events-object img-rounded" src='+imageSource+'></a></div>'; // TODO: REPLACE PLACEHOLDER IMAGE
+		
+
+		// timelineEntry += '<div class="pull-left"><img class="events-object img-rounded" src='+imageSource+'></div>'; // TODO: REPLACE PLACEHOLDER IMAGE
+
+
 		timelineEntry += '<div class="events-body"><h4 class="events-heading">Sample Document</h4>'; // heading
 		timelineEntry += '<p id=text'+value._id+'>'+shortTextSnippet+'</p>'; // BODY
 
@@ -279,8 +288,9 @@ function processResults(searchResult) {
 				$(this).text(getSnippet(value._source.text,LONG_SNIPPET_LENGTH));
 		});
 
+		// TODO:
+		// UPDATE WHEN THUMBNAIL AND FINAL PDFs AVAILABLE!
 		$("#PDF"+value._id).on("click",function(e) {
-			window.alert('ffs');
 			e.preventDefault();
 			createPDF(pdfTimestamp, value._source.text);
 			return false; 
