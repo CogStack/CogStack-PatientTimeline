@@ -8,7 +8,8 @@
     <title>The Timeliner Test</title>
 
     <link rel="stylesheet" type="text/css" href="css/bootflat.css" />
-	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
+	<!--<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />-->
+	<link rel="stylesheet" href="css/bootstrap.min.css" />
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css" />
 	<link rel="stylesheet" type="text/css" href="css/main.css" />
 
@@ -55,6 +56,13 @@
 		        </div>
 		    </div>
 		
+		    <div class='col-md-5'>
+		        <div class="form-group">
+			        <label for="containingKeywords">Patient ID:</label>
+			        <input class="form-control input-sm" id="containingKeywords" type="text" placeholder="Type patient ID">
+		        </div>
+            </div>
+		
             <div class='col-md-5'>
 		        <div class="form-group">
 			         <label for="numberResults">Number of Results to Display:</label>
@@ -66,7 +74,6 @@
 				           <option>50</option>
 			          </select>
 		         </div>
-		         <button type="button" class="btn btn-primary" id="searchButton" onclick="startSearch()">Search Documents</button>
             </div>
 
             <div class='col-md-5'>
@@ -76,6 +83,11 @@
 		        </div>
             </div>
 			
+		    <div class='col-md-5'>
+			<label for="searchButton">&nbsp;</label>
+			    <br><button type="button" class="btn btn-primary" id="searchButton" onclick="startSearch()">Search Documents</button>
+	        </div>
+	        
         </div>
 		
 	</form>
