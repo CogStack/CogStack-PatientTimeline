@@ -30,6 +30,10 @@
     transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
 }
 
+.myImage {
+	height: 10px;
+}
+
 body {
     background-color: #ECF0F1;
 }

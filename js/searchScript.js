@@ -5,10 +5,13 @@ TODO:
 - code cleanup + refactor
 - code documentation
 - divide this js into seperate ones with different functionalities
+- manage image resize
 */
 const SHORT_SNIPPET_LENGTH = 100;
 
 const LONG_SNIPPET_LENGTH = 1000;
+const MAX_PREVIEW_HEIGHT = 75;
+const MAX_PREVIEW_WIDTH = 75;
 
 var debug = true;
 
@@ -262,7 +265,7 @@ function processResults(searchResult) {
 
 		timelineEntry += '<div class="collapse in" id=collapsableEntry'+value._id+'>';   //TODO: INSERT id=something
 		timelineEntry += '<dd class="pos-right clearfix"><div class="circ"></div><div class="time">'+getShortMonth(exactDate.getMonth())+' '+exactDate.getDate()+'</div><div class="events">'; // circle with exact date on the side
-		timelineEntry += '<div class="pull-left"><a href='+imageSource+' data-toggle="lightbox"><img class="events-object img-rounded" src='+imageSource+'></a></div>'; // TODO: REPLACE PLACEHOLDER IMAGE
+		timelineEntry += '<div class="pull-left"><a href='+imageSource+' data-toggle="lightbox"><img class="events-object img-rounded" "myImage" src='+imageSource+'></a></div>'; // TODO: REPLACE PLACEHOLDER IMAGE
 		
 
 		// timelineEntry += '<div class="pull-left"><img class="events-object img-rounded" src='+imageSource+'></div>'; // TODO: REPLACE PLACEHOLDER IMAGE
