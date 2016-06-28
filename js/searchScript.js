@@ -176,7 +176,7 @@ function createPDF(sourceText) {
 	var doc = new jsPDF();
 
 	var splitText = doc.splitTextToSize(sourceText,180);
- 	doc.text(10,10,sourceText);
+ 	doc.text(10,10,splitText);
 	// var x = 10;
 	// pageHeight= doc.internal.pageSize.height;
 	// var y = 500 
@@ -194,22 +194,25 @@ function createPDF(sourceText) {
 function processResults(searchResult) {
 	if(debug) 
 		console.log(searchResult);
+
 	searchResult = searchResult.sort(resultsCompararison)
 
-	var presentMonths;
+	var presentMonths = {};
 	$.each(searchResult, function(index, value){
 		var exactDate = new Date(value._source.created);
 		var monthYear = getShortMonth(exactDate.getMonth())+" "+exactDate.getFullYear();
 		var timelineEntry = "";
-		// if(!presentMonths[monthYear]) {
+		if(!(presentMonths[monthYear.replace(/ /g,'')])) {
 			timelineEntry += "<dt>"+monthYear+"</dt>"; // Month-Year Tag
-		// 	presentMonths[monthYear] = true;
-		// }
+			presentMonths[monthYear.replace(/ /g,'')] = true;
+		}
 		timelineEntry += '<div class="collapse in">';   //TODO: INSERT id=something
 		timelineEntry += '<dd class="pos-right clearfix"><div class="circ"></div><div class="time">'+getShortMonth(exactDate.getMonth())+' '+exactDate.getDate()+'</div>'; // circle with exact date on the side
 		timelineEntry += '<div class="events"><div class="pull-left"><img class="events-object img-rounded" src="img/Icon-Placeholder.png"></div>'; // TODO: REPLACE PLACEHOLDER IMAGE
 		timelineEntry += '<div class="events-body"><h4 class="events-heading">Sample Document</h4>'; // heading
 		timelineEntry += '<p>'+getSnippet(value._source.text,100)+'</p>'; // BODY
+
+
 		// createPDF(value._source.text+value._source.text+value._source.text+value._source.text);
 
 
@@ -218,6 +221,7 @@ function processResults(searchResult) {
 
 		$("#timelineList").append(timelineEntry);
 	});
+	console.log(presentMonths)
 
 }
 
