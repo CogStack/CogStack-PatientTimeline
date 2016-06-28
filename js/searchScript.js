@@ -68,6 +68,7 @@ function doSetup() {
 
 
 	$('#collapseButton').hide();
+	$('#secondCollapseButton').hide();
 
 	$(document).delegate('*[data-toggle="lightbox"]', 'click', function(event) {
 	    event.preventDefault();
@@ -84,6 +85,7 @@ function startSearch() {
 
 function toggleCollapse() {
 	var buttonHandle = $('#collapseButton');
+	var secondButtonHandle = $('#secondCollapseButton');
 	var collapsableHandle = $("[id^=" + "collapsableEntry" + "]");
 	var numberOfVisibleEntries = 0;
 	$.each(collapsableHandle, function(index, value){
@@ -94,17 +96,19 @@ function toggleCollapse() {
 	if(buttonHandle.text() == "Collapse all") {
 		collapsableHandle.collapse("hide");
 		buttonHandle.text('Expand all');
+		secondButtonHandle.text('Expand all');
 	}
+	
 	else {
 		collapsableHandle.collapse("show");
-		buttonHandle.text("Collapse all")
+		buttonHandle.text("Collapse all");
+		secondButtonHandle.text("Collapse all");
 	}
 }
 
 function clearTimeline() {
 	$("#timelineList").empty();
 }
-
 
 
 function prepareSearchData()
@@ -239,6 +243,11 @@ function createPDF(timestamp, source) {
 }
 
 function processResults(searchResult) {
+	
+	$('#secondCollapseButton').hide();
+	$('#collapseButton').text("Collapse all");
+	$('#secondCollapseButton').text("Collapse all");
+	
 	if(debug) 
 		console.log(searchResult);
 
@@ -303,6 +312,10 @@ function processResults(searchResult) {
 	if(debug)
 		console.log(presentMonths)
 	$('#collapseButton').show();
+	
+	if($('#numberResults').val()>2)
+	$('#secondCollapseButton').show();
+	
 }
 
 function getSnippet(text, length) {

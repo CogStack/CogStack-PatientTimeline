@@ -3,6 +3,11 @@
 	margin-bottom: 200px;
 }
 
+.text-right {
+	position: relative;
+	margin-right: 200px;
+}
+
 .input-sm {
     height: 35px;
     padding: 5px 10px;
