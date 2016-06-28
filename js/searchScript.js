@@ -7,7 +7,9 @@ TODO:
 - code cleanup + refactor
 - code documentation
 */
-const SNIPPET_LENGTH = 100;
+const SHORT_SNIPPET_LENGTH = 100;
+
+const LONG_SNIPPET_LENGTH = 1000;
 
 var debug = true;
 
@@ -198,7 +200,7 @@ function getShortMonth(num) {
 	}
 }
 
-function createPDF(source) {
+function createPDF(timestamp, source) {
 	var pdf = new jsPDF('p', 'pt', 'a4');
 	//source = $('#pdf2htmldiv')[0];
 	specialElementHandlers = {
@@ -216,13 +218,13 @@ function createPDF(source) {
 	  	, margins.left // x coord
 	  	, margins.top // y coord
 	  	, {
-	  		'width': margins.width // max width of content on PDF 
-	  		, 'elementHandlers': specialElementHandlers
+	  		"width": margins.width // max width of content on PDF 
+	  		, "elementHandlers": specialElementHandlers
 	  	},
 	  	function (dispose) {
 	  	  // dispose: object with X, Y of the last line add to the PDF
 	  	  //          this allow the insertion of new lines after html
-	        pdf.save('html2pdf.pdf');
+	        pdf.save(timestamp+".pdf");
 	      },
 		  {
 			top : 70,
@@ -246,36 +248,42 @@ function processResults(searchResult) {
 		var monthYear = getShortMonth(exactDate.getMonth())+" "+exactDate.getFullYear();
 		var monthYearNoSpaces = monthYear.replace(/ /g,'');
 		var timelineEntry = "";
-		var textSnippet = getSnippet(value._source.text,SNIPPET_LENGTH);
+		var shortTextSnippet = getSnippet(value._source.text,SHORT_SNIPPET_LENGTH);
+
+		var pdfTimestamp = exactDate.getDate()+monthYearNoSpaces;
 		if(!(presentMonths[monthYearNoSpaces])) {
 			timelineEntry += "<dt id="+monthYearNoSpaces+">"+monthYear+"</dt>"; // Month-Year Tag
 			presentMonths[monthYearNoSpaces] = true;
 		}
+
 		timelineEntry += '<div class="collapse in" id=collapsableEntry'+value._id+'>';   //TODO: INSERT id=something
 		timelineEntry += '<dd class="pos-right clearfix"><div class="circ"></div><div class="time">'+getShortMonth(exactDate.getMonth())+' '+exactDate.getDate()+'</div>'; // circle with exact date on the side
 		timelineEntry += '<div class="events"><div class="pull-left"><img class="events-object img-rounded" src="img/Icon-Placeholder.png"></div>'; // TODO: REPLACE PLACEHOLDER IMAGE
 		timelineEntry += '<div class="events-body"><h4 class="events-heading">Sample Document</h4>'; // heading
-		timelineEntry += '<p id=text'+value._id+'>'+textSnippet+'</p>'; // BODY
+		timelineEntry += '<p id=text'+value._id+'>'+shortTextSnippet+'</p>'; // BODY
 
-
-		// createPDF(value._source.text+value._source.text+value._source.text+value._source.text);
-
-
-		timelineEntry += '<a href="">Download Full PDF</a>'; //TODO
+		timelineEntry += '<a href="#" id=PDF'+value._id+'>Download Full PDF</a>'; //TODO
 		timelineEntry += '</div></div></div></dd>'; // closing tags
 
 		$("#timelineList").append(timelineEntry);
 
-		$("#"+monthYearNoSpaces).on("click", function(){
+		$("#"+monthYearNoSpaces).on("click", function() {
 			var collapsableEntryHandle = $("#collapsableEntry"+value._id);
 			collapsableEntryHandle.collapse("toggle");
 		});
 
-		$("#text"+value._id).on("click",function(){
-			if($(this).text().length > textSnippet.length)
-				$(this).text(textSnippet);
+		$("#text"+value._id).on("click",function() {
+			if($(this).text().length > shortTextSnippet.length)
+				$(this).text(shortTextSnippet);
 			else
-				$(this).text(value._source.text);
+				$(this).text(getSnippet(value._source.text,LONG_SNIPPET_LENGTH));
+		});
+
+		$("#PDF"+value._id).on("click",function(e) {
+			window.alert('ffs');
+			e.preventDefault();
+			createPDF(pdfTimestamp, value._source.text);
+			return false; 
 		});
 
 	});
@@ -285,6 +293,8 @@ function processResults(searchResult) {
 }
 
 function getSnippet(text, length) {
+	if (text.length < length)
+		return text;
     var rx = new RegExp("^.{" + length + "}[^ ]*");
     return rx.exec(text)[0]+"...";
 }
@@ -303,6 +313,8 @@ function searchData(searchParams) {
 
 
 /*
+FOR POSSIBLE FUTURE REFERENCE IF WE NEED TO USE AJAX:
+
 function getDummyData() {
 	$.ajax({
 		dataType: "json",
@@ -321,26 +333,5 @@ function getDummyData() {
 	    },
 	});
 
-}
-
-getDummyData()
-*/
-/*
-var searchParams = {
-	//size : 2,
-	index : "mock",
-	type : "patient",
-	//query : {match}
-	body : {
-		query : {
-			bool : {
-				must : [
-					{term : {gender : "male"} },
-					{range: 
-						{dob : {"gte" : "2000-01-01"} }	}
-				]
-			}
-		}
-	}
 }
 */
