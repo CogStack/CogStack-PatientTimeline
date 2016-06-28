@@ -59,12 +59,25 @@ function doSetup() {
 	    $('#datePickerFrom').data("DateTimePicker").maxDate(e.date);
 	});
 
+	$('#collapseButton').hide();
 }
 
 function startSearch() {
 	// testCollapse();
 	clearTimeline()
 	prepareSearchData();
+}
+
+function toggleCollapse() {
+	var buttonHandle = $('#collapseButton');
+	if(buttonHandle.text() == "Collapse all") {
+		$("[id^=" + "collapsableEntry" + "]").collapse("hide");
+		buttonHandle.text('Expand all');
+	}
+	else {
+		$("[id^=" + "collapsableEntry" + "]").collapse("show");
+		buttonHandle.text("Collapse all")
+	}
 }
 
 function clearTimeline() {
@@ -194,6 +207,9 @@ function processResults(searchResult) {
 	if(debug) 
 		console.log(searchResult);
 
+	if(!searchResult)
+		return
+
 	searchResult = searchResult.sort(resultsCompararison)
 
 	var presentMonths = {};
@@ -205,7 +221,7 @@ function processResults(searchResult) {
 			timelineEntry += "<dt>"+monthYear+"</dt>"; // Month-Year Tag
 			presentMonths[monthYear.replace(/ /g,'')] = true;
 		}
-		timelineEntry += '<div class="collapse in">';   //TODO: INSERT id=something
+		timelineEntry += '<div class="collapse in" id=collapsableEntry'+value._source.brcid+'>';   //TODO: INSERT id=something
 		timelineEntry += '<dd class="pos-right clearfix"><div class="circ"></div><div class="time">'+getShortMonth(exactDate.getMonth())+' '+exactDate.getDate()+'</div>'; // circle with exact date on the side
 		timelineEntry += '<div class="events"><div class="pull-left"><img class="events-object img-rounded" src="img/Icon-Placeholder.png"></div>'; // TODO: REPLACE PLACEHOLDER IMAGE
 		timelineEntry += '<div class="events-body"><h4 class="events-heading">Sample Document</h4>'; // heading
@@ -221,20 +237,13 @@ function processResults(searchResult) {
 		$("#timelineList").append(timelineEntry);
 	});
 	console.log(presentMonths)
-
+	$('#collapseButton').show();
 }
-
 
 function getSnippet(text, length) {
     var rx = new RegExp("^.{" + length + "}[^ ]*");
     return rx.exec(text)[0]+"...";
 }
-
-
-function testCollapse() {
-		$("#test_collapse").collapse("toggle");
-}
-
 
 function searchData(searchParams) {
 	client.search(searchParams).then(function(response) {
