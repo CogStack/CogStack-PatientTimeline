@@ -170,6 +170,7 @@ function prepareSearchJSON(patientID, resultsPerPage, startDate, endDate, contai
 		index : "mock", // temp
 		type : "doc", //temp
 		body : {
+			sort : {"created" : {order : "desc"}},
 			query : {
 				bool : {
 					must : [
@@ -196,14 +197,6 @@ function prepareSearchJSON(patientID, resultsPerPage, startDate, endDate, contai
 	searchData(searchParams);
 }
 
-function resultsCompararison(a,b) {
-	if(a._source.created > b._source.created)
-		return -1;
-	if(a._source.created == b._source.created)
-		return 0;
-	else
-		return 1;
-}
 
 function getShortMonth(num) {
 	switch(num) {
@@ -271,8 +264,6 @@ function processResults(searchResult) {
 
 	if(!searchResult)
 		return
-
-	searchResult = searchResult.sort(resultsCompararison)
 
 	var presentMonths = {};
 	$.each(searchResult, function(index, value){
