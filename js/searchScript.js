@@ -23,6 +23,8 @@ var client = new $.es.Client({
 
 
 $(document).ready(function() {
+	$(".timelineContainer").hide();
+
 	$('#datePickerFrom').datetimepicker({
 		viewMode: 'years',
 		format: 'YYYY-MM-DD',
@@ -71,7 +73,8 @@ $(document).ready(function() {
 
 function startSearch() {
 	clearTimeline()
-	prepareSearchData();
+	if(prepareSearchData())
+		$(".timelineContainer").show();
 }
 
 function toggleCollapse() {
@@ -100,6 +103,9 @@ function toggleCollapse() {
 
 function clearTimeline() {
 	$("#timelineList").empty();
+	$('#collapseButton').hide();
+	$('#secondCollapseButton').hide();
+	$(".timelineContainer").hide();
 }
 
 function prepareSearchData()
@@ -113,7 +119,7 @@ function prepareSearchData()
 	if(!patientID){
 		$("#patientIDBox").removeClass("form-group").addClass("form-group has-error has-feedback");
     	$("#patientIDSpan").addClass("glyphicon glyphicon-remove form-control-feedback");
-		return;
+		return false;
 	}
 	else {
 		$("#patientIDBox").removeClass("form-group has-error has-feedback").addClass("form-group");
@@ -145,6 +151,7 @@ function prepareSearchData()
 		console.log(containingKeywords);
 	}
 	prepareSearchJSON(patientID, resultsPerPage, startDate, endDate, containingKeywords)
+	return true;
 }
 
 
@@ -185,7 +192,6 @@ function prepareSearchJSON(patientID, resultsPerPage, startDate, endDate, contai
 
 	if(containingKeywords)
 		searchParams.body.query.bool.must.push({ match: {"_all" : containingKeywords}})
-	//{ match: {"_all" : containingKeywords}}
 
 	searchData(searchParams);
 }
@@ -339,7 +345,9 @@ function processResults(searchResult) {
 	});
 	if(debug)
 		console.log(presentMonths)
-	$('#collapseButton').show();
+
+	if(!($.isEmptyObject(searchResult)))
+		$('#collapseButton').show();
 	
 	if($('#numberResults').val()>2)
 		$('#secondCollapseButton').show();
