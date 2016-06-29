@@ -86,7 +86,17 @@
 		        </div>
             </div>
 			
-		    <div class='col-md-5'>
+			<div class="col-md-5">
+	            <div class="radioContainer" id="radioContainer">
+	                <label for radioContainer">Thumbnail Size:   </label>
+		            <label class="radio-inline"><input type="radio" value="small" name="thumbnailSize"checked >Small </label>
+					<label class="radio-inline"><input type="radio" value="medium" name="thumbnailSize">Medium </label>
+					<label class="radio-inline"><input type="radio" value="large" name="thumbnailSize">Large </label>
+				</div>
+			</div>
+
+
+		    <div class='col-md-10'>
 			<label for="searchButton">&nbsp;</label>
 			    <br><button type="button" class="btn btn-primary" id="searchButton" onclick="startSearch()">Search Documents</button>
 	        </div>

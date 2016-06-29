@@ -11,7 +11,14 @@ TODO:
 
 const SHORT_SNIPPET_LENGTH = 100;
 const LONG_SNIPPET_LENGTH = 1000;
-const THUMBNAIL_HEIGHT = 75;
+
+const THUMBNAIL_HEIGHT_SMALL = 75;
+const THUMBNAIL_HEIGHT_MEDIUM = 150;
+const THUMBNAIL_HEIGHT_LARGE = 250;
+
+
+
+
 var debug = true;
 
 var url = "http://timeline-silverash.rhcloud.com";
@@ -69,6 +76,17 @@ $(document).ready(function() {
 	    $(this).ekkoLightbox();
 	}); 
 });
+
+
+function getThumbnailHeight() {
+	var thumbnailSize = $("input:radio[name ='thumbnailSize']:checked").val();
+	if(thumbnailSize == "small")
+		return THUMBNAIL_HEIGHT_SMALL
+	else if(thumbnailSize == "medium")
+		return THUMBNAIL_HEIGHT_MEDIUM;
+	else
+		return THUMBNAIL_HEIGHT_LARGE;
+}
 
 
 function startSearch() {
@@ -249,8 +267,8 @@ function createPDF(patientID, timestamp, source) {
 }
 
 //TODO: move into commons.js (once created)
-function getThumbnailWidth(naturalHeight, naturalWidth) {
-	return THUMBNAIL_HEIGHT*naturalWidth/naturalHeight;
+function getThumbnailWidth(targetHeight, naturalHeight, naturalWidth) {
+	return targetHeight*naturalWidth/naturalHeight;
 }
 
 function processResults(searchResult) {
@@ -274,6 +292,9 @@ function processResults(searchResult) {
 		var shortTextSnippet = getSnippet(value._source.text,SHORT_SNIPPET_LENGTH);
 
 		var pdfTimestamp = exactDate.getDate()+monthYearNoSpaces;
+
+		var targetHeight = getThumbnailHeight();
+
 		if(!(presentMonths[monthYearNoSpaces])) {
 			timelineEntry += "<dt id="+monthYearNoSpaces+">"+monthYear+"</dt>"; // Month-Year Tag
 			presentMonths[monthYearNoSpaces] = true;
@@ -328,8 +349,8 @@ function processResults(searchResult) {
 		$("#img"+value._id).load(function(){
 			var imageHeight = $(this).height();
 			var imageWidth = $(this).width();
-			var finalWidth = getThumbnailWidth(imageHeight, imageWidth);
-			$(this).attr('style','width:'+finalWidth+'px;height:'+THUMBNAIL_HEIGHT+'px');
+			var finalWidth = getThumbnailWidth(targetHeight, imageHeight, imageWidth);
+			$(this).attr('style','width:'+finalWidth+'px;height:'+targetHeight+'px');
 		});
 
 

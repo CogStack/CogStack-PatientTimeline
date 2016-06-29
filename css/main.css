@@ -103,6 +103,10 @@
 	left:0;
 }
 
+.radioContainer {
+	margin-top:31px;
+}
+
 body {
     background-color: #f1f2f6;
 }
