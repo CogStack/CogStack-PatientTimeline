@@ -173,14 +173,19 @@ function prepareSearchJSON(patientID, resultsPerPage, startDate, endDate, contai
 								"lte" : endDate
 							}
 						 }	
-					}],
+					   },
+					],/*
 					should : [
 						{ match: {"_all" : containingKeywords}}
-					]
+					]*/
 				}
 			}
 		}
 	}
+
+	if(containingKeywords)
+		searchParams.body.query.bool.must.push({ match: {"_all" : containingKeywords}})
+	//{ match: {"_all" : containingKeywords}}
 
 	searchData(searchParams);
 }
