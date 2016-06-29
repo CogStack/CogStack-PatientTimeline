@@ -289,7 +289,8 @@ function processResults(searchResult) {
 		timelineEntry += '<div class="collapse in" aria-expanded=true id=collapsableEntry'+value._id+'>';   
 		timelineEntry += '<dd class="pos-right clearfix"><div class="circ"></div><div class="time">'+getShortMonth(exactDate.getMonth())+' '+exactDate.getDate()+'</div><div class="events">'; // circle with exact date on the side
 		timelineEntry += '<div class="pull-left"><a href='+imageSource+' data-toggle="lightbox"><img class="events-object img-rounded" id=img'+value._id+' src='+imageSource+'></a></div><div class="events-body" id="entry'+value._id+'">'; // TODO: REPLACE PLACEHOLDER IMAGE
-		
+		timelineEntry += '<div class="help-tip"> <p>Double click to expand/minimize the text <br> or Download full PDF version</p></div>';   
+
 
 		// timelineEntry += '<div class="pull-left"><img class="events-object img-rounded" src='+imageSource+'></div>'; // TODO: REPLACE PLACEHOLDER IMAGE
 
