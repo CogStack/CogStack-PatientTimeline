@@ -11,7 +11,7 @@ TODO:
 const SHORT_SNIPPET_LENGTH = 100;
 const LONG_SNIPPET_LENGTH = 1000;
 const THUMBNAIL_HEIGHT = 75;
-
+var numberOfVisibleEntriesGlobal = 0;
 var debug = true;
 
 var url = "http://timeline-silverash.rhcloud.com";
@@ -86,6 +86,7 @@ function toggleCollapse() {
 	$.each(collapsableHandle, function(index, value){
 		if($(value).attr("aria-expanded") == "true")
 			numberOfVisibleEntries += 1;  
+		numberOfVisibleEntriesGlobal=numberOfVisibleEntries;
 	});
 	
 	if(buttonHandle.text() == "Collapse all" && numberOfVisibleEntries > 0) {
@@ -295,8 +296,8 @@ function processResults(searchResult) {
 		// timelineEntry += '<div class="pull-left"><img class="events-object img-rounded" src='+imageSource+'></div>'; // TODO: REPLACE PLACEHOLDER IMAGE
 
 
-		timelineEntry += '<h4 class="events-heading">Sample Document</h4>'; // heading
-		timelineEntry += '<p id=text'+value._id+'>'+shortTextSnippet+'</p>'; // BODY
+	   //  timelineEntry += '<h4 class="events-heading">Sample Document</h4>'; // heading
+		timelineEntry += '<p style="width:90%" id=text'+value._id+'>'+shortTextSnippet+'</p>'; // BODY
 
 		timelineEntry += '<a href="#" id=PDF'+value._id+'>Download Full PDF</a>'; //TODO
 		timelineEntry += '</div></div></div></dd>'; // closing tags
@@ -341,7 +342,8 @@ function processResults(searchResult) {
 	if(!($.isEmptyObject(searchResult)))
 		$('#collapseButton').show();
 	
-	if($('#numberResults').val()>2)
+
+	if(numberOfVisibleEntriesGlobal>2 && !($.isEmptyObject(searchResult)))
 		$('#secondCollapseButton').show();
 	
 }
