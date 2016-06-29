@@ -23,6 +23,8 @@ var client = new $.es.Client({
 
 
 $(document).ready(function() {
+	$(".timelineContainer").hide();
+
 	$('#datePickerFrom').datetimepicker({
 		viewMode: 'years',
 		format: 'YYYY-MM-DD',
@@ -71,7 +73,8 @@ $(document).ready(function() {
 
 function startSearch() {
 	clearTimeline()
-	prepareSearchData();
+	if(prepareSearchData())
+		$(".timelineContainer").show();
 }
 
 function toggleCollapse() {
@@ -100,6 +103,9 @@ function toggleCollapse() {
 
 function clearTimeline() {
 	$("#timelineList").empty();
+	$('#collapseButton').hide();
+	$('#secondCollapseButton').hide();
+	$(".timelineContainer").hide();
 }
 
 function prepareSearchData()
@@ -109,6 +115,16 @@ function prepareSearchData()
 	var resultsPerPage = $('#numberResults').val();
 
 	var containingKeywords = "";
+	var patientID = $('#patientID').val();
+	if(!patientID){
+		$("#patientIDBox").removeClass("form-group").addClass("form-group has-error has-feedback");
+    	$("#patientIDSpan").addClass("glyphicon glyphicon-remove form-control-feedback");
+		return false;
+	}
+	else {
+		$("#patientIDBox").removeClass("form-group has-error has-feedback").addClass("form-group");
+		$('#patientIDSpan').removeClass("glyphicon glyphicon-remove form-control-feedback");
+    }
 
     // below was converting DD/MM/YYYY into YYYY-MM-DD
     //
@@ -134,11 +150,12 @@ function prepareSearchData()
 		console.log(endDate);
 		console.log(containingKeywords);
 	}
-	prepareSearchJSON(resultsPerPage, startDate, endDate, containingKeywords)
+	prepareSearchJSON(patientID, resultsPerPage, startDate, endDate, containingKeywords)
+	return true;
 }
 
 
-function prepareSearchJSON(resultsPerPage, startDate, endDate, containingKeywords) {
+function prepareSearchJSON(patientID, resultsPerPage, startDate, endDate, containingKeywords) {
 	startDate = new Date(startDate).getTime();
 	endDate = new Date(endDate).getTime();
 	if(debug) {
@@ -153,36 +170,33 @@ function prepareSearchJSON(resultsPerPage, startDate, endDate, containingKeyword
 		index : "mock", // temp
 		type : "doc", //temp
 		body : {
+			sort : {"created" : {order : "desc"}},
 			query : {
 				bool : {
-					must : [{
-						//{term : {gender : "male"} },
-						range:	{
+					must : [
+						{term : {brcid : patientID} },
+						{range:	{
 							created : {
 								"gte" : startDate,
 								"lte" : endDate
 							}
 						 }	
-					}],
+					   },
+					],/*
 					should : [
 						{ match: {"_all" : containingKeywords}}
-					]
+					]*/
 				}
 			}
 		}
 	}
 
+	if(containingKeywords)
+		searchParams.body.query.bool.must.push({ match: {"_all" : containingKeywords}})
+
 	searchData(searchParams);
 }
 
-function resultsCompararison(a,b) {
-	if(a._source.created > b._source.created)
-		return -1;
-	if(a._source.created == b._source.created)
-		return 0;
-	else
-		return 1;
-}
 
 function getShortMonth(num) {
 	switch(num) {
@@ -251,8 +265,6 @@ function processResults(searchResult) {
 	if(!searchResult)
 		return
 
-	searchResult = searchResult.sort(resultsCompararison)
-
 	var presentMonths = {};
 	$.each(searchResult, function(index, value){
 		var exactDate = new Date(value._source.created);
@@ -274,9 +286,9 @@ function processResults(searchResult) {
 		else
 			imageSource = "img/Icon-Placeholder.png";
 
-		timelineEntry += '<div class="collapse in" id=collapsableEntry'+value._id+'>';   
+		timelineEntry += '<div class="collapse in" aria-expanded=true id=collapsableEntry'+value._id+'>';   
 		timelineEntry += '<dd class="pos-right clearfix"><div class="circ"></div><div class="time">'+getShortMonth(exactDate.getMonth())+' '+exactDate.getDate()+'</div><div class="events">'; // circle with exact date on the side
-		timelineEntry += '<div class="pull-left"><a href='+imageSource+' data-toggle="lightbox"><img class="events-object img-rounded" id=img'+value._id+' src='+imageSource+'></a></div><div class="events-body">'; // TODO: REPLACE PLACEHOLDER IMAGE
+		timelineEntry += '<div class="pull-left"><a href='+imageSource+' data-toggle="lightbox"><img class="events-object img-rounded" id=img'+value._id+' src='+imageSource+'></a></div><div class="events-body" id="entry'+value._id+'">'; // TODO: REPLACE PLACEHOLDER IMAGE
 		
 
 		// timelineEntry += '<div class="pull-left"><img class="events-object img-rounded" src='+imageSource+'></div>'; // TODO: REPLACE PLACEHOLDER IMAGE
@@ -295,11 +307,12 @@ function processResults(searchResult) {
 			collapsableEntryHandle.collapse("toggle");
 		});
 
-		$("#text"+value._id).on("click",function() {
-			if($(this).text().length > shortTextSnippet.length)
-				$(this).text(shortTextSnippet);
+		$("#entry"+value._id).on("dblclick",function() {
+			var textHandle = "#text"+value._id;
+			if($(textHandle).text().length > shortTextSnippet.length)
+				$(textHandle).text(shortTextSnippet);
 			else
-				$(this).text(getSnippet(value._source.text,LONG_SNIPPET_LENGTH));
+				$(textHandle).text(getSnippet(value._source.text,LONG_SNIPPET_LENGTH));
 		});
 
 		// TODO:
@@ -323,7 +336,9 @@ function processResults(searchResult) {
 	});
 	if(debug)
 		console.log(presentMonths)
-	$('#collapseButton').show();
+
+	if(!($.isEmptyObject(searchResult)))
+		$('#collapseButton').show();
 	
 	if($('#numberResults').val()>2)
 		$('#secondCollapseButton').show();
