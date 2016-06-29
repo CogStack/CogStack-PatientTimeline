@@ -9,7 +9,6 @@ TODO:
 */
 
 const SHORT_SNIPPET_LENGTH = 100;
-
 const LONG_SNIPPET_LENGTH = 1000;
 const THUMBNAIL_HEIGHT = 75;
 
@@ -90,11 +89,11 @@ function toggleCollapse() {
 
 	var numberOfVisibleEntries = 0;
 	$.each(collapsableHandle, function(index, value){
-		if($(value).attr("aria-expanded"))
-			numberOfVisibleEntries += 1;  //TODO: FINISH THAT
+		if($(value).attr("aria-expanded") == "true")
+			numberOfVisibleEntries += 1;  
 	});
 	
-	if(buttonHandle.text() == "Collapse all") {
+	if(buttonHandle.text() == "Collapse all" && numberOfVisibleEntries > 0) {
 		collapsableHandle.collapse("hide");
 		buttonHandle.text('Expand all');
 		secondButtonHandle.text('Expand all');
@@ -211,7 +210,7 @@ function getShortMonth(num) {
 	}
 }
 
-function createPDF(timestamp, source) {
+function createPDF(patientID, timestamp, source) {
 	var pdf = new jsPDF('p', 'pt', 'a4');
 	//source = $('#pdf2htmldiv')[0];
 	specialElementHandlers = {
@@ -235,7 +234,7 @@ function createPDF(timestamp, source) {
 	  	function (dispose) {
 	  	  // dispose: object with X, Y of the last line add to the PDF
 	  	  //          this allow the insertion of new lines after html
-	        pdf.save(timestamp+".pdf");
+	        pdf.save(timestamp+"_"+patientID+".pdf");
 	      },
 		  {
 			top : 70,
@@ -316,7 +315,7 @@ function processResults(searchResult) {
 		// UPDATE WHEN THUMBNAIL AND FINAL PDFs AVAILABLE!
 		$("#PDF"+value._id).on("click",function(e) {
 			e.preventDefault();
-			createPDF(pdfTimestamp, value._source.text);
+			createPDF(value._source.brcid, pdfTimestamp, value._source.text);
 			return false; 
 		});
 
