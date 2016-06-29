@@ -6,12 +6,12 @@ TODO:
 - code cleanup + refactor
 - code documentation
 - divide this js into seperate ones with different functionalities
+- slider to change dimension of thumbnail
 */
 
 const SHORT_SNIPPET_LENGTH = 100;
 const LONG_SNIPPET_LENGTH = 1000;
 const THUMBNAIL_HEIGHT = 75;
-var numberOfVisibleEntriesGlobal = 0;
 var debug = true;
 
 var url = "http://timeline-silverash.rhcloud.com";
@@ -86,7 +86,6 @@ function toggleCollapse() {
 	$.each(collapsableHandle, function(index, value){
 		if($(value).attr("aria-expanded") == "true")
 			numberOfVisibleEntries += 1;  
-		numberOfVisibleEntriesGlobal=numberOfVisibleEntries;
 	});
 	
 	if(buttonHandle.text() == "Collapse all" && numberOfVisibleEntries > 0) {
@@ -343,7 +342,7 @@ function processResults(searchResult) {
 		$('#collapseButton').show();
 	
 
-	if(numberOfVisibleEntriesGlobal>2 && !($.isEmptyObject(searchResult)))
+	if(searchResult.length > 2)
 		$('#secondCollapseButton').show();
 	
 }
