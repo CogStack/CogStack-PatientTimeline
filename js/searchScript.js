@@ -244,13 +244,9 @@ function createPDF(timestamp, source) {
 	)		
 }
 
-//TODO: move into commons.js (once created) + use in getThumbnailWidth
-function gcd (a, b) {
-    return (b == 0) ? a : gcd (b, a%b);
-}
-
+//TODO: move into commons.js (once created)
 function getThumbnailWidth(naturalHeight, naturalWidth) {
-	return THUMBNAIL_HEIGHT; // TEMP
+	return THUMBNAIL_HEIGHT*naturalWidth/naturalHeight;
 }
 
 function processResults(searchResult) {
@@ -285,7 +281,7 @@ function processResults(searchResult) {
 
 		timelineEntry += '<div class="collapse in" id=collapsableEntry'+value._id+'>';   //TODO: INSERT id=something
 		timelineEntry += '<dd class="pos-right clearfix"><div class="circ"></div><div class="time">'+getShortMonth(exactDate.getMonth())+' '+exactDate.getDate()+'</div><div class="events">'; // circle with exact date on the side
-		timelineEntry += '<div class="pull-left"><a href='+imageSource+' data-toggle="lightbox"><img class="events-object img-rounded" src='+imageSource+' style="width:'+getThumbnailWidth(0,0)+'px;height:'+THUMBNAIL_HEIGHT+'px"></a></div>'; // TODO: REPLACE PLACEHOLDER IMAGE
+		timelineEntry += '<div class="pull-left"><a href='+imageSource+' data-toggle="lightbox"><img class="events-object img-rounded" id=img'+value._id+' src='+imageSource+'></a></div>'; // TODO: REPLACE PLACEHOLDER IMAGE
 		
 
 		// timelineEntry += '<div class="pull-left"><img class="events-object img-rounded" src='+imageSource+'></div>'; // TODO: REPLACE PLACEHOLDER IMAGE
@@ -318,6 +314,16 @@ function processResults(searchResult) {
 			createPDF(pdfTimestamp, value._source.text);
 			return false; 
 		});
+
+
+		$("#img"+value._id).load(function(){
+			var imageHeight = $(this).height();
+			var imageWidth = $(this).width();
+			var finalWidth = getThumbnailWidth(imageHeight, imageWidth);
+			$(this).attr('style','width:'+finalWidth+'px;height:'+THUMBNAIL_HEIGHT+'px');
+		});
+
+
 
 	});
 	if(debug)
