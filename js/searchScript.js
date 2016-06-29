@@ -21,12 +21,8 @@ var client = new $.es.Client({
 	log: "info"
 });
 
+
 $(document).ready(function() {
-	doSetup();
-});
-
-function doSetup() {
-
 	$('#datePickerFrom').datetimepicker({
 		viewMode: 'years',
 		format: 'YYYY-MM-DD',
@@ -63,9 +59,6 @@ function doSetup() {
 	    $('#datePickerFrom').data("DateTimePicker").maxDate(e.date);
 	});
 
-
-
-
 	$('#collapseButton').hide();
 	$('#secondCollapseButton').hide();
 
@@ -73,11 +66,10 @@ function doSetup() {
 	    event.preventDefault();
 	    $(this).ekkoLightbox();
 	}); 
+});
 
-}
 
 function startSearch() {
-	// testCollapse();
 	clearTimeline()
 	prepareSearchData();
 }
@@ -109,7 +101,6 @@ function toggleCollapse() {
 function clearTimeline() {
 	$("#timelineList").empty();
 }
-
 
 function prepareSearchData()
 {
@@ -285,13 +276,13 @@ function processResults(searchResult) {
 
 		timelineEntry += '<div class="collapse in" id=collapsableEntry'+value._id+'>';   
 		timelineEntry += '<dd class="pos-right clearfix"><div class="circ"></div><div class="time">'+getShortMonth(exactDate.getMonth())+' '+exactDate.getDate()+'</div><div class="events">'; // circle with exact date on the side
-		timelineEntry += '<div class="pull-left"><a href='+imageSource+' data-toggle="lightbox"><img class="events-object img-rounded" id=img'+value._id+' src='+imageSource+'></a></div>'; // TODO: REPLACE PLACEHOLDER IMAGE
+		timelineEntry += '<div class="pull-left"><a href='+imageSource+' data-toggle="lightbox"><img class="events-object img-rounded" id=img'+value._id+' src='+imageSource+'></a></div><div class="events-body">'; // TODO: REPLACE PLACEHOLDER IMAGE
 		
 
 		// timelineEntry += '<div class="pull-left"><img class="events-object img-rounded" src='+imageSource+'></div>'; // TODO: REPLACE PLACEHOLDER IMAGE
 
 
-		timelineEntry += '<div class="events-body"><h4 class="events-heading">Sample Document</h4>'; // heading
+		timelineEntry += '<h4 class="events-heading">Sample Document</h4>'; // heading
 		timelineEntry += '<p id=text'+value._id+'>'+shortTextSnippet+'</p>'; // BODY
 
 		timelineEntry += '<a href="#" id=PDF'+value._id+'>Download Full PDF</a>'; //TODO
@@ -347,8 +338,10 @@ function getSnippet(text, length) {
 }
 
 function searchData(searchParams) {
+	showLoading();
 	client.search(searchParams).then(function(response) {
 		processResults(response.hits.hits);
+		hideLoading();
 	}, function(jqXHR, textStatus, errorThrown) {
 		if(debug) {
 			console.log(textStatus);
@@ -357,6 +350,13 @@ function searchData(searchParams) {
 	});
 }
 
+function showLoading() {
+    $("#summary").html("<h4>Please wait...</h4>");
+};
+
+function hideLoading() {
+    $("#summary").html("");
+}
 
 
 /*
