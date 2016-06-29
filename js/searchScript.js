@@ -109,6 +109,16 @@ function prepareSearchData()
 	var resultsPerPage = $('#numberResults').val();
 
 	var containingKeywords = "";
+	var patientID = $('#patientID').val();
+	if(!patientID){
+		$("#patientIDBox").removeClass("form-group").addClass("form-group has-error has-feedback");
+    	$("#patientIDSpan").addClass("glyphicon glyphicon-remove form-control-feedback");
+		return;
+	}
+	else {
+		$("#patientIDBox").removeClass("form-group has-error has-feedback").addClass("form-group");
+		$('#patientIDSpan').removeClass("glyphicon glyphicon-remove form-control-feedback");
+    }
 
     // below was converting DD/MM/YYYY into YYYY-MM-DD
     //
@@ -134,11 +144,11 @@ function prepareSearchData()
 		console.log(endDate);
 		console.log(containingKeywords);
 	}
-	prepareSearchJSON(resultsPerPage, startDate, endDate, containingKeywords)
+	prepareSearchJSON(patientID, resultsPerPage, startDate, endDate, containingKeywords)
 }
 
 
-function prepareSearchJSON(resultsPerPage, startDate, endDate, containingKeywords) {
+function prepareSearchJSON(patientID, resultsPerPage, startDate, endDate, containingKeywords) {
 	startDate = new Date(startDate).getTime();
 	endDate = new Date(endDate).getTime();
 	if(debug) {
@@ -155,9 +165,9 @@ function prepareSearchJSON(resultsPerPage, startDate, endDate, containingKeyword
 		body : {
 			query : {
 				bool : {
-					must : [{
-						//{term : {gender : "male"} },
-						range:	{
+					must : [
+						{term : {brcid : patientID} },
+						{range:	{
 							created : {
 								"gte" : startDate,
 								"lte" : endDate
@@ -275,7 +285,7 @@ function processResults(searchResult) {
 			imageSource = "img/Icon-Placeholder.png";
 
 		timelineEntry += '<div class="collapse in" id=collapsableEntry'+value._id+'>';   
-		timelineEntry += '<dd class="pos-right clearfix"><div class="circ"></div><div class="time">'+getShortMonth(exactDate.getMonth())+' '+exactDate.getDate()+'</div><div class="events">'; // circle with exact date on the side
+		timelineEntry += '<dd class="pos-right clearfix id="entry'+value._id+'"><div class="circ"></div><div class="time">'+getShortMonth(exactDate.getMonth())+' '+exactDate.getDate()+'</div><div class="events">'; // circle with exact date on the side
 		timelineEntry += '<div class="pull-left"><a href='+imageSource+' data-toggle="lightbox"><img class="events-object img-rounded" id=img'+value._id+' src='+imageSource+'></a></div><div class="events-body">'; // TODO: REPLACE PLACEHOLDER IMAGE
 		
 
@@ -295,11 +305,12 @@ function processResults(searchResult) {
 			collapsableEntryHandle.collapse("toggle");
 		});
 
-		$("#text"+value._id).on("click",function() {
-			if($(this).text().length > shortTextSnippet.length)
-				$(this).text(shortTextSnippet);
+		$("#entry"+value._id).on("dblclick",function() {
+			var textHandle = "#text"+value._id;
+			if($(textHandle).text().length > shortTextSnippet.length)
+				$(textHandle).text(shortTextSnippet);
 			else
-				$(this).text(getSnippet(value._source.text,LONG_SNIPPET_LENGTH));
+				$(textHandle).text(getSnippet(value._source.text,LONG_SNIPPET_LENGTH));
 		});
 
 		// TODO:
