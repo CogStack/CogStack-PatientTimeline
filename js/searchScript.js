@@ -1,12 +1,8 @@
 /*
 TODO:
-- display thumbnails/icon for text
-- introduce patientID into search params
-- choose patient at the beginning, then search for same bcoid in the docs
 - code cleanup + refactor
 - code documentation
 - divide this js into seperate ones with different functionalities
-- slider to change dimension of thumbnail
 */
 
 const SHORT_SNIPPET_LENGTH = 100;
@@ -15,9 +11,6 @@ const LONG_SNIPPET_LENGTH = 1000;
 const THUMBNAIL_HEIGHT_SMALL = 75;
 const THUMBNAIL_HEIGHT_MEDIUM = 150;
 const THUMBNAIL_HEIGHT_LARGE = 250;
-
-
-
 
 var debug = true;
 
@@ -31,6 +24,7 @@ var client = new $.es.Client({
 
 $(document).ready(function() {
 	$(".timelineContainer").hide();
+	$('#waitMessage').delay(100).fadeOut();
 
 	$('#datePickerFrom').datetimepicker({
 		viewMode: 'years',
@@ -59,6 +53,12 @@ $(document).ready(function() {
 		}
 	});
 
+	$("#patientID").on("keydown", function(e){
+		if (e.keyCode == 13) {
+			e.preventDefault();
+			$("#searchButton").click();
+		}
+	});
 
 	$("#datePickerFrom").on("dp.change", function (e) {
 	    $('#datePickerTo').data("DateTimePicker").minDate(e.date);
@@ -69,7 +69,6 @@ $(document).ready(function() {
 	});
 
 	$('#collapseButton').hide();
-	$('#secondCollapseButton').hide();
 
 	$(document).delegate('*[data-toggle="lightbox"]', 'click', function(event) {
 	    event.preventDefault();
@@ -97,7 +96,6 @@ function startSearch() {
 
 function toggleCollapse() {
 	var buttonHandle = $('#collapseButton');
-	var secondButtonHandle = $('#secondCollapseButton');
 	var collapsableHandle = $("[id^=" + "collapsableEntry" + "]");
 
 	var numberOfVisibleEntries = 0;
@@ -109,20 +107,17 @@ function toggleCollapse() {
 	if(buttonHandle.text() == "Collapse all" && numberOfVisibleEntries > 0) {
 		collapsableHandle.collapse("hide");
 		buttonHandle.text('Expand all');
-		secondButtonHandle.text('Expand all');
 	}
 	
 	else {
 		collapsableHandle.collapse("show");
 		buttonHandle.text("Collapse all");
-		secondButtonHandle.text("Collapse all");
 	}
 }
 
 function clearTimeline() {
 	$("#timelineList").empty();
 	$('#collapseButton').hide();
-	$('#secondCollapseButton').hide();
 	$(".timelineContainer").hide();
 }
 
@@ -273,9 +268,7 @@ function getThumbnailWidth(targetHeight, naturalHeight, naturalWidth) {
 
 function processResults(searchResult) {
 	
-	$('#secondCollapseButton').hide();
 	$('#collapseButton').text("Collapse all");
-	$('#secondCollapseButton').text("Collapse all");
 	
 	if(debug) 
 		console.log(searchResult);
@@ -310,7 +303,7 @@ function processResults(searchResult) {
 		timelineEntry += '<div class="collapse in" aria-expanded=true id=collapsableEntry'+value._id+'>';   
 		timelineEntry += '<dd class="pos-right clearfix"><div class="circ"></div><div class="time">'+getShortMonth(exactDate.getMonth())+' '+exactDate.getDate()+'</div><div class="events">'; // circle with exact date on the side
 		timelineEntry += '<div class="pull-left"><a href='+imageSource+' data-toggle="lightbox"><img class="events-object img-rounded" id=img'+value._id+' src='+imageSource+'></a></div><div class="events-body" id="entry'+value._id+'">'; // TODO: REPLACE PLACEHOLDER IMAGE
-		timelineEntry += '<div class="help-tip"> <p>Double click to expand/minimize the text <br> or Download full PDF version</p></div>';   
+		timelineEntry += '<div class="help-tip"> <p>Double click to expand/minimize the text</p></div>';   
 
 
 		// timelineEntry += '<div class="pull-left"><img class="events-object img-rounded" src='+imageSource+'></div>'; // TODO: REPLACE PLACEHOLDER IMAGE
@@ -361,11 +354,6 @@ function processResults(searchResult) {
 
 	if(!($.isEmptyObject(searchResult)))
 		$('#collapseButton').show();
-	
-
-	if(searchResult.length > 2)
-		$('#secondCollapseButton').show();
-	
 }
 
 function getSnippet(text, length) {
@@ -389,11 +377,11 @@ function searchData(searchParams) {
 }
 
 function showLoading() {
-    $("#summary").html("<h4>Please wait...</h4>");
+	$('#waitMessage').fadeIn(300);
 };
 
 function hideLoading() {
-    $("#summary").html("");
+    $("#waitMessage").fadeOut(300);
 }
 
 

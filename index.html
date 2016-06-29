@@ -105,10 +105,11 @@
 		
 	</form>
 
-<!-- To populate with search statistics: -->
-	<div class="searchSummary" id="summary"></div>
+	<div class="pwmodal-bg" id="waitMessage">
+		<div class="pwmodal-container">Please wait...</div>
+	</div>
 
-	<nav>
+	<!-- <nav>
 		<center>
 		  <ul class="pagination">
 		    <li class="page-item disabled">
@@ -130,20 +131,15 @@
 		    </li>
 		  </ul>
 	  </center>
-	</nav>
-
-	<div class="timelineContainer">
-	  <div class="text-right">
-	  	<button type="button" class="btn btn-secondary btn-sm" id="collapseButton" onclick="toggleCollapse()">Collapse all</button>
-	  </div>
-	  <div class="timeline">
-	    <dl id=timelineList>
-	    </dl>
-	  </div>
-	  <div class="text-right">
-	  	<button type="button" class="btn btn-secondary btn-sm" id="secondCollapseButton" onclick="toggleCollapse()">Collapse all</button>
-	  </div>
+	</nav> -->
+	<div class="siteContainer">
+		<div class="timelineContainer">
+		  <div class="timeline">
+		  	<button type="button" class="btn btn-secondary btn-sm" id="collapseButton" onclick="toggleCollapse()">Collapse all</button>
+		    <dl id=timelineList>
+		    </dl>
+		  </div>
+		</div>
 	</div>
-	
   </body>
 </html>
