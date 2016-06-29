@@ -1,17 +1,17 @@
 /*
 TODO:
 - display thumbnails/icon for text
+- introduce patientID into search params
 - choose patient at the beginning, then search for same bcoid in the docs
 - code cleanup + refactor
 - code documentation
 - divide this js into seperate ones with different functionalities
-- manage image resize
+- manage image resize (PARTIALLY done)
 */
 const SHORT_SNIPPET_LENGTH = 100;
 
 const LONG_SNIPPET_LENGTH = 1000;
-const MAX_PREVIEW_HEIGHT = 75;
-const MAX_PREVIEW_WIDTH = 75;
+const THUMBNAIL_HEIGHT = 75;
 
 var debug = true;
 
@@ -87,6 +87,7 @@ function toggleCollapse() {
 	var buttonHandle = $('#collapseButton');
 	var secondButtonHandle = $('#secondCollapseButton');
 	var collapsableHandle = $("[id^=" + "collapsableEntry" + "]");
+
 	var numberOfVisibleEntries = 0;
 	$.each(collapsableHandle, function(index, value){
 		if($(value).attr("aria-expanded"))
@@ -155,6 +156,7 @@ function prepareSearchJSON(resultsPerPage, startDate, endDate, containingKeyword
 		console.log(endDate);
 		console.log(containingKeywords);
 	}
+	//todo: introduce patientID
 	var searchParams = {
 		size : resultsPerPage, // temp
 		//from : startingIndex, // TODO
@@ -242,6 +244,15 @@ function createPDF(timestamp, source) {
 	)		
 }
 
+//TODO: move into commons.js (once created) + use in getThumbnailWidth
+function gcd (a, b) {
+    return (b == 0) ? a : gcd (b, a%b);
+}
+
+function getThumbnailWidth(naturalHeight, naturalWidth) {
+	return THUMBNAIL_HEIGHT; // TEMP
+}
+
 function processResults(searchResult) {
 	
 	$('#secondCollapseButton').hide();
@@ -274,7 +285,7 @@ function processResults(searchResult) {
 
 		timelineEntry += '<div class="collapse in" id=collapsableEntry'+value._id+'>';   //TODO: INSERT id=something
 		timelineEntry += '<dd class="pos-right clearfix"><div class="circ"></div><div class="time">'+getShortMonth(exactDate.getMonth())+' '+exactDate.getDate()+'</div><div class="events">'; // circle with exact date on the side
-		timelineEntry += '<div class="pull-left"><a href='+imageSource+' data-toggle="lightbox"><img class="events-object img-rounded" "myImage" src='+imageSource+'></a></div>'; // TODO: REPLACE PLACEHOLDER IMAGE
+		timelineEntry += '<div class="pull-left"><a href='+imageSource+' data-toggle="lightbox"><img class="events-object img-rounded" src='+imageSource+' style="width:'+getThumbnailWidth(0,0)+'px;height:'+THUMBNAIL_HEIGHT+'px"></a></div>'; // TODO: REPLACE PLACEHOLDER IMAGE
 		
 
 		// timelineEntry += '<div class="pull-left"><img class="events-object img-rounded" src='+imageSource+'></div>'; // TODO: REPLACE PLACEHOLDER IMAGE
@@ -314,7 +325,7 @@ function processResults(searchResult) {
 	$('#collapseButton').show();
 	
 	if($('#numberResults').val()>2)
-	$('#secondCollapseButton').show();
+		$('#secondCollapseButton').show();
 	
 }
 
