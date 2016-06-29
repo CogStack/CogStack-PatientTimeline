@@ -6,8 +6,8 @@ TODO:
 - code cleanup + refactor
 - code documentation
 - divide this js into seperate ones with different functionalities
-- manage image resize (PARTIALLY done)
 */
+
 const SHORT_SNIPPET_LENGTH = 100;
 
 const LONG_SNIPPET_LENGTH = 1000;
@@ -277,9 +277,14 @@ function processResults(searchResult) {
 			presentMonths[monthYearNoSpaces] = true;
 		}
 
-		var imageSource = "img/Icon-Placeholder.png";
+		var imageSource =""
 
-		timelineEntry += '<div class="collapse in" id=collapsableEntry'+value._id+'>';   //TODO: INSERT id=something
+		if(value._source.thumbnail) 
+			imageSource = "img/thumbnail_placeholder.png"; // todo: replace with actual thumbnail when available
+		else
+			imageSource = "img/Icon-Placeholder.png";
+
+		timelineEntry += '<div class="collapse in" id=collapsableEntry'+value._id+'>';   
 		timelineEntry += '<dd class="pos-right clearfix"><div class="circ"></div><div class="time">'+getShortMonth(exactDate.getMonth())+' '+exactDate.getDate()+'</div><div class="events">'; // circle with exact date on the side
 		timelineEntry += '<div class="pull-left"><a href='+imageSource+' data-toggle="lightbox"><img class="events-object img-rounded" id=img'+value._id+' src='+imageSource+'></a></div>'; // TODO: REPLACE PLACEHOLDER IMAGE
 		
