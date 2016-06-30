@@ -54,11 +54,11 @@ function getShortMonth(num) {
 /** 
  * Get snippet of input text of specified length. It ensures words are not cut in the middle.
  * @example 
- * // returns "Lorem ipsum"
+ * // returns "Lorem ipsum..."
  * getSnippet("Lorem ipsum dolor sit amet", 8);
  * @param {String} text source text
  * @param {Number} length desired length of the text
- * @return {String} text shortened text
+ * @return {String} shortened text
  */
 function getSnippet(text, length) {
 	if (text.length < length)
