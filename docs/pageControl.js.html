@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: pageControl.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: pageControl.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @file Script file responsible for controlling main behaviour of the application
+ * @author Jedrzej Stuczynski
+ * @author Ali Aliyev 
+ */
+
+/**Constant specifying length of the initial text snippet*/
+const SHORT_SNIPPET_LENGTH = 100;
+
+/**Constant specifying length of the expanded text snippet*/
+const LONG_SNIPPET_LENGTH = 1000;
+
+/**Constant specifying height(in px) of small thumbnail/icon*/
+const THUMBNAIL_HEIGHT_SMALL = 75;
+
+/**Constant specifying height(in px) of medium thumbnail/icon*/
+const THUMBNAIL_HEIGHT_MEDIUM = 150;
+
+/**Constant specifying height(in px) of large thumbnail/icon*/
+const THUMBNAIL_HEIGHT_LARGE = 250;
+
+/**Variable responsible for toggling debug mode for printing debug messages to the console*/
+var debug = true;
+
+
+/**
+* Fired when the document is finished loading.
+* Responsible for settng initial components, such as hiding the timeline, collapse button, etc.
+* @function "$(document).ready"
+*/
+$(document).ready(function() {
+	$("#waitMessage").delay(100).fadeOut();
+	$(".timelineContainer").hide();
+	setFormProperties();
+	$("#collapseButton").hide();
+
+	/**Listener required by the lightbox library*/
+	$(document).delegate("*[data-toggle='lightbox']", "click", function(event) {
+	    event.preventDefault();
+	    $(this).ekkoLightbox();
+	}); 
+});
+
+/**
+ * Function called by $(document).ready. It is responsible for setting properties of the form,
+ * such as formatting of the input calendars as well as listeners for changes in them or return key press.
+ * @listens event:"keydown" on patientID (listens for return key press)
+ * @listens event:"keydown" on containingKeywords (listens for return key press)
+ * @listens event:"dp.change" on datePickerFrom (listens for changes in datePickerTo)
+ * @listens event:"dp.change" on datePickerTo (listens for changes in datePickerFrom)
+*/
+function setFormProperties() {
+	// Properties for the calendar for "from" date
+	$('#datePickerFrom').datetimepicker({
+		viewMode: 'years',
+		format: 'YYYY-MM-DD',
+		useCurrent: false,
+		defaultDate : new Date(0), // default displayed date: 1-1-1970 (user can still manually choose date before that)
+		maxDate : new Date(), // default maximum date: todays date
+		allowInputToggle : true // allows for displaying the calendar when the text box is clicked
+	});
+
+	// Properties for the calendar for "to" date
+	$('#datePickerTo').datetimepicker({
+		viewMode: 'years',
+		format: 'YYYY-MM-DD',
+	    defaultDate : new Date(), // default displayed date: todays date
+	    maxDate: new Date(), // default maximum date: todays date
+		allowInputToggle : true // allows for displaying the calendar when the text box is clicked
+	});
+
+	// When return key is pressed in the "containing" box, initialise search
+	$("#containingKeywords").on("keydown", function(e){
+		if (e.keyCode == 13) {
+			e.preventDefault();
+			$("#searchButton").click();
+		}
+	});
+
+	// When return key is pressed in the "patient ID" box, initialise search
+	$("#patientID").on("keydown", function(e){
+		if (e.keyCode == 13) {
+			e.preventDefault();
+			$("#searchButton").click();
+		}
+	});
+
+	// Ensures you can't set end date which is before the start date
+	$("#datePickerFrom").on("dp.change", function (e) {
+	    $('#datePickerTo').data("DateTimePicker").minDate(e.date);
+	});
+
+	// Ensures you can't set start date which is after the end date
+	$("#datePickerTo").on("dp.change", function (e) {
+	    $('#datePickerFrom').data("DateTimePicker").maxDate(e.date);
+	});
+}
+
+/**
+ * Cleans up the timeline before the search is initialiased; empties its content (if it contained any data) and hides unnecessary elements
+ */
+function clearTimeline() {
+	$("#timelineList").empty();
+	$('#collapseButton').hide();
+	$(".timelineContainer").hide();
+}
+
+/**
+ * Collapses or expands all populated timeline entries
+ */
+function toggleCollapse() {
+	var buttonHandle = $("#collapseButton");
+	var collapsableHandle = $("[id^=" + "collapsableEntry" + "]"); // looks for all elements with id beginning with "collapsableEntry"
+	var numberOfVisibleEntries = 0;
+
+	// calculates current number of expanded entries
+	$.each(collapsableHandle, function(index, value){
+		if($(value).attr("aria-expanded") == "true")
+			numberOfVisibleEntries += 1;  
+	});
+	
+	if(buttonHandle.text() == "Collapse all" &amp;&amp; numberOfVisibleEntries > 0) { // numberOfVisibleEntries ensures it won't try to collapse entries while there are no entries to collapse
+		collapsableHandle.collapse("hide");
+		buttonHandle.text('Expand all');
+	}
+	else {
+		collapsableHandle.collapse("show");
+		buttonHandle.text("Collapse all");
+	}
+}
+
+/**
+ * Displays the loading message when the results are being fetched
+ */
+function showLoading() {
+	$('#waitMessage').fadeIn(300);
+};
+
+/**
+ * Hides the loading messages after results are fetched
+ */
+function hideLoading() {
+    $("#waitMessage").fadeOut(300);
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#%2522$(document).ready%2522">"$(document).ready"</a></li><li><a href="global.html#clearTimeline">clearTimeline</a></li><li><a href="global.html#client">client</a></li><li><a href="global.html#createPDF">createPDF</a></li><li><a href="global.html#createTimelineEntry">createTimelineEntry</a></li><li><a href="global.html#createTimelineListeners">createTimelineListeners</a></li><li><a href="global.html#debug">debug</a></li><li><a href="global.html#getPatientID">getPatientID</a></li><li><a href="global.html#getShortMonth">getShortMonth</a></li><li><a href="global.html#getSnippet">getSnippet</a></li><li><a href="global.html#getThumbnailHeight">getThumbnailHeight</a></li><li><a href="global.html#getThumbnailWidth">getThumbnailWidth</a></li><li><a href="global.html#hideLoading">hideLoading</a></li><li><a href="global.html#LONG_SNIPPET_LENGTH">LONG_SNIPPET_LENGTH</a></li><li><a href="global.html#prepareESObject">prepareESObject</a></li><li><a href="global.html#prepareSearchData">prepareSearchData</a></li><li><a href="global.html#processResults">processResults</a></li><li><a href="global.html#searchForEntries">searchForEntries</a></li><li><a href="global.html#setFormProperties">setFormProperties</a></li><li><a href="global.html#SHORT_SNIPPET_LENGTH">SHORT_SNIPPET_LENGTH</a></li><li><a href="global.html#showLoading">showLoading</a></li><li><a href="global.html#startSearch">startSearch</a></li><li><a href="global.html#THUMBNAIL_HEIGHT_LARGE">THUMBNAIL_HEIGHT_LARGE</a></li><li><a href="global.html#THUMBNAIL_HEIGHT_MEDIUM">THUMBNAIL_HEIGHT_MEDIUM</a></li><li><a href="global.html#THUMBNAIL_HEIGHT_SMALL">THUMBNAIL_HEIGHT_SMALL</a></li><li><a href="global.html#toggleCollapse">toggleCollapse</a></li><li><a href="global.html#url">url</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Thu Jun 30 2016 14:22:43 GMT+0100 (GMT (czas letni))
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
