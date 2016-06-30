@@ -1,5 +1,11 @@
+/** 
+ * Create PDF of given text/document 
+ * @param {number} patientID - ID of patient
+ * @param {number} timestamp - timestamp used to save (name) the PDF file with
+ * @param {text} source - source of HTML string or DOM element reference
+ */
 function createPDF(patientID, timestamp, source) {
-	var pdf = new jsPDF('p', 'pt', 'a4');
+	var pdf = new jsPDF('p', 'pt', 'a4');  // create new jsPDF object
 	specialElementHandlers = {
 		'#bypassme': function(element, renderer) {
 			return true
@@ -18,6 +24,7 @@ function createPDF(patientID, timestamp, source) {
 	  		"width": margins.width, // max width of content on PDF 
 	  		"elementHandlers": specialElementHandlers
 	  	},
+		
 	  	function (dispose) {
 	  	// dispose: object with X, Y of the last line add to the PDF
 	  	//          this allow the insertion of new lines after html
@@ -30,6 +37,10 @@ function createPDF(patientID, timestamp, source) {
 	)		
 }
 
+/** 
+ * Process results on page with returned search results
+ * @param {number} searchResult - results of elastic search query
+ */
 function processResults(searchResult) {
 	$('#collapseButton').text("Collapse all");
 	
