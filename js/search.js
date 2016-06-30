@@ -1,12 +1,22 @@
+/**
+ * @file Script file responsible for controlling search behaviour of the application
+ * @author Jedrzej Stuczynski
+ * @author Ali Aliyev 
+ */
 
+/**Variable specifying the address of the ElasticSearch server*/
 var url = "http://timeline-silverash.rhcloud.com";
 
+/**ElasticSearch client definition*/
 var client = new $.es.Client({
 	host: url,
 	log: "info"
 });
 
-
+/**
+ * Function responsible for querrying the ElasticSearch server. It uses the provided ElasticSearch library for JavaScript to wrap AJAX functionalities
+ * @param {Object} searchParams Object specifying querry properties formatted in a way required by the ElasticSearch engine.
+ */
 function searchForEntries(searchParams) {
 	showLoading();
 	client.search(searchParams).then(function(response) {
@@ -20,6 +30,9 @@ function searchForEntries(searchParams) {
 	});
 }
 
+/** 
+ * Function initialising the search. If there are no valid search parameters, it does not commence the actual search.
+ */
 function startSearch() {
 	clearTimeline();
 	var searchParams = prepareSearchData();
@@ -29,8 +42,13 @@ function startSearch() {
 	}
 }
 
+/** 
+ * Wrapper for getting the ID of the patient which is inputted in the appropriate box.
+ * If its value is empty, it displays an error in the box
+ * @returns {Boolean|String} patientID (String) or false (Boolean) if it is empty
+ */
 function getPatientID() {
-	var patientID = $('#patientID').val();
+	var patientID = $("#patientID").val();
 	if(!patientID){
 		$("#patientIDBox").removeClass("form-group").addClass("form-group has-error has-feedback");
     	$("#patientIDSpan").addClass("glyphicon glyphicon-remove form-control-feedback");
@@ -38,30 +56,43 @@ function getPatientID() {
 	}
 	else {
 		$("#patientIDBox").removeClass("form-group has-error has-feedback").addClass("form-group");
-		$('#patientIDSpan').removeClass("glyphicon glyphicon-remove form-control-feedback");
+		$("#patientIDSpan").removeClass("glyphicon glyphicon-remove form-control-feedback");
     }
     return patientID;
 }
 
+/**
+ * Gets all the information from the form regarding the search conditions and passes it to prepareESObject function to create the related object
+ * @returns {Boolean|Object} Object with search properties (Object) or false (Boolean) if getPatientID() failed to get any data
+ */
 function prepareSearchData() {
 	var patientID = getPatientID();
 	if(!patientID)
 		return false;
 
-	var startDate = $('#datePickerFrom').data('date');
-	var endDate = $('#datePickerTo').data('date');
-	var resultsPerPage = $('#numberResults').val();
+	var startDate = $("#datePickerFrom").data("date");
+	var endDate = $("#datePickerTo").data("date");
+	var resultsPerPage = $("#numberResults").val();
 
 	var containingKeywords = "";
-	if($('#containingKeywords').val())
-		containingKeywords = $('#containingKeywords').val();
+	if($("#containingKeywords").val())
+		containingKeywords = $("#containingKeywords").val();
 
-	var searchProperties = prepareSearchJSON(patientID, resultsPerPage, startDate, endDate, containingKeywords)
+	var searchProperties = prepareESObject(patientID, resultsPerPage, startDate, endDate, containingKeywords)
 	return searchProperties;
 }
 
 
-function prepareSearchJSON(patientID, resultsPerPage, startDate, endDate, containingKeywords) {
+/**
+ * Creates Querry Object that is understood by the ElasticSearch Engine to querry for the related data
+ * @param {String} patientID ID of the patient being querried 
+ * @param {Number} resultsPerPage number of results to display per page
+ * @param {String} startDate starting date from which the documents should be fetched
+ * @param {String} endDate finishing date until which the documents should be fetched
+ * @param {String} containingKeywords keywords that must be included in any field in the documents
+ * @returns {Object} Object specyfing querry properties
+ */
+function prepareESObject(patientID, resultsPerPage, startDate, endDate, containingKeywords) {
 	startDate = new Date(startDate).getTime();
 	endDate = new Date(endDate).getTime();
 
@@ -95,6 +126,7 @@ function prepareSearchJSON(patientID, resultsPerPage, startDate, endDate, contai
 		}
 	}
 
+	// adds to the search conditions match for the keywords if the user inputted any. Otherwise this field is ignored
 	if(containingKeywords)
 		searchParams.body.query.bool.must.push({ match: {"_all" : containingKeywords}})
 
