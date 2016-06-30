@@ -14,8 +14,8 @@ var client = new $.es.Client({
 });
 
 /**
- * Function responsible for querrying the ElasticSearch server. It uses the provided ElasticSearch library for JavaScript to wrap AJAX functionalities
- * @param {Object} searchParams Object specifying querry properties formatted in a way required by the ElasticSearch engine.
+ * Function responsible for querying the ElasticSearch server. It uses the provided ElasticSearch library for JavaScript to wrap AJAX functionalities
+ * @param {Object} searchParams Object specifying query properties formatted in a way required by the ElasticSearch engine.
  */
 function searchForEntries(searchParams) {
 	showLoading();
@@ -84,13 +84,13 @@ function prepareSearchData() {
 
 
 /**
- * Creates Querry Object that is understood by the ElasticSearch Engine to querry for the related data
+ * Creates query Object that is understood by the ElasticSearch Engine to query for the related data
  * @param {String} patientID ID of the patient being querried 
  * @param {Number} resultsPerPage number of results to display per page
  * @param {String} startDate starting date from which the documents should be fetched
  * @param {String} endDate finishing date until which the documents should be fetched
  * @param {String} containingKeywords keywords that must be included in any field in the documents
- * @returns {Object} Object specyfing querry properties
+ * @returns {Object} Object specyfing query properties
  */
 function prepareESObject(patientID, resultsPerPage, startDate, endDate, containingKeywords) {
 	startDate = new Date(startDate).getTime();
