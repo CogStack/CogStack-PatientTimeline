@@ -121,8 +121,7 @@ function clearTimeline() {
 	$(".timelineContainer").hide();
 }
 
-function prepareSearchData()
-{
+function prepareSearchData() {
 	var startDate = $('#datePickerFrom').data('date');
 	var endDate = $('#datePickerTo').data('date');
 	var resultsPerPage = $('#numberResults').val();
