@@ -20,6 +20,7 @@ var client = new $.es.Client({
 function searchForEntries(searchParams) {
 	showLoading();
 	client.search(searchParams).then(function(response) {
+		setPagination(parseInt(searchParams.size) - 1,response.hits.hits.length)
 		processResults(response.hits.hits);
 		hideLoading();
 	}, function(jqXHR, textStatus, errorThrown) {
@@ -103,7 +104,7 @@ function prepareESObject(patientID, resultsPerPage, startDate, endDate, containi
 	}
 
 	var searchParams = {
-		size : resultsPerPage, // temp
+		size : parseInt(resultsPerPage) + 1, // temp
 		//from : startingIndex, // TODO
 		index : "mock", // temp
 		type : "doc", //temp
@@ -112,7 +113,7 @@ function prepareESObject(patientID, resultsPerPage, startDate, endDate, containi
 			query : {
 				bool : {
 					must : [
-						{term : {brcid : patientID} },
+						// {term : {brcid : patientID} },
 						{range:	{
 							created : {
 								"gte" : startDate,

@@ -4,18 +4,6 @@
 //TESTING STUFF:
 $(document).ready(function() {
 
-	// $(".pagination").find(".page-item.active").removeClass("active").next().addClass("active");
-
-	//  var currentActiveHandle = $(".pagination").find(".page-item.active");
-	//  window.alert(currentActiveHandle.text());
-
-
-	// $(".pagination li.page-item.active").on("click",function(){
-
-	// 	window.alert($(".pagination li.page-item.active sr-only").text());
-	// });
-
-
 	$.each($(".pagination li.page-item"), function(index, value) {
 		$(this).on("click", function() {
 			if($(this)[0].id != "nextPage" && $(this)[0].id != "prevPage")
@@ -44,6 +32,20 @@ $(document).ready(function() {
 
 });
 
+function addPage() {
+	var lastPageHandle = $(".pagination li.page-item").last().prev();
+	var pageNumber = parseInt(lastPageHandle.text()) + 1;
+
+	var pageElement = "<li class='page-item' id='page" + pageNumber + "'><a class='page-link' href='#' onClick='return false;'>" + pageNumber + "</a></li>"
+
+	$(lastPageHandle).after(pageElement);	
+
+	$("#page"+pageNumber).on("click", function() {
+		gotoPage(this);
+	});
+}
+
+
 function checkPrevButton(targetPage) {
 	var prevPageHandle = $("#prevPage");
 	if($(prevPageHandle).hasClass("disabled") && targetPage > 1) {
@@ -58,7 +60,17 @@ function checkPrevButton(targetPage) {
 
 }
 
-//TODO: make sure page doesnt go negative/above limit; handle "next/prev" buttons
+function setPagination(resultsPerPage, entriesFound) {
+	if(resultsPerPage < entriesFound) {
+
+		if(debug)
+			console.log("need more than 1 page");
+	}
+
+	console.log(resultsPerPage);
+	console.log(entriesFound);
+}
+
 function previousPage() {
 	var currentPageHandle = $(".pagination").find("li.page-item.active");
 	if(currentPageHandle.text() == 1)
@@ -90,5 +102,4 @@ function gotoPage(targetPage) {
 	currentPageHandle.removeClass("active");
 	$(targetPage).addClass("active");
 	checkPrevButton($(targetPage).text());
-
 }
