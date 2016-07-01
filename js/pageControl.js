@@ -39,6 +39,16 @@ $(document).ready(function() {
 	    event.preventDefault();
 	    $(this).ekkoLightbox();
 	}); 
+	
+	$(function(){
+		$("input:radio[name ='thumbnailSize']").change(function(){
+			var thumbIconHandles = $("[id^=" + "thumbIcon" + "]"); 
+			$.each(thumbIconHandles, function(index, img) {
+				$(img).load();
+			});
+		});
+	});
+	
 });
 
 /**

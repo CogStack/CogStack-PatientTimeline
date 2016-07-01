@@ -52,6 +52,9 @@ function getPatientID() {
 	var patientID = $("#patientID").val();
 	if(!patientID){
 		$("#patientIDBox").removeClass("form-group").addClass("form-group has-error has-feedback");
+		
+		// $("#patientID").popover({title: 'Please enter patient ID'});
+		
     	$("#patientIDSpan").addClass("glyphicon glyphicon-remove form-control-feedback");
 		return false;
 	}
