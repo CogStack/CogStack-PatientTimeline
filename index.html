@@ -27,6 +27,7 @@
     <script src="js/search.js"></script>
     <script src="js/auxiliary.js"></script>
     <script src="js/resultProcessing.js"></script>
+    <script src="js/pagination.js"></script>
 
   </head>
   <body>
@@ -113,29 +114,28 @@
 		<div class="pwmodal-container">Please wait...</div>
 	</div>
 
-	<!-- <nav>
-		<center>
+
+		<div class="text-center">
 		  <ul class="pagination">
-		    <li class="page-item disabled">
+		    <li class="page-item disabled" id="prevPage">
 		      <a class="page-link" href="#" aria-label="Previous">
 		        <span aria-hidden="true">&laquo;</span>
 		        <span class="sr-only">Previous</span>
 		      </a>
 		    </li>
-		    <li class="page-item active">
-		      <a class="page-link" href="#">1 <span class="sr-only">(current)</span></a>
-		    </li>
+		    <li class="page-item active"><a class="page-link" href="#">1</a></li>
 		    <li class="page-item"><a class="page-link" href="#">2</a></li>
 		    <li class="page-item"><a class="page-link" href="#">3</a></li>
-		    <li class="page-item">
+		    <li class="page-item" id="nextPage">
 		      <a class="page-link" href="#" aria-label="Next">
 		        <span aria-hidden="true">&raquo;</span>
 		        <span class="sr-only">Next</span>
 		      </a>
 		    </li>
 		  </ul>
-	  </center>
-	</nav> -->
+	  </div>
+
+
 	<div class="siteContainer">
 		<div class="timelineContainer">
 		  <div class="timeline">
