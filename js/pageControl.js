@@ -22,12 +22,12 @@ const THUMBNAIL_HEIGHT_LARGE = 250;
 /**Variable responsible for toggling debug mode for printing debug messages to the console*/
 var debug = true;
 
+
 /**
 * Fired when the document is finished loading.
 * Responsible for settng initial components, such as hiding the timeline, collapse button, etc.
 * @function "$(document).ready"
 */
-
 $(document).ready(function() {
 	$("#waitMessage").delay(100).fadeOut();
 	$(".timelineContainer").hide();
@@ -39,15 +39,6 @@ $(document).ready(function() {
 	    event.preventDefault();
 	    $(this).ekkoLightbox();
 	}); 
-	
-	$(function(){
-		$("input:radio[name ='thumbnailSize']").change(function(){
-			var thumbIconHandles = $("[id^=" + "thumbIcon" + "]"); 
-			$.each(thumbIconHandles, function(index, img) {
-				$(img).load();
-			});
-		});
-	});
 });
 
 /**
