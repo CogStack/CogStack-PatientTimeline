@@ -153,6 +153,8 @@ function processResults(searchResult) {
 	var presentMonths = {};
 
 	$.each(searchResult, function(index, value) {
+		if(index == searchResult.length-1)
+			return true;
 		presentMonths = createTimelineEntry(value, presentMonths);
 	});
 

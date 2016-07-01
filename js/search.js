@@ -20,23 +20,23 @@ var client = new $.es.Client({
 function searchForEntries(searchParams) {
 	showLoading();
 	client.search(searchParams).then(function(response) {
-		setPagination(parseInt(searchParams.size) - 1,response.hits.hits.length)
+		setPagination(parseInt(searchParams.size) - 1, searchParams.from, response.hits.hits.length)
 		processResults(response.hits.hits);
-		hideLoading();
 	}, function(jqXHR, textStatus, errorThrown) {
 		if(debug) {
 			console.log(textStatus);
 			console.log(errorThrown);
 		}
 	});
+	hideLoading();
 }
 
 /** 
  * Function initialising the search. If there are no valid search parameters, it does not commence the actual search.
  */
-function startSearch() {
+function startSearch(startingIndex = 0) {
 	clearTimeline();
-	var searchParams = prepareSearchData();
+	var searchParams = prepareSearchData(startingIndex);
 	if(searchParams) {
 		$(".timelineContainer").show();
 		searchForEntries(searchParams);	
@@ -52,9 +52,6 @@ function getPatientID() {
 	var patientID = $("#patientID").val();
 	if(!patientID){
 		$("#patientIDBox").removeClass("form-group").addClass("form-group has-error has-feedback");
-		
-		// $("#patientID").popover({title: 'Please enter patient ID'});
-		
     	$("#patientIDSpan").addClass("glyphicon glyphicon-remove form-control-feedback");
 		return false;
 	}
@@ -69,7 +66,7 @@ function getPatientID() {
  * Gets all the information from the form regarding the search conditions and passes it to prepareESObject function to create the related object
  * @returns {Boolean|Object} Object with search properties (Object) or false (Boolean) if getPatientID() failed to get any data
  */
-function prepareSearchData() {
+function prepareSearchData(startingIndex = 0) {
 	var patientID = getPatientID();
 	if(!patientID)
 		return false;
@@ -82,7 +79,7 @@ function prepareSearchData() {
 	if($("#containingKeywords").val())
 		containingKeywords = $("#containingKeywords").val();
 
-	var searchProperties = prepareESObject(patientID, resultsPerPage, startDate, endDate, containingKeywords)
+	var searchProperties = prepareESObject(patientID, resultsPerPage, startingIndex, startDate, endDate, containingKeywords)
 	return searchProperties;
 }
 
@@ -96,7 +93,7 @@ function prepareSearchData() {
  * @param {String} containingKeywords keywords that must be included in any field in the documents
  * @returns {Object} Object specyfing query properties
  */
-function prepareESObject(patientID, resultsPerPage, startDate, endDate, containingKeywords) {
+function prepareESObject(patientID, resultsPerPage, startingIndex, startDate, endDate, containingKeywords) {
 	startDate = new Date(startDate).getTime();
 	endDate = new Date(endDate).getTime();
 
@@ -108,7 +105,7 @@ function prepareESObject(patientID, resultsPerPage, startDate, endDate, containi
 
 	var searchParams = {
 		size : parseInt(resultsPerPage) + 1, // temp
-		//from : startingIndex, // TODO
+		from : startingIndex, // TODO
 		index : "mock", // temp
 		type : "doc", //temp
 		body : {

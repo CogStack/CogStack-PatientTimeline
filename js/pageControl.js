@@ -39,7 +39,7 @@ $(document).ready(function() {
 	    event.preventDefault();
 	    $(this).ekkoLightbox();
 	}); 
-	
+
 	$(function(){
 		$("input:radio[name ='thumbnailSize']").change(function(){
 			var thumbIconHandles = $("[id^=" + "thumbIcon" + "]"); 
@@ -48,7 +48,6 @@ $(document).ready(function() {
 			});
 		});
 	});
-	
 });
 
 /**
