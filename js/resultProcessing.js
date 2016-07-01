@@ -74,7 +74,7 @@ function createTimelineEntry(value, presentMonths) {
 
 	timelineEntry += "<div class='collapse in' aria-expanded=true id=collapsableEntry" + value._id + ">";   
 	timelineEntry += "<dd class='pos-right clearfix'><div class='circ'></div><div class='time'>" + getShortMonth(exactDate.getMonth()) + " " + exactDate.getDate() + "</div><div class='events'>"; // circle with exact date on the side
-	timelineEntry += "<div class='pull-left'><a href=" + imageSource + " data-toggle='lightbox'><img class='events-object img-rounded' id=img" + value._id + " src=" + imageSource + "></a></div><div class='events-body' id='entry" + value._id + "''>"; // TODO: REPLACE PLACEHOLDER IMAGE
+	timelineEntry += "<div class='pull-left'><a href=" + imageSource + " data-toggle='lightbox'><img class='events-object img-rounded' id=thumbIcon" + value._id + " src=" + imageSource + "></a></div><div class='events-body' id='entry" + value._id + "''>"; // TODO: REPLACE PLACEHOLDER IMAGE
 	timelineEntry += "<div class='help-tip'><p>Double click to expand/minimize the text</p></div>";   
     //timelineEntry += '<h4 class="events-heading">Sample Document</h4>'; // heading
 	timelineEntry += "<p style='width:90%' id=text" + value._id + ">" + shortTextSnippet + "</p>"; // BODY
@@ -125,7 +125,7 @@ function createTimelineListeners(value, shortTextSnippet, longTextSnippet, pdfTi
 	});
 
 	// when thumbnails are loaded, they are resized to target size
-	$("#img"+value._id).load(function(){
+	$("#thumbIcon"+value._id).load(function(){
 		var imageHeight = $(this).height();
 		var imageWidth = $(this).width();
 		var targetThumbnailHeight = getThumbnailHeight();
