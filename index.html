@@ -12,6 +12,7 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css" />
 	<link rel="stylesheet" type="text/css" href="css/ekko-lightbox.min.css" />
 	<link rel="stylesheet" type="text/css" href="css/loading-animation.min.css" />
+	<link href="css/bootstrap-slider.css" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="css/main.css" />
 
 
@@ -29,8 +30,11 @@
     <script src="js/auxiliary.js"></script>
     <script src="js/resultProcessing.js"></script>
     <script src="js/pagination.js"></script>
-
+	<script src="js/bootstrap-slider.js"></script>
+    
+ 	
   </head>
+  
   <body>
   
     <div class="container">
@@ -92,15 +96,20 @@
             </div>
 			
 			<div class="col-md-5">
-	            <div class="radioContainer" id="radioContainer">
-	                <label for radioContainer">Thumbnail Size:   </label>
+			<div class="radioContainer" id="radioContainer">
+			<label for radioContainer">Thumbnail Size:   </label>
+				<!--           
 		            <label class="radio-inline"><input type="radio" value="small" name="thumbnailSize"checked >Small </label>
 					<label class="radio-inline"><input type="radio" value="medium" name="thumbnailSize">Medium </label>
 					<label class="radio-inline"><input type="radio" value="large" name="thumbnailSize">Large </label>
-				</div>
+				-->
+			
+				<!-- <div id="slider"></div> -->
+
+            </div>				
 			</div>
-
-
+			
+			
 		    <div class='col-md-10'>
 			<label for="searchButton">&nbsp;</label>
 			    <br><button type="button" class="btn btn-primary" id="searchButton" onclick="startSearch()">Search Documents</button>
@@ -165,7 +174,6 @@
 	    <div style='top:80px;left:93px;width:14px;height:40px;background:#00b2ff;-webkit-transform:rotate(270deg) translate(0,-60px);transform:rotate(270deg) translate(0,-60px);border-radius:10px;position:absolute;'></div>
 	    <div style='top:80px;left:93px;width:14px;height:40px;background:#00b2ff;-webkit-transform:rotate(300deg) translate(0,-60px);transform:rotate(300deg) translate(0,-60px);border-radius:10px;position:absolute;'></div>
 	    <div style='top:80px;left:93px;width:14px;height:40px;background:#00b2ff;-webkit-transform:rotate(330deg) translate(0,-60px);transform:rotate(330deg) translate(0,-60px);border-radius:10px;position:absolute;'></div></div>
-	</div>
-
+	</div>	
   </body>
 </html>

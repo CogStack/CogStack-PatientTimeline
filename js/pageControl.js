@@ -61,6 +61,20 @@ $(document).ready(function() {
 		if(!($(this).hasClass("disabled")))
 			changePage.previousPage();
 	});
+	
+ // $(function() {
+ //  $( "#slider" ).slider();
+ //	step: 5
+ // });
+  
+  // With JQuery
+$('#ex1').slider({
+	step: 0.1, min: 0.1, max: 1.5,
+	formatter: function(value) {
+		return 'Current value: ' + value;
+	}
+});
+
 
 });
 
@@ -164,3 +178,4 @@ function showLoading() {
 function hideLoading() {
     $("#waitMessage").fadeOut(300);
 }
+
