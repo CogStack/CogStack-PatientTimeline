@@ -11,13 +11,13 @@ const SHORT_SNIPPET_LENGTH = 100;
 const LONG_SNIPPET_LENGTH = 1000;
 
 /**Constant specifying height(in px) of small thumbnail/icon*/
-const THUMBNAIL_HEIGHT_SMALL = 75;
+const THUMBNAIL_HEIGHT_SMALL = 125;
 
 /**Constant specifying height(in px) of medium thumbnail/icon*/
-const THUMBNAIL_HEIGHT_MEDIUM = 150;
+const THUMBNAIL_HEIGHT_MEDIUM = 250;
 
 /**Constant specifying height(in px) of large thumbnail/icon*/
-const THUMBNAIL_HEIGHT_LARGE = 250;
+const THUMBNAIL_HEIGHT_LARGE = 375;
 
 /**Variable responsible for toggling debug mode for printing debug messages to the console*/
 var debug = true;

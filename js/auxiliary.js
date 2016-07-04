@@ -71,6 +71,7 @@ function getSnippet(text, length) {
 	}
 	else {
 		console.log("returning substring");
-		return text.substring(1,length)+"...";
+		var bodyLocation = text.indexOf("<body>") + 6;
+		return text.substring(bodyLocation,bodyLocation+length)+"...";
 	}
 }

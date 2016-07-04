@@ -84,7 +84,7 @@ function createTimelineEntry(value, presentMonths) {
 	timelineEntry += "<div class='help-tip'><p>Double click to expand/minimize the text</p></div>";   
     //timelineEntry += '<h4 class="events-heading">Sample Document</h4>'; // heading
 	timelineEntry += "<p style='width:90%' id=text" + value._id + ">" + shortTextSnippet + "</p>"; // BODY
-	timelineEntry += "<a href='" + PDFSource + "' id=PDF" + value._id + ">Download Full PDF</a>";
+	timelineEntry += "<a href='" + PDFSource + "'class='btn btn-info' role='button' target='_blank' id=PDF" + value._id + ">Download Full PDF</a>";
 	timelineEntry += "</div></div></div></dd>"; // closing tags
 
 	$("#timelineList").append(timelineEntry);
