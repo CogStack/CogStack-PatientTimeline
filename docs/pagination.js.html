@@ -1,4 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: pagination.js</title>
 
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: pagination.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>
 
 /**Constant specifying maximum number of visible pagination pages*/
 const MAX_VISIBLE_PAGES = 3;
@@ -44,7 +72,7 @@ function addNewPageEnd() {
 	var lastPageHandle = $(".pagination li.page-item").last().prev();
 	var pageNumber = parseInt(lastPageHandle.text()) + 1;
 
-	var pageElement = "<li class='page-item' id='page" + pageNumber + "'><a class='page-link' href='#' onClick='return false;'>" + pageNumber + "</a></li>"
+	var pageElement = "&lt;li class='page-item' id='page" + pageNumber + "'>&lt;a class='page-link' href='#' onClick='return false;'>" + pageNumber + "&lt;/a>&lt;/li>"
 
 	$(lastPageHandle).after(pageElement);	
 
@@ -63,13 +91,13 @@ function addNewPageStart() {
 	var firstPageHandle = $(".pagination li.page-item").first();
 	var pageNumber;
 
-	//Checks if the currently displayed pagination isn't: " << 1 >> "
+	//Checks if the currently displayed pagination isn't: " &lt;&lt; 1 >> "
 	if(firstPageHandle.next()[0].id != "nextPage")
 		pageNumber = parseInt(firstPageHandle.next().text()) - 1;
 	else
 		pageNumber = 1;
 
-	var pageElement = "<li class='page-item' id='page" + pageNumber + "'><a class='page-link' href='#' onClick='return false;'>" + pageNumber + "</a></li>"
+	var pageElement = "&lt;li class='page-item' id='page" + pageNumber + "'>&lt;a class='page-link' href='#' onClick='return false;'>" + pageNumber + "&lt;/a>&lt;/li>"
 	$(firstPageHandle).after(pageElement);	
 
 	$("#page"+pageNumber).on("click", function() {
@@ -86,12 +114,12 @@ function addNewPageStart() {
  */
 function checkPrevButton(targetPage) {
 	var prevPageHandle = $("#prevPage");
-	if($(prevPageHandle).hasClass("disabled") && targetPage > 1) {
+	if($(prevPageHandle).hasClass("disabled") &amp;&amp; targetPage > 1) {
 		$(prevPageHandle).removeClass("disabled");
 		return;
 	}
 
-	if(!($(prevPageHandle).hasClass("disabled")) && targetPage == 1) {
+	if(!($(prevPageHandle).hasClass("disabled")) &amp;&amp; targetPage == 1) {
 		$(prevPageHandle).addClass("disabled");
 		return;
 	}
@@ -105,12 +133,12 @@ function checkNextButton(targetPage) {
 	var nextPageHandle = $("#nextPage");
 	var lastPageValue = $(".pagination li.page-item").last().prev().text();
 
-	if($(nextPageHandle).hasClass("disabled") && targetPage <= lastPageValue) {
+	if($(nextPageHandle).hasClass("disabled") &amp;&amp; targetPage &lt;= lastPageValue) {
 		$(nextPageHandle).removeClass("disabled");
 		return;
 	}
 
-	if(!($(nextPageHandle).hasClass("disabled")) && targetPage == lastPageValue) {
+	if(!($(nextPageHandle).hasClass("disabled")) &amp;&amp; targetPage == lastPageValue) {
 		$(nextPageHandle).addClass("disabled");
 		return;
 	}
@@ -192,7 +220,7 @@ var changePage = {
 function recreatePagination(startingPage = 1) {
 	var exists = false;
 	$.each($(".pagination li.page-item"), function(index, value) {
-		if($(value)[0].id != "nextPage" && $(value)[0].id != "prevPage")
+		if($(value)[0].id != "nextPage" &amp;&amp; $(value)[0].id != "prevPage")
 			if($(value)[0].id == startingPage) {
 				exists = true
 				return true;
@@ -204,7 +232,7 @@ function recreatePagination(startingPage = 1) {
 	checkPrevButton(startingPage);
 
 	if(!exists){
-		var firstPage = "<li class='page-item active' id='page" + startingPage + "'><a class='page-link' href='#' onClick='return false;'>" + startingPage +"</a></li>"
+		var firstPage = "&lt;li class='page-item active' id='page" + startingPage + "'>&lt;a class='page-link' href='#' onClick='return false;'>" + startingPage +"&lt;/a>&lt;/li>"
 		$("#prevPage").after(firstPage);
 		$("#page"+startingPage).on("click", function() {
 			changePage.gotoPage(this);
@@ -226,7 +254,7 @@ function setPagination(resultsPerPage, startingIndex, numberOfEntriesFound) {
 	recreatePagination(startingPage);
 	changePage.startingIndex = startingIndex;
 	changePage.resultsPerPage = resultsPerPage;
-	if(resultsPerPage < numberOfEntriesFound) {
+	if(resultsPerPage &lt; numberOfEntriesFound) {
 		addNewPageEnd();
 		$("#nextPage").removeClass("disabled");
 	}
@@ -235,4 +263,26 @@ function setPagination(resultsPerPage, startingIndex, numberOfEntriesFound) {
 		console.log(resultsPerPage);
 		console.log(numberOfEntriesFound);
 	}
-}
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="changePage.html">changePage</a></li></ul><h3>Global</h3><ul><li><a href="global.html#%2522$(document).ready%2522">"$(document).ready"</a></li><li><a href="global.html#addNewPageEnd">addNewPageEnd</a></li><li><a href="global.html#addNewPageStart">addNewPageStart</a></li><li><a href="global.html#checkNextButton">checkNextButton</a></li><li><a href="global.html#checkPrevButton">checkPrevButton</a></li><li><a href="global.html#clearTimeline">clearTimeline</a></li><li><a href="global.html#client">client</a></li><li><a href="global.html#createPDF">createPDF</a></li><li><a href="global.html#createTimelineEntry">createTimelineEntry</a></li><li><a href="global.html#createTimelineListeners">createTimelineListeners</a></li><li><a href="global.html#debug">debug</a></li><li><a href="global.html#getCurrentActivePage">getCurrentActivePage</a></li><li><a href="global.html#getPatientID">getPatientID</a></li><li><a href="global.html#getShortMonth">getShortMonth</a></li><li><a href="global.html#getSnippet">getSnippet</a></li><li><a href="global.html#getThumbnailHeight">getThumbnailHeight</a></li><li><a href="global.html#getThumbnailWidth">getThumbnailWidth</a></li><li><a href="global.html#hideLoading">hideLoading</a></li><li><a href="global.html#LONG_SNIPPET_LENGTH">LONG_SNIPPET_LENGTH</a></li><li><a href="global.html#MAX_VISIBLE_PAGES">MAX_VISIBLE_PAGES</a></li><li><a href="global.html#prepareESObject">prepareESObject</a></li><li><a href="global.html#prepareSearchData">prepareSearchData</a></li><li><a href="global.html#processResults">processResults</a></li><li><a href="global.html#recreatePagination">recreatePagination</a></li><li><a href="global.html#removeFirstPage">removeFirstPage</a></li><li><a href="global.html#removeLastPage">removeLastPage</a></li><li><a href="global.html#searchForEntries">searchForEntries</a></li><li><a href="global.html#setFormProperties">setFormProperties</a></li><li><a href="global.html#setNewActivePage">setNewActivePage</a></li><li><a href="global.html#setPagination">setPagination</a></li><li><a href="global.html#SHORT_SNIPPET_LENGTH">SHORT_SNIPPET_LENGTH</a></li><li><a href="global.html#showLoading">showLoading</a></li><li><a href="global.html#startSearch">startSearch</a></li><li><a href="global.html#THUMBNAIL_HEIGHT_LARGE">THUMBNAIL_HEIGHT_LARGE</a></li><li><a href="global.html#THUMBNAIL_HEIGHT_MEDIUM">THUMBNAIL_HEIGHT_MEDIUM</a></li><li><a href="global.html#THUMBNAIL_HEIGHT_SMALL">THUMBNAIL_HEIGHT_SMALL</a></li><li><a href="global.html#toggleCollapse">toggleCollapse</a></li><li><a href="global.html#url">url</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Mon Jul 04 2016 10:15:28 GMT+0100 (GMT (czas letni))
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

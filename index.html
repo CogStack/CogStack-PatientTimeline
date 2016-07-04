@@ -74,12 +74,11 @@
 		
             <div class='col-md-5'>
 		        <div class="form-group">
-			         <label for="numberResults">Number of Results to Display:</label>
+			         <label for="numberResults">Number of Results per Page:</label>
 			         <select class="form-control" id="numberResults">
-				           <option>1</option>
-				           <option>2</option>
 				           <option>5</option>
 				           <option>10</option>
+				           <option>20</option>
 				           <option>50</option>
 			          </select>
 		         </div>
@@ -117,7 +116,41 @@
 	</div>
     -->
 
- <div class="pwmodal-bg" id="waitMessage">
+
+
+	<div class="paginationContainer">
+		<div class="text-center">
+			<ul class="pagination">
+				<li class="page-item disabled" id="prevPage">
+					<a class="page-link" href="#" onClick="return false;" aria-label="Previous">
+						<span aria-hidden="true">&laquo;</span>
+						<span class="sr-only">Previous</span>
+					</a>
+				</li>
+				<li class="page-item active" id='page1'>
+					<a class="page-link" href="#" onClick="return false;">1</a>
+				</li>
+				<li class="page-item disabled" id="nextPage">
+					<a class="page-link" href="#" onClick="return false;" aria-label="Next">
+						<span aria-hidden="true">&raquo;</span>
+						<span class="sr-only">Next</span>
+					</a>
+				</li>
+			</ul>
+		</div>
+		<div class="siteContainer">
+			<div class="timelineContainer">
+			  <div class="timeline">
+			  	<button type="button" class="btn btn-secondary btn-sm" id="collapseButton" onclick="toggleCollapse()">Collapse all</button>
+			    <dl id=timelineList>
+			    </dl>
+			  </div>
+			</div>
+		</div>
+	</div>
+
+
+	 <div class="pwmodal-bg" id="waitMessage">
         <div class="pwmodal-container">Please wait...</div>
 	    <div class='uil-default-css' style='transform:scale(0.3);'>
 	    <div style='top:80px;left:93px;width:14px;height:40px;background:#00b2ff;-webkit-transform:rotate(0deg) translate(0,-60px);transform:rotate(0deg) translate(0,-60px);border-radius:10px;position:absolute;'></div>
@@ -133,34 +166,6 @@
 	    <div style='top:80px;left:93px;width:14px;height:40px;background:#00b2ff;-webkit-transform:rotate(300deg) translate(0,-60px);transform:rotate(300deg) translate(0,-60px);border-radius:10px;position:absolute;'></div>
 	    <div style='top:80px;left:93px;width:14px;height:40px;background:#00b2ff;-webkit-transform:rotate(330deg) translate(0,-60px);transform:rotate(330deg) translate(0,-60px);border-radius:10px;position:absolute;'></div></div>
 	</div>
-	
-	<div class="text-center">
-		  <ul class="pagination">
-		    <li class="page-item disabled" id="prevPage">
-		      <a class="page-link" href="#" onClick="return false;" aria-label="Previous">
-		        <span aria-hidden="true">&laquo;</span>
-		        <span class="sr-only">Previous</span>
-		      </a>
-		    </li>
-		    <li class="page-item active" id='page1'><a class="page-link" href="#" onClick="return false;">1</a></li>
-		    <li class="page-item disabled" id="nextPage">
-		      <a class="page-link" href="#" onClick="return false;" aria-label="Next">
-		        <span aria-hidden="true">&raquo;</span>
-		        <span class="sr-only">Next</span>
-		      </a>
-		    </li>
-		  </ul>
-	  </div>
 
-
-	<div class="siteContainer">
-		<div class="timelineContainer">
-		  <div class="timeline">
-		  	<button type="button" class="btn btn-secondary btn-sm" id="collapseButton" onclick="toggleCollapse()">Collapse all</button>
-		    <dl id=timelineList>
-		    </dl>
-		  </div>
-		</div>
-	</div>
   </body>
 </html>

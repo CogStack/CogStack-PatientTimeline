@@ -139,7 +139,7 @@ function createTimelineListeners(value, shortTextSnippet, longTextSnippet, pdfTi
  * Using the search results it generates and populates timeline entries
  * @param {Object} searchResult results of the ElasticSearch query
  */
-function processResults(searchResult) {
+function processResults(searchResult, size) {
 	$("#collapseButton").text("Collapse all");
 	
 	if(debug) 
@@ -153,7 +153,7 @@ function processResults(searchResult) {
 	var presentMonths = {};
 
 	$.each(searchResult, function(index, value) {
-		if(index == searchResult.length-1)
+		if((index == searchResult.length - 1) && (searchResult.length == size))
 			return true;
 		presentMonths = createTimelineEntry(value, presentMonths);
 	});
@@ -162,5 +162,5 @@ function processResults(searchResult) {
 		console.log(presentMonths)
 
 	if(!($.isEmptyObject(searchResult)))
-		$("#collapseButton").show();
+		$(".paginationContainer").show();
 }

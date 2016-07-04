@@ -30,9 +30,8 @@ var debug = true;
 */
 $(document).ready(function() {
 	$("#waitMessage").delay(100).fadeOut();
-	$(".timelineContainer").hide();
+	$(".paginationContainer").hide();
 	setFormProperties();
-	$("#collapseButton").hide();
 
 	/**Listener required by the lightbox library*/
 	$(document).delegate("*[data-toggle='lightbox']", "click", function(event) {
@@ -48,6 +47,21 @@ $(document).ready(function() {
 			});
 		});
 	});
+
+	/**Listener for the next-page button*/
+	$("#nextPage").on("click", function(e){
+		e.preventDefault();
+		if(!($(this).hasClass("disabled")))
+			changePage.nextPage();
+	});
+
+	/**Listener for the next-page button*/
+	$("#prevPage").on("click", function(e){
+		e.preventDefault();
+		if(!($(this).hasClass("disabled")))
+			changePage.previousPage();
+	});
+
 });
 
 /**
@@ -110,8 +124,7 @@ function setFormProperties() {
  */
 function clearTimeline() {
 	$("#timelineList").empty();
-	$('#collapseButton').hide();
-	$(".timelineContainer").hide();
+	$(".paginationContainer").hide();
 }
 
 /**

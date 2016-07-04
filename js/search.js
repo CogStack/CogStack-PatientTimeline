@@ -21,7 +21,7 @@ function searchForEntries(searchParams) {
 	showLoading();
 	client.search(searchParams).then(function(response) {
 		setPagination(parseInt(searchParams.size) - 1, searchParams.from, response.hits.hits.length)
-		processResults(response.hits.hits);
+		processResults(response.hits.hits, searchParams.size);
 	}, function(jqXHR, textStatus, errorThrown) {
 		if(debug) {
 			console.log(textStatus);
@@ -38,7 +38,7 @@ function startSearch(startingIndex = 0) {
 	clearTimeline();
 	var searchParams = prepareSearchData(startingIndex);
 	if(searchParams) {
-		$(".timelineContainer").show();
+		$(".paginationContainer").show();
 		searchForEntries(searchParams);	
 	}
 }

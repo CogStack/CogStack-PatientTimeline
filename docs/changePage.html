@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Home</title>
+    <title>JSDoc: Namespace: changePage</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,35 +17,9 @@
 
 <div id="main">
 
-    <h1 class="page-title">Home</h1>
+    <h1 class="page-title">Namespace: changePage</h1>
 
     
-
-
-
-    
-
-
-    <h3> </h3>
-
-
-
-
-
-
-
-
-
-
-    
-
-
-
-
-
-
-
-
 
 
 
@@ -54,7 +28,7 @@
 
 <header>
     
-        <h2>auxiliary.js</h2>
+        <h2>changePage</h2>
         
     
 </header>
@@ -63,7 +37,7 @@
     <div class="container-overview">
     
         
-            <div class="description">Script file providing auxiliary functionalities for the search and processing</div>
+            <div class="description">Handles going to previous page, next page and to a specific page.</div>
         
 
         
@@ -88,15 +62,6 @@
     
 
     
-    <dt class="tag-author">Author:</dt>
-    <dd class="tag-author">
-        <ul>
-            <li>Jedrzej Stuczynski</li>
-        
-            <li>Ali Aliyev</li>
-        </ul>
-    </dd>
-    
 
     
 
@@ -107,7 +72,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="auxiliary.js.html">auxiliary.js</a>, <a href="auxiliary.js.html#line1">line 1</a>
+        <a href="pagination.js.html">pagination.js</a>, <a href="pagination.js.html#line120">line 120</a>
     </li></ul></dd>
     
 
@@ -134,39 +99,23 @@
     
 
     
-
-    
-
-    
-
-    
-</article>
-
-</section>
-
-
-
-
-
-
-
-<section>
-
-<header>
-    
-        <h2>pageControl.js</h2>
-        
-    
-</header>
-
-<article>
-    <div class="container-overview">
-    
-        
-            <div class="description">Script file responsible for controlling main behaviour of the application</div>
-        
+        <h3 class="subsection-title">Members</h3>
 
         
+            
+<h4 class="name" id=".startingIndex"><span class="type-signature">(static) </span>startingIndex<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    Index of the first visible page
+</div>
+
+
+
+
+
 
 
 <dl class="details">
@@ -188,15 +137,6 @@
     
 
     
-    <dt class="tag-author">Author:</dt>
-    <dd class="tag-author">
-        <ul>
-            <li>Jedrzej Stuczynski</li>
-        
-            <li>Ali Aliyev</li>
-        </ul>
-    </dd>
-    
 
     
 
@@ -207,7 +147,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="pageControl.js.html">pageControl.js</a>, <a href="pageControl.js.html#line1">line 1</a>
+        <a href="pagination.js.html">pagination.js</a>, <a href="pagination.js.html#line127">line 127</a>
     </li></ul></dd>
     
 
@@ -219,54 +159,90 @@
 </dl>
 
 
+
+
+
+
         
     
-    </div>
 
     
+        <h3 class="subsection-title">Methods</h3>
 
-    
-
-    
-
-     
-
-    
-
-    
-
-    
-
-    
-
-    
-</article>
-
-</section>
-
-
-
-
-
-
-
-<section>
-
-<header>
-    
-        <h2>resultProcessing.js</h2>
         
-    
-</header>
+            
 
-<article>
-    <div class="container-overview">
     
+
+    <h4 class="name" id=".gotoPage"><span class="type-signature">(static) </span>gotoPage<span class="signature">(targetPage)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    Goes to a specific page (if available) and sends an appropriate query
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
         
-            <div class="description">Script file responsible for processing the search results</div>
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
         
 
         
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>targetPage</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Integer</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">page to which the pagination is going to be set</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
 
 
 <dl class="details">
@@ -288,15 +264,6 @@
     
 
     
-    <dt class="tag-author">Author:</dt>
-    <dd class="tag-author">
-        <ul>
-            <li>Jedrzej Stuczynski</li>
-        
-            <li>Ali Aliyev</li>
-        </ul>
-    </dd>
-    
 
     
 
@@ -307,7 +274,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="resultProcessing.js.html">resultProcessing.js</a>, <a href="resultProcessing.js.html#line1">line 1</a>
+        <a href="pagination.js.html">pagination.js</a>, <a href="pagination.js.html#line173">line 173</a>
     </li></ul></dd>
     
 
@@ -319,30 +286,6 @@
 </dl>
 
 
-        
-    
-    </div>
-
-    
-
-    
-
-    
-
-     
-
-    
-
-    
-
-    
-
-    
-
-    
-</article>
-
-</section>
 
 
 
@@ -350,23 +293,38 @@
 
 
 
-<section>
 
-<header>
-    
-        <h2>search.js</h2>
-        
-    
-</header>
 
-<article>
-    <div class="container-overview">
-    
-        
-            <div class="description">Script file responsible for controlling search behaviour of the application</div>
-        
+
+
+
+
 
         
+            
+
+    
+
+    <h4 class="name" id=".nextPage"><span class="type-signature">(static) </span>nextPage<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    Goes to the next page (if available) and sends an appropriate query
+</div>
+
+
+
+
+
+
+
+
+
+
+
 
 
 <dl class="details">
@@ -388,15 +346,6 @@
     
 
     
-    <dt class="tag-author">Author:</dt>
-    <dd class="tag-author">
-        <ul>
-            <li>Jedrzej Stuczynski</li>
-        
-            <li>Ali Aliyev</li>
-        </ul>
-    </dd>
-    
 
     
 
@@ -407,7 +356,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="search.js.html">search.js</a>, <a href="search.js.html#line1">line 1</a>
+        <a href="pagination.js.html">pagination.js</a>, <a href="pagination.js.html#line155">line 155</a>
     </li></ul></dd>
     
 
@@ -419,22 +368,103 @@
 </dl>
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         
-    
-    </div>
+            
 
     
 
+    <h4 class="name" id=".previousPage"><span class="type-signature">(static) </span>previousPage<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    Goes to the previous page (if available) and sends an appropriate query
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
     
 
     
 
-     
+    
+
+    
 
     
 
     
 
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="pagination.js.html">pagination.js</a>, <a href="pagination.js.html#line134">line 134</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
     
 
     
