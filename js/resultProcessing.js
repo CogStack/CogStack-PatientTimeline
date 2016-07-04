@@ -10,6 +10,9 @@
  * @param {String} timestamp associated with the source timestamp
  * @param {String} source text to create the PDF from
  */
+
+var thumbnailSource = "http://192.168.99.42:8080/thumbs/"
+
 function createPDF(patientID, timestamp, source) {
 	var pdf = new jsPDF("p", "pt", "a4");  // create new jsPDF object
 	specialElementHandlers = {
@@ -66,9 +69,12 @@ function createTimelineEntry(value, presentMonths) {
 	}
 
 	var imageSource = "";
-
-	if(value._source.thumbnail) 
-		imageSource = "img/thumbnail_placeholder.png"; // todo: replace with actual thumbnail when available
+	var PDFSource = "#";
+	if(value._source.thumbnail) { 
+		imageSource = thumbnailSource + value._source.thumbnail;
+		PDFSource = thumbnailSource + value._source.thumbnail.slice(0, -3) + "pdf";
+		//imageSource = "img/thumbnail_placeholder.png"; // todo: replace with actual thumbnail when available
+	}
 	else
 		imageSource = "img/Icon-Placeholder.png";
 
@@ -78,7 +84,7 @@ function createTimelineEntry(value, presentMonths) {
 	timelineEntry += "<div class='help-tip'><p>Double click to expand/minimize the text</p></div>";   
     //timelineEntry += '<h4 class="events-heading">Sample Document</h4>'; // heading
 	timelineEntry += "<p style='width:90%' id=text" + value._id + ">" + shortTextSnippet + "</p>"; // BODY
-	timelineEntry += "<a href='#' id=PDF" + value._id + ">Download Full PDF</a>";
+	timelineEntry += "<a href='" + PDFSource + "' id=PDF" + value._id + ">Download Full PDF</a>";
 	timelineEntry += "</div></div></div></dd>"; // closing tags
 
 	$("#timelineList").append(timelineEntry);
@@ -118,11 +124,14 @@ function createTimelineListeners(value, shortTextSnippet, longTextSnippet, pdfTi
 	// TODO:
 	// UPDATE WHEN THUMBNAIL AND FINAL PDFs AVAILABLE!
 	// download pdf when the link is clicked
-	$("#PDF"+value._id).on("click",function(e) {
-		e.preventDefault();
-		createPDF(value._source.docId, pdfTimestamp, value._source.html);
-		return false; 
-	});
+	if(!value._source.thumbnail) {
+		$("#PDF"+value._id).on("click",function(e) {
+			window.alert("something went wrong");
+			e.preventDefault();
+			createPDF(value._source.docId, pdfTimestamp, value._source.html);
+			return false; 
+		});
+	}
 
 	// when thumbnails are loaded, they are resized to target size
 	$("#thumbIcon"+value._id).load(function(){
