@@ -5,7 +5,8 @@
  */
 
 /**Variable specifying the address of the ElasticSearch server*/
-var url = "http://timeline-silverash.rhcloud.com";
+//var url = "http://timeline-silverash.rhcloud.com";
+var url = "http://192.168.99.47:9200";
 
 /**ElasticSearch client definition*/
 var client = new $.es.Client({
@@ -34,7 +35,8 @@ function searchForEntries(searchParams) {
 /** 
  * Function initialising the search. If there are no valid search parameters, it does not commence the actual search.
  */
-function startSearch(startingIndex = 0) {
+function startSearch(startingIndex) {
+	startingIndex = typeof startingIndex !== "undefined" ? startingIndex : 0;
 	clearTimeline();
 	var searchParams = prepareSearchData(startingIndex);
 	if(searchParams) {
@@ -66,7 +68,8 @@ function getPatientID() {
  * Gets all the information from the form regarding the search conditions and passes it to prepareESObject function to create the related object
  * @returns {Boolean|Object} Object with search properties (Object) or false (Boolean) if getPatientID() failed to get any data
  */
-function prepareSearchData(startingIndex = 0) {
+function prepareSearchData(startingIndex) {
+	startingIndex = typeof startingIndex !== "undefined" ? startingIndex : 0;
 	var patientID = getPatientID();
 	if(!patientID)
 		return false;
@@ -105,17 +108,17 @@ function prepareESObject(patientID, resultsPerPage, startingIndex, startDate, en
 
 	var searchParams = {
 		size : parseInt(resultsPerPage) + 1, // temp
-		from : startingIndex, // TODO
-		index : "mock", // temp
+		from : startingIndex,
+		index : "time2016", //temp
 		type : "doc", //temp
 		body : {
-			sort : {"created" : {order : "desc"}},
+			sort : {"timestamp" : {order : "desc"}},
 			query : {
 				bool : {
 					must : [
-						// {term : {brcid : patientID} },
+						//{term : {patientId : patientID} },
 						{range:	{
-							created : {
+							timestamp : {
 								"gte" : startDate,
 								"lte" : endDate
 							}

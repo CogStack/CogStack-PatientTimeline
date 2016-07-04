@@ -52,13 +52,13 @@ function createPDF(patientID, timestamp, source) {
 function createTimelineEntry(value, presentMonths) {
 	var timelineEntry = "";
 
-	var exactDate = new Date(value._source.created);
-	var monthYear = getShortMonth(exactDate.getMonth())+" "+exactDate.getFullYear();
+	var exactDate = new Date(value._source.timestamp);
+	var monthYear = getShortMonth(exactDate.getMonth()) + " " + exactDate.getFullYear();
 	var monthYearNoSpaces = monthYear.replace(/ /g,"");
 	var pdfTimestamp = exactDate.getDate()+monthYearNoSpaces;
 
-	var shortTextSnippet = getSnippet(value._source.text,SHORT_SNIPPET_LENGTH);
-	var longTextSnippet = getSnippet(value._source.text,LONG_SNIPPET_LENGTH);
+	var shortTextSnippet = getSnippet(value._source.html,SHORT_SNIPPET_LENGTH);
+	var longTextSnippet = getSnippet(value._source.html,LONG_SNIPPET_LENGTH);
 
 	if(!(presentMonths[monthYearNoSpaces])) {
 		timelineEntry += "<dt id=" + monthYearNoSpaces + ">" + monthYear + "</dt>"; // Month-Year Tag
@@ -102,13 +102,13 @@ function createTimelineListeners(value, shortTextSnippet, longTextSnippet, pdfTi
 	
 	// when month-year element is clicked, given set of entries are collapsed/expanded
 	$("#"+monthYearNoSpaces).on("click", function() {
-		var collapsableEntryHandle = $("#collapsableEntry"+value._id);
+		var collapsableEntryHandle = $("#collapsableEntry" + value._id);
 		collapsableEntryHandle.collapse("toggle");
 	});
 
 	// when the text of the entry is double clicked, it is changed between short and longer version
 	$("#entry"+value._id).on("dblclick",function() {
-		var textHandle = "#text"+value._id;
+		var textHandle = "#text" + value._id;
 		if($(textHandle).text().length > shortTextSnippet.length)
 			$(textHandle).text(shortTextSnippet);
 		else
@@ -120,7 +120,7 @@ function createTimelineListeners(value, shortTextSnippet, longTextSnippet, pdfTi
 	// download pdf when the link is clicked
 	$("#PDF"+value._id).on("click",function(e) {
 		e.preventDefault();
-		createPDF(value._source.brcid, pdfTimestamp, value._source.text);
+		createPDF(value._source.docId, pdfTimestamp, value._source.html);
 		return false; 
 	});
 

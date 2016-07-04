@@ -189,7 +189,8 @@ var changePage = {
  * Recreates the whole pagination by removing every page apart from the starting page that should be visible and "next" + "prev" button as well as page 1
  * @param {Integer} startingPage
  */
-function recreatePagination(startingPage = 1) {
+function recreatePagination(startingPage) {
+	startingPage = typeof startingPage !== "undefined" ? startingPage : 1;	
 	var exists = false;
 	$.each($(".pagination li.page-item"), function(index, value) {
 		if($(value)[0].id != "nextPage" && $(value)[0].id != "prevPage")

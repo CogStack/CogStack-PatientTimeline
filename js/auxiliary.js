@@ -63,6 +63,14 @@ function getShortMonth(num) {
 function getSnippet(text, length) {
 	if (text.length < length)
 		return text;
-    var rx = new RegExp("^.{" + length + "}[^ ]*");
-    return rx.exec(text)[0]+"...";
+	var rx = new RegExp("^.{" + length + "}[^ ]*");
+	var rxResult = rx.exec(text);
+	if(rxResult) {
+		console.log("returning regex");
+		return rxResult[0]+"...";
+	}
+	else {
+		console.log("returning substring");
+		return text.substring(1,length)+"...";
+	}
 }
