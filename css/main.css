@@ -150,12 +150,12 @@ button#collapseButton {
 	left:0;
 }
 
-.radioContainer {
-	margin-top:31px;
+.thumbSizeSel {
+	margin-top:20px;
 }
 
-#ex1Slider .slider-selection {
-	background: #BABABA;
+#searchButton {
+	margin-top:10px;
 }
 
 body {
