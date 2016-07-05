@@ -18,14 +18,41 @@ var debug = true;
 
 
 /**
+ * Checks if user is using Internet Explorer
+ * @returns {Boolean} determines if user is using Internet Explorer
+ */
+var checkBrowser = function() {
+    var ms_ie = false;
+    var ua = window.navigator.userAgent;
+    var old_ie = ua.indexOf('MSIE ');
+    var new_ie = ua.indexOf('Trident/');
+
+    if ((old_ie > -1) || (new_ie > -1)) {
+        ms_ie = true;
+    }
+    if ( ms_ie ) {
+		$(".pwmodal-container").text("Sorry, this application does not support Microsoft Internet Explorer 11 or below. This application is best viewed on Chrome, Firefox, MS Edge or Safari.");
+		$(".uil-default-css").remove();
+		showLoading();
+		return true;
+    }
+}
+
+
+/**
 * Fired when the document is finished loading.
 * Responsible for settng initial components, such as hiding the timeline, collapse button, etc.
 * @function "$(document).ready"
 */
 $(document).ready(function() {
+	var checkIE = checkBrowser();
+	if(checkIE)
+		return;
+
 	$("#waitMessage").delay(100).fadeOut();
-	$(".paginationContainer").hide();
+
 	setFormProperties();
+	$(".paginationContainer").hide();
 
 	/**Listener required by the lightbox library*/
 	$(document).delegate("*[data-toggle='lightbox']", "click", function(event) {
