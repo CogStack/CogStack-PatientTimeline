@@ -20,6 +20,12 @@ function getThumbnailWidth(targetHeight, naturalHeight, naturalWidth) {
  * @return {Number} The desired height
 */
 function getThumbnailHeight() {
+	var scalingFactor = $("#thumbnailSizeSlider").slider('getValue');
+	return scalingFactor * DEFAULT_THUMBNAIL_HEIGHT;
+
+
+	//OLD IMPLEMENTATION WITH RADIO BUTTONS: (LEAVE HERE IF WE DECIDE TO REVERT)
+	/*
 	var thumbnailSize = $("input:radio[name ='thumbnailSize']:checked").val();
 	if(thumbnailSize == "small")
 		return THUMBNAIL_HEIGHT_SMALL
@@ -27,6 +33,7 @@ function getThumbnailHeight() {
 		return THUMBNAIL_HEIGHT_MEDIUM;
 	else
 		return THUMBNAIL_HEIGHT_LARGE;
+	*/
 }
 
 /** 

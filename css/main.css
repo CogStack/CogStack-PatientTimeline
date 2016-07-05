@@ -150,8 +150,12 @@ button#collapseButton {
 	left:0;
 }
 
-.radioContainer {
-	margin-top:31px;
+.thumbSizeSel {
+	margin-top:20px;
+}
+
+#searchButton {
+	margin-top:10px;
 }
 
 body {

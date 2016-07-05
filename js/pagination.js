@@ -1,3 +1,8 @@
+/**
+ * @file Script file responsible for creating the pagination
+ * @author Jedrzej Stuczynski
+ * @author Ali Aliyev 
+ */
 
 
 /**Constant specifying maximum number of visible pagination pages*/

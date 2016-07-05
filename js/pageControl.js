@@ -10,14 +10,8 @@ const SHORT_SNIPPET_LENGTH = 100;
 /**Constant specifying length of the expanded text snippet*/
 const LONG_SNIPPET_LENGTH = 1000;
 
-/**Constant specifying height(in px) of small thumbnail/icon*/
-const THUMBNAIL_HEIGHT_SMALL = 125;
-
 /**Constant specifying height(in px) of medium thumbnail/icon*/
-const THUMBNAIL_HEIGHT_MEDIUM = 250;
-
-/**Constant specifying height(in px) of large thumbnail/icon*/
-const THUMBNAIL_HEIGHT_LARGE = 375;
+const DEFAULT_THUMBNAIL_HEIGHT = 250;
 
 /**Variable responsible for toggling debug mode for printing debug messages to the console*/
 var debug = true;
@@ -39,12 +33,10 @@ $(document).ready(function() {
 	    $(this).ekkoLightbox();
 	}); 
 
-	$(function(){
-		$("input:radio[name ='thumbnailSize']").change(function(){
-			var thumbIconHandles = $("[id^=" + "thumbIcon" + "]"); 
-			$.each(thumbIconHandles, function(index, img) {
-				$(img).load();
-			});
+	$("#thumbnailSizeSlider").on("change", function(){
+		var thumbIconHandles = $("[id^=" + "thumbIcon" + "]"); 
+		$.each(thumbIconHandles, function(index, img) {
+			$(img).load();
 		});
 	});
 
@@ -116,6 +108,15 @@ function setFormProperties() {
 	// Ensures you can't set start date which is after the end date
 	$("#datePickerTo").on("dp.change", function (e) {
 	    $('#datePickerFrom').data("DateTimePicker").maxDate(e.date);
+	});
+
+	// Properties of the thumbnail size selector slider
+	$("#thumbnailSizeSlider").slider({
+	    ticks: [0.1, 0.5, 1.0, 1.5],
+	    ticks_labels: ["Tiny", "Small", "Medium", "Big"],
+	    ticks_snap_bounds: 0.05,
+	    step: 0.025,
+	    value: 0.5
 	});
 }
 

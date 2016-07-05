@@ -4,15 +4,14 @@
  * @author Ali Aliyev 
  */
 
+var thumbnailSource = "http://192.168.99.42:8080/thumbs/"
+
 /** 
  * Create PDF of given text/document 
  * @param {String} patientID associated with the source ID of patient
  * @param {String} timestamp associated with the source timestamp
  * @param {String} source text to create the PDF from
  */
-
-var thumbnailSource = "http://192.168.99.42:8080/thumbs/"
-
 function createPDF(patientID, timestamp, source) {
 	var pdf = new jsPDF("p", "pt", "a4");  // create new jsPDF object
 	specialElementHandlers = {
@@ -73,7 +72,6 @@ function createTimelineEntry(value, presentMonths) {
 	if(value._source.thumbnail) { 
 		imageSource = thumbnailSource + value._source.thumbnail;
 		PDFSource = thumbnailSource + value._source.thumbnail.slice(0, -3) + "pdf";
-		//imageSource = "img/thumbnail_placeholder.png"; // todo: replace with actual thumbnail when available
 	}
 	else
 		imageSource = "img/Icon-Placeholder.png";

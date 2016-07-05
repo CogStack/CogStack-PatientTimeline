@@ -12,6 +12,7 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css" />
 	<link rel="stylesheet" type="text/css" href="css/ekko-lightbox.min.css" />
 	<link rel="stylesheet" type="text/css" href="css/loading-animation.min.css" />
+	<link rel="stylesheet" type="text/css" href="css/bootstrap-slider.css">
 	<link rel="stylesheet" type="text/css" href="css/main.css" />
 
 
@@ -23,7 +24,7 @@
     <script src="js/elasticsearch.jquery.js"></script>   
     <script src="js/jspdf.js"></script>
     <script src="js/ekko-lightbox.min.js"></script>
-    <!-- <script src="js/searchScript.js"></script> -->
+	<script src="js/bootstrap-slider.js"></script>
     <script src="js/pageControl.js"></script>
     <script src="js/search.js"></script>
     <script src="js/auxiliary.js"></script>
@@ -84,26 +85,25 @@
 		         </div>
             </div>
 
-            <div class='col-md-5'>
-		        <div class="form-group">
-			        <label for="containingKeywords">Containing:</label>
-			        <input class="form-control input-sm" id="containingKeywords" type="text" placeholder="Key words, phrases, etc.">
-		        </div>
-            </div>
-			
-			<div class="col-md-5">
-	            <div class="radioContainer" id="radioContainer">
-	                <label for radioContainer">Thumbnail Size:   </label>
-		            <label class="radio-inline"><input type="radio" value="small" name="thumbnailSize"checked >Small </label>
-					<label class="radio-inline"><input type="radio" value="medium" name="thumbnailSize">Medium </label>
-					<label class="radio-inline"><input type="radio" value="large" name="thumbnailSize">Large </label>
-				</div>
+            <div class="col-md-5">
+				<div class="thumbSizeSel" id="thumbSizeSel">
+					<label for thumbSizeSel">Thumbnail Size:   </label>
+						
+<!-- 						OLD RADIO BUTTON SELECTOR FOR THUMBNAILSIZE:
+ -->						<!--           
+				            <label class="radio-inline"><input type="radio" value="small" name="thumbnailSize"checked >Small </label>
+							<label class="radio-inline"><input type="radio" value="medium" name="thumbnailSize">Medium </label>
+							<label class="radio-inline"><input type="radio" value="large" name="thumbnailSize">Large </label>
+						-->
+					 <input id="thumbnailSizeSlider" type="text"/>
+
+	            </div>				
 			</div>
-
-
+			
+			
 		    <div class='col-md-10'>
-			<label for="searchButton">&nbsp;</label>
-			    <br><button type="button" class="btn btn-primary" id="searchButton" onclick="startSearch()">Search Documents</button>
+				<label for="searchButton">&nbsp;</label>
+			    <button type="button" class="btn btn-primary" id="searchButton" onclick="startSearch()">Search Documents</button>
 	        </div>
 	        
         </div>
