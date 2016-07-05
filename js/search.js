@@ -17,7 +17,7 @@ var client = new $.es.Client({
  * Function responsible for querying the ElasticSearch server. It uses the provided ElasticSearch library for JavaScript to wrap AJAX functionalities
  * @param {Object} searchParams Object specifying query properties formatted in a way required by the ElasticSearch engine.
  */
-function searchForEntries(searchParams) {
+var searchForEntries = function(searchParams) {
 	showLoading();
 	client.search(searchParams).then(function(response) {
 		setPagination(parseInt(searchParams.size) - 1, searchParams.from, response.hits.hits.length)
@@ -34,7 +34,8 @@ function searchForEntries(searchParams) {
 /** 
  * Function initialising the search. If there are no valid search parameters, it does not commence the actual search.
  */
-function startSearch(startingIndex = 0) {
+var startSearch = function(startingIndex) {
+	startingIndex = typeof startingIndex !== "undefined" ? startingIndex : 0;	
 	clearTimeline();
 	var searchParams = prepareSearchData(startingIndex);
 	if(searchParams) {
@@ -48,7 +49,7 @@ function startSearch(startingIndex = 0) {
  * If its value is empty, it displays an error in the box
  * @returns {Boolean|String} patientID (String) or false (Boolean) if it is empty
  */
-function getPatientID() {
+var getPatientID = function() {
 	var patientID = $("#patientID").val();
 	if(!patientID){
 		$("#patientIDBox").removeClass("form-group").addClass("form-group has-error has-feedback");
@@ -66,7 +67,8 @@ function getPatientID() {
  * Gets all the information from the form regarding the search conditions and passes it to prepareESObject function to create the related object
  * @returns {Boolean|Object} Object with search properties (Object) or false (Boolean) if getPatientID() failed to get any data
  */
-function prepareSearchData(startingIndex = 0) {
+var prepareSearchData = function(startingIndex ) {
+	startingIndex = typeof startingIndex !== "undefined" ? startingIndex : 0;	
 	var patientID = getPatientID();
 	if(!patientID)
 		return false;
@@ -93,7 +95,7 @@ function prepareSearchData(startingIndex = 0) {
  * @param {String} containingKeywords keywords that must be included in any field in the documents
  * @returns {Object} Object specyfing query properties
  */
-function prepareESObject(patientID, resultsPerPage, startingIndex, startDate, endDate, containingKeywords) {
+var prepareESObject = function(patientID, resultsPerPage, startingIndex, startDate, endDate, containingKeywords) {
 	startDate = new Date(startDate).getTime();
 	endDate = new Date(endDate).getTime();
 

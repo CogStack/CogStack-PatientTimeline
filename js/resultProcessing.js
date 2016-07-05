@@ -10,7 +10,7 @@
  * @param {String} timestamp associated with the source timestamp
  * @param {String} source text to create the PDF from
  */
-function createPDF(patientID, timestamp, source) {
+var createPDF = function(patientID, timestamp, source) {
 	var pdf = new jsPDF("p", "pt", "a4");  // create new jsPDF object
 	specialElementHandlers = {
 		"#bypassme": function(element, renderer) {
@@ -49,7 +49,7 @@ function createPDF(patientID, timestamp, source) {
  * @param {Object} presentMonths very simple HashMap-like structure to check if given month-year is already present
  * @returns {Object} returns presentMonths to be used in the next call
  */
-function createTimelineEntry(value, presentMonths) {
+var createTimelineEntry = function(value, presentMonths) {
 	var timelineEntry = "";
 
 	var exactDate = new Date(value._source.created);
@@ -98,7 +98,7 @@ function createTimelineEntry(value, presentMonths) {
  * @listens event:"dbclick" on entry
  * @listens event:"click" on 'Download PDF'
  */
-function createTimelineListeners(value, shortTextSnippet, longTextSnippet, pdfTimestamp, monthYearNoSpaces) {
+var createTimelineListeners = function(value, shortTextSnippet, longTextSnippet, pdfTimestamp, monthYearNoSpaces) {
 	
 	// when month-year element is clicked, given set of entries are collapsed/expanded
 	$("#"+monthYearNoSpaces).on("click", function() {
@@ -139,7 +139,7 @@ function createTimelineListeners(value, shortTextSnippet, longTextSnippet, pdfTi
  * Using the search results it generates and populates timeline entries
  * @param {Object} searchResult results of the ElasticSearch query
  */
-function processResults(searchResult, size) {
+var processResults = function(searchResult, size) {
 	$("#collapseButton").text("Collapse all");
 	
 	if(debug) 

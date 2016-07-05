@@ -63,7 +63,7 @@ $(document).ready(function() {
  * @listens event:"dp.change" on datePickerFrom (listens for changes in datePickerTo)
  * @listens event:"dp.change" on datePickerTo (listens for changes in datePickerFrom)
 */
-function setFormProperties() {
+var setFormProperties = function() {
 	// Properties for the calendar for "from" date
 	$('#datePickerFrom').datetimepicker({
 		viewMode: 'years',
@@ -122,7 +122,7 @@ function setFormProperties() {
 /**
  * Cleans up the timeline before the search is initialiased; empties its content (if it contained any data) and hides unnecessary elements
  */
-function clearTimeline() {
+var clearTimeline = function() {
 	$("#timelineList").empty();
 	$(".paginationContainer").hide();
 }
@@ -130,7 +130,7 @@ function clearTimeline() {
 /**
  * Collapses or expands all populated timeline entries
  */
-function toggleCollapse() {
+var toggleCollapse = function() {
 	var buttonHandle = $("#collapseButton");
 	var collapsableHandle = $("[id^=" + "collapsableEntry" + "]"); // looks for all elements with id beginning with "collapsableEntry"
 	var numberOfVisibleEntries = 0;
@@ -154,14 +154,14 @@ function toggleCollapse() {
 /**
  * Displays the loading message when the results are being fetched
  */
-function showLoading() {
+var showLoading = function() {
 	$('#waitMessage').fadeIn(300);
 };
 
 /**
  * Hides the loading messages after results are fetched
  */
-function hideLoading() {
+var hideLoading = function() {
     $("#waitMessage").fadeOut(300);
 }
 
