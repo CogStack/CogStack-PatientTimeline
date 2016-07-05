@@ -138,7 +138,7 @@ var setFormProperties = function() {
 
 	// Properties of the thumbnail size selector slider
 	$("#thumbnailSizeSlider").slider({
-	    ticks: [0.1, 0.5, 1.0, 1.5],
+	    ticks: [0.05, 0.5, 1.0, 1.5],
 	    ticks_labels: ["Tiny", "Small", "Medium", "Big"],
 	    ticks_snap_bounds: 0.05,
 	    step: 0.025,

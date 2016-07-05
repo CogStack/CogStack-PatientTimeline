@@ -34,6 +34,8 @@
 .slider.slider-horizontal {
   width: 210px;
   height: 20px;
+  margin-top: 5px;
+  margin-left: 5px;
 }
 .slider.slider-horizontal .slider-track {
   height: 10px;
