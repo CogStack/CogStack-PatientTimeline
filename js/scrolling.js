@@ -1,13 +1,13 @@
 
 $(document).ready(function() {
-	$(document).keydown(function(e) {
+	$(document).keyup(function(e) {
 		if(e.which == 38) {
-			scrollOneUp();
 			e.preventDefault();
+			scrollOneUp();
 		}
 		if(e.which == 40) {
-			scrollOneDown()
 			e.preventDefault();
+			scrollOneDown()
 		}
 	});
 });
@@ -16,17 +16,20 @@ var scrollOneUp = function() {
 	var windowYPos = $(window).scrollTop();
 	var collapsableHandle = $("[id^=" + "collapsableEntry" + "]");
 	var scrollToEntry = null;
+	var offsetToTop = 0;
 	$.each(collapsableHandle, function(index, entry) {
-	   var offsetToTop  = $(entry).offset().top;
-	    if (windowYPos > offsetToTop && $(entry).attr("aria-expanded") == "true") 
-	    	scrollToEntry = entry;
-	    else 
-	    	return true;    
-  });
-  if(scrollToEntry != null) {
-    scrollTo(scrollToEntry);
-  }
-
+		offsetToTop  = $(entry).offset().top;
+		if (windowYPos > offsetToTop && $(entry).attr("aria-expanded") == "true") 
+			scrollToEntry = entry;
+		else 
+			return false;    
+	});
+	if(scrollToEntry != null) {
+		offsetToTop = $(scrollToEntry).offset().top;
+		scrollTo(scrollToEntry, offsetToTop);
+	}
+	else
+		scrollTo('#',0);
 
 }
 
@@ -36,16 +39,16 @@ var scrollOneDown = function() {
 	$.each(collapsableHandle, function(index, entry) {
 		var offsetToTop = $(entry).offset().top;
 		if(windowYPos < offsetToTop) {
-			scrollTo(entry);
+			scrollTo(entry, offsetToTop);
 			return false;
 		}
 	});
 }
 
-var scrollTo = function(entry) {
-    $('html, body').stop().animate({
-        'scrollTop': $(entry).offset().top
-    }, 250, 'swing', function () {
-        window.location.hash = entry;
-    });
+var scrollTo = function(entry, offsetToTop) {
+	$("html, body").stop().animate({
+		"scrollTop": offsetToTop
+	}, 250, "swing", function () {
+		window.location.hash = entry;
+	});
 };
