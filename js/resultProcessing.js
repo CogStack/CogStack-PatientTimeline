@@ -66,19 +66,22 @@ var createTimelineEntry = function(value, presentMonths) {
 	}
 
 	var imageSource = "";
-
-	if(value._source.thumbnail) 
-		imageSource = "img/thumbnail_placeholder.png"; // todo: replace with actual thumbnail when available
+	var PDFSource = "#";
+	if(value._source.thumbnail) {
+			imageSource = "img/thumbnail_placeholder.png"; // todo: replace with actual thumbnail when available
+			// imageSource = thumbnailSource + value._source.thumbnail;
+			// PDFSource = thumbnailSource + value._source.thumbnail.slice(0, -3) + "pdf"; 
+	}
 	else
 		imageSource = "img/Icon-Placeholder.png";
 
 	timelineEntry += "<div class='collapse in' aria-expanded=true id=collapsableEntry" + value._id + ">";   
 	timelineEntry += "<dd class='pos-right clearfix'><div class='circ'></div><div class='time'>" + getShortMonth(exactDate.getMonth()) + " " + exactDate.getDate() + "</div><div class='events'>"; // circle with exact date on the side
-	timelineEntry += "<div class='pull-left'><a href=" + imageSource + " data-toggle='lightbox'><img class='events-object img-rounded' id=thumbIcon" + value._id + " src=" + imageSource + "></a></div><div class='events-body' id='entry" + value._id + "''>"; // TODO: REPLACE PLACEHOLDER IMAGE
+	timelineEntry += "<div class='pull-left'><div class='thumbIcon'><a href=" + imageSource + " data-toggle='lightbox'><img class='events-object img-rounded' id=thumbIcon" + value._id + " src=" + imageSource + "></a></div>";
+	timelineEntry += "<div class='downloadButton'><a href='" + PDFSource + "' class='btn btn-info' role='button' target='_blank' id=PDF" + value._id + ">Download Full PDF</a></div></div><div class='events-body' id='entry" + value._id + "''>"; 
 	timelineEntry += "<div class='help-tip'><p>Double click to expand/minimize the text</p></div>";   
     //timelineEntry += '<h4 class="events-heading">Sample Document</h4>'; // heading
 	timelineEntry += "<p style='width:90%' id=text" + value._id + ">" + shortTextSnippet + "</p>"; // BODY
-	timelineEntry += "<a href='#' id=PDF" + value._id + ">Download Full PDF</a>";
 	timelineEntry += "</div></div></div></dd>"; // closing tags
 
 	$("#timelineList").append(timelineEntry);
@@ -118,11 +121,13 @@ var createTimelineListeners = function(value, shortTextSnippet, longTextSnippet,
 	// TODO:
 	// UPDATE WHEN THUMBNAIL AND FINAL PDFs AVAILABLE!
 	// download pdf when the link is clicked
-	$("#PDF"+value._id).on("click",function(e) {
-		e.preventDefault();
-		createPDF(value._source.brcid, pdfTimestamp, value._source.text);
-		return false; 
-	});
+	if(!value._source.thumbnail) {
+		$("#PDF"+value._id).on("click",function(e) {
+			e.preventDefault();
+			createPDF(value._source.brcid, pdfTimestamp, value._source.text);
+			return false; 
+		});
+	}
 
 	// when thumbnails are loaded, they are resized to target size
 	$("#thumbIcon"+value._id).load(function(){
