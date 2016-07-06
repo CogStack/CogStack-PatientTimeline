@@ -45,7 +45,7 @@ var client = new $.es.Client({
  * Function responsible for querying the ElasticSearch server. It uses the provided ElasticSearch library for JavaScript to wrap AJAX functionalities
  * @param {Object} searchParams Object specifying query properties formatted in a way required by the ElasticSearch engine.
  */
-function searchForEntries(searchParams) {
+var searchForEntries = function(searchParams) {
 	showLoading();
 	client.search(searchParams).then(function(response) {
 		setPagination(parseInt(searchParams.size) - 1, searchParams.from, response.hits.hits.length)
@@ -62,7 +62,8 @@ function searchForEntries(searchParams) {
 /** 
  * Function initialising the search. If there are no valid search parameters, it does not commence the actual search.
  */
-function startSearch(startingIndex = 0) {
+var startSearch = function(startingIndex) {
+	startingIndex = typeof startingIndex !== "undefined" ? startingIndex : 0;	
 	clearTimeline();
 	var searchParams = prepareSearchData(startingIndex);
 	if(searchParams) {
@@ -76,7 +77,7 @@ function startSearch(startingIndex = 0) {
  * If its value is empty, it displays an error in the box
  * @returns {Boolean|String} patientID (String) or false (Boolean) if it is empty
  */
-function getPatientID() {
+var getPatientID = function() {
 	var patientID = $("#patientID").val();
 	if(!patientID){
 		$("#patientIDBox").removeClass("form-group").addClass("form-group has-error has-feedback");
@@ -94,7 +95,8 @@ function getPatientID() {
  * Gets all the information from the form regarding the search conditions and passes it to prepareESObject function to create the related object
  * @returns {Boolean|Object} Object with search properties (Object) or false (Boolean) if getPatientID() failed to get any data
  */
-function prepareSearchData(startingIndex = 0) {
+var prepareSearchData = function(startingIndex ) {
+	startingIndex = typeof startingIndex !== "undefined" ? startingIndex : 0;	
 	var patientID = getPatientID();
 	if(!patientID)
 		return false;
@@ -121,7 +123,7 @@ function prepareSearchData(startingIndex = 0) {
  * @param {String} containingKeywords keywords that must be included in any field in the documents
  * @returns {Object} Object specyfing query properties
  */
-function prepareESObject(patientID, resultsPerPage, startingIndex, startDate, endDate, containingKeywords) {
+var prepareESObject = function(patientID, resultsPerPage, startingIndex, startDate, endDate, containingKeywords) {
 	startDate = new Date(startDate).getTime();
 	endDate = new Date(endDate).getTime();
 
@@ -170,13 +172,13 @@ function prepareESObject(patientID, resultsPerPage, startingIndex, startDate, en
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="changePage.html">changePage</a></li></ul><h3>Global</h3><ul><li><a href="global.html#%2522$(document).ready%2522">"$(document).ready"</a></li><li><a href="global.html#addNewPageEnd">addNewPageEnd</a></li><li><a href="global.html#addNewPageStart">addNewPageStart</a></li><li><a href="global.html#checkNextButton">checkNextButton</a></li><li><a href="global.html#checkPrevButton">checkPrevButton</a></li><li><a href="global.html#clearTimeline">clearTimeline</a></li><li><a href="global.html#client">client</a></li><li><a href="global.html#createPDF">createPDF</a></li><li><a href="global.html#createTimelineEntry">createTimelineEntry</a></li><li><a href="global.html#createTimelineListeners">createTimelineListeners</a></li><li><a href="global.html#debug">debug</a></li><li><a href="global.html#getCurrentActivePage">getCurrentActivePage</a></li><li><a href="global.html#getPatientID">getPatientID</a></li><li><a href="global.html#getShortMonth">getShortMonth</a></li><li><a href="global.html#getSnippet">getSnippet</a></li><li><a href="global.html#getThumbnailHeight">getThumbnailHeight</a></li><li><a href="global.html#getThumbnailWidth">getThumbnailWidth</a></li><li><a href="global.html#hideLoading">hideLoading</a></li><li><a href="global.html#LONG_SNIPPET_LENGTH">LONG_SNIPPET_LENGTH</a></li><li><a href="global.html#MAX_VISIBLE_PAGES">MAX_VISIBLE_PAGES</a></li><li><a href="global.html#prepareESObject">prepareESObject</a></li><li><a href="global.html#prepareSearchData">prepareSearchData</a></li><li><a href="global.html#processResults">processResults</a></li><li><a href="global.html#recreatePagination">recreatePagination</a></li><li><a href="global.html#removeFirstPage">removeFirstPage</a></li><li><a href="global.html#removeLastPage">removeLastPage</a></li><li><a href="global.html#searchForEntries">searchForEntries</a></li><li><a href="global.html#setFormProperties">setFormProperties</a></li><li><a href="global.html#setNewActivePage">setNewActivePage</a></li><li><a href="global.html#setPagination">setPagination</a></li><li><a href="global.html#SHORT_SNIPPET_LENGTH">SHORT_SNIPPET_LENGTH</a></li><li><a href="global.html#showLoading">showLoading</a></li><li><a href="global.html#startSearch">startSearch</a></li><li><a href="global.html#THUMBNAIL_HEIGHT_LARGE">THUMBNAIL_HEIGHT_LARGE</a></li><li><a href="global.html#THUMBNAIL_HEIGHT_MEDIUM">THUMBNAIL_HEIGHT_MEDIUM</a></li><li><a href="global.html#THUMBNAIL_HEIGHT_SMALL">THUMBNAIL_HEIGHT_SMALL</a></li><li><a href="global.html#toggleCollapse">toggleCollapse</a></li><li><a href="global.html#url">url</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="changePage.html">changePage</a></li></ul><h3>Global</h3><ul><li><a href="global.html#%2522$(document).ready%2522">"$(document).ready"</a></li><li><a href="global.html#addNewPageEnd">addNewPageEnd</a></li><li><a href="global.html#addNewPageStart">addNewPageStart</a></li><li><a href="global.html#checkBrowser">checkBrowser</a></li><li><a href="global.html#checkNextButton">checkNextButton</a></li><li><a href="global.html#checkPrevButton">checkPrevButton</a></li><li><a href="global.html#clearTimeline">clearTimeline</a></li><li><a href="global.html#client">client</a></li><li><a href="global.html#createPDF">createPDF</a></li><li><a href="global.html#createTimelineEntry">createTimelineEntry</a></li><li><a href="global.html#createTimelineListeners">createTimelineListeners</a></li><li><a href="global.html#debug">debug</a></li><li><a href="global.html#DEFAULT_THUMBNAIL_HEIGHT">DEFAULT_THUMBNAIL_HEIGHT</a></li><li><a href="global.html#getCurrentActivePage">getCurrentActivePage</a></li><li><a href="global.html#getPatientID">getPatientID</a></li><li><a href="global.html#getShortMonth">getShortMonth</a></li><li><a href="global.html#getSnippet">getSnippet</a></li><li><a href="global.html#getThumbnailHeight">getThumbnailHeight</a></li><li><a href="global.html#getThumbnailWidth">getThumbnailWidth</a></li><li><a href="global.html#hideLoading">hideLoading</a></li><li><a href="global.html#LONG_SNIPPET_LENGTH">LONG_SNIPPET_LENGTH</a></li><li><a href="global.html#MAX_VISIBLE_PAGES">MAX_VISIBLE_PAGES</a></li><li><a href="global.html#prepareESObject">prepareESObject</a></li><li><a href="global.html#prepareSearchData">prepareSearchData</a></li><li><a href="global.html#processResults">processResults</a></li><li><a href="global.html#recreatePagination">recreatePagination</a></li><li><a href="global.html#removeFirstPage">removeFirstPage</a></li><li><a href="global.html#removeLastPage">removeLastPage</a></li><li><a href="global.html#scrollOneDown">scrollOneDown</a></li><li><a href="global.html#scrollOneUp">scrollOneUp</a></li><li><a href="global.html#scrollTo">scrollTo</a></li><li><a href="global.html#searchForEntries">searchForEntries</a></li><li><a href="global.html#setFormProperties">setFormProperties</a></li><li><a href="global.html#setNewActivePage">setNewActivePage</a></li><li><a href="global.html#setPagination">setPagination</a></li><li><a href="global.html#SHORT_SNIPPET_LENGTH">SHORT_SNIPPET_LENGTH</a></li><li><a href="global.html#showLoading">showLoading</a></li><li><a href="global.html#startSearch">startSearch</a></li><li><a href="global.html#toggleCollapse">toggleCollapse</a></li><li><a href="global.html#url">url</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Mon Jul 04 2016 10:15:28 GMT+0100 (GMT (czas letni))
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Wed Jul 06 2016 15:17:14 GMT+0100 (GMT Daylight Time)
 </footer>
 
 <script> prettyPrint(); </script>

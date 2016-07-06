@@ -1,17 +1,12 @@
-
-$(document).ready(function() {
-	$(document).keyup(function(e) {
-		if(e.which == 38) {
-			e.preventDefault();
-			scrollOneUp();
-		}
-		if(e.which == 40) {
-			e.preventDefault();
-			scrollOneDown()
-		}
-	});
-});
-
+/**
+ * @file Script file responsible for controlling scrolling between timeline entries on arrow up/down buttons
+ * @author Jedrzej Stuczynski
+ * @author Ali Aliyev 
+ */
+ 
+ /**
+ * Scrolls one entry up
+ */
 var scrollOneUp = function() {
 	var windowYPos = $(window).scrollTop();
 	var collapsableHandle = $("[id^=" + "collapsableEntry" + "]");
@@ -33,6 +28,9 @@ var scrollOneUp = function() {
 
 }
 
+/**
+ * Scrolls one entry down
+ */
 var scrollOneDown = function() {
 	var windowYPos = $(window).scrollTop();
 	var collapsableHandle = $("[id^=" + "collapsableEntry" + "]");
@@ -45,6 +43,11 @@ var scrollOneDown = function() {
 	});
 }
 
+/**
+ * Handles scrolling to specific position with animation
+ * @param {Object} entry single timeline entry
+ * @param {Number} offsetToTop Y position of the element
+ */
 var scrollTo = function(entry, offsetToTop) {
 	$("html, body").stop().animate({
 		"scrollTop": offsetToTop

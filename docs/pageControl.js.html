@@ -38,17 +38,33 @@ const SHORT_SNIPPET_LENGTH = 100;
 /**Constant specifying length of the expanded text snippet*/
 const LONG_SNIPPET_LENGTH = 1000;
 
-/**Constant specifying height(in px) of small thumbnail/icon*/
-const THUMBNAIL_HEIGHT_SMALL = 75;
-
 /**Constant specifying height(in px) of medium thumbnail/icon*/
-const THUMBNAIL_HEIGHT_MEDIUM = 150;
-
-/**Constant specifying height(in px) of large thumbnail/icon*/
-const THUMBNAIL_HEIGHT_LARGE = 250;
+const DEFAULT_THUMBNAIL_HEIGHT = 250;
 
 /**Variable responsible for toggling debug mode for printing debug messages to the console*/
 var debug = true;
+
+
+/**
+ * Checks if user is using Internet Explorer
+ * @returns {Boolean} determines if user is using Internet Explorer
+ */
+var checkBrowser = function() {
+    var ms_ie = false;
+    var ua = window.navigator.userAgent;
+    var old_ie = ua.indexOf('MSIE ');
+    var new_ie = ua.indexOf('Trident/');
+
+    if ((old_ie > -1) || (new_ie > -1)) {
+        ms_ie = true;
+    }
+    if ( ms_ie ) {
+		$(".pwmodal-container").text("Sorry, this application does not support Microsoft Internet Explorer 11 or below. This application is best viewed on Chrome, Firefox, MS Edge or Safari.");
+		$(".uil-default-css").remove();
+		showLoading();
+		return true;
+    }
+}
 
 
 /**
@@ -57,9 +73,14 @@ var debug = true;
 * @function "$(document).ready"
 */
 $(document).ready(function() {
+	var checkIE = checkBrowser();
+	if(checkIE)
+		return;
+
 	$("#waitMessage").delay(100).fadeOut();
-	$(".paginationContainer").hide();
+
 	setFormProperties();
+	$(".paginationContainer").hide();
 
 	/**Listener required by the lightbox library*/
 	$(document).delegate("*[data-toggle='lightbox']", "click", function(event) {
@@ -67,12 +88,10 @@ $(document).ready(function() {
 	    $(this).ekkoLightbox();
 	}); 
 
-	$(function(){
-		$("input:radio[name ='thumbnailSize']").change(function(){
-			var thumbIconHandles = $("[id^=" + "thumbIcon" + "]"); 
-			$.each(thumbIconHandles, function(index, img) {
-				$(img).load();
-			});
+	$("#thumbnailSizeSlider").on("change", function(){
+		var thumbIconHandles = $("[id^=" + "thumbIcon" + "]"); 
+		$.each(thumbIconHandles, function(index, img) {
+			$(img).load();
 		});
 	});
 
@@ -89,7 +108,17 @@ $(document).ready(function() {
 		if(!($(this).hasClass("disabled")))
 			changePage.previousPage();
 	});
-
+	
+	$(document).keyup(function(e) {
+		if(e.which == 38) {
+			e.preventDefault();
+			scrollOneUp();
+		}
+		if(e.which == 40) {
+			e.preventDefault();
+			scrollOneDown()
+		}
+	});
 });
 
 /**
@@ -100,7 +129,7 @@ $(document).ready(function() {
  * @listens event:"dp.change" on datePickerFrom (listens for changes in datePickerTo)
  * @listens event:"dp.change" on datePickerTo (listens for changes in datePickerFrom)
 */
-function setFormProperties() {
+var setFormProperties = function() {
 	// Properties for the calendar for "from" date
 	$('#datePickerFrom').datetimepicker({
 		viewMode: 'years',
@@ -145,12 +174,21 @@ function setFormProperties() {
 	$("#datePickerTo").on("dp.change", function (e) {
 	    $('#datePickerFrom').data("DateTimePicker").maxDate(e.date);
 	});
+
+	// Properties of the thumbnail size selector slider
+	$("#thumbnailSizeSlider").slider({
+	    ticks: [0.05, 0.5, 1.0, 1.5],
+	    ticks_labels: ["Tiny", "Small", "Medium", "Big"],
+	    ticks_snap_bounds: 0.05,
+	    step: 0.025,
+	    value: 0.5
+	});
 }
 
 /**
  * Cleans up the timeline before the search is initialiased; empties its content (if it contained any data) and hides unnecessary elements
  */
-function clearTimeline() {
+var clearTimeline = function() {
 	$("#timelineList").empty();
 	$(".paginationContainer").hide();
 }
@@ -158,7 +196,7 @@ function clearTimeline() {
 /**
  * Collapses or expands all populated timeline entries
  */
-function toggleCollapse() {
+var toggleCollapse = function() {
 	var buttonHandle = $("#collapseButton");
 	var collapsableHandle = $("[id^=" + "collapsableEntry" + "]"); // looks for all elements with id beginning with "collapsableEntry"
 	var numberOfVisibleEntries = 0;
@@ -182,16 +220,18 @@ function toggleCollapse() {
 /**
  * Displays the loading message when the results are being fetched
  */
-function showLoading() {
+var showLoading = function() {
 	$('#waitMessage').fadeIn(300);
 };
 
 /**
  * Hides the loading messages after results are fetched
  */
-function hideLoading() {
+var hideLoading = function() {
     $("#waitMessage").fadeOut(300);
-}</code></pre>
+}
+
+</code></pre>
         </article>
     </section>
 
@@ -201,13 +241,13 @@ function hideLoading() {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="changePage.html">changePage</a></li></ul><h3>Global</h3><ul><li><a href="global.html#%2522$(document).ready%2522">"$(document).ready"</a></li><li><a href="global.html#addNewPageEnd">addNewPageEnd</a></li><li><a href="global.html#addNewPageStart">addNewPageStart</a></li><li><a href="global.html#checkNextButton">checkNextButton</a></li><li><a href="global.html#checkPrevButton">checkPrevButton</a></li><li><a href="global.html#clearTimeline">clearTimeline</a></li><li><a href="global.html#client">client</a></li><li><a href="global.html#createPDF">createPDF</a></li><li><a href="global.html#createTimelineEntry">createTimelineEntry</a></li><li><a href="global.html#createTimelineListeners">createTimelineListeners</a></li><li><a href="global.html#debug">debug</a></li><li><a href="global.html#getCurrentActivePage">getCurrentActivePage</a></li><li><a href="global.html#getPatientID">getPatientID</a></li><li><a href="global.html#getShortMonth">getShortMonth</a></li><li><a href="global.html#getSnippet">getSnippet</a></li><li><a href="global.html#getThumbnailHeight">getThumbnailHeight</a></li><li><a href="global.html#getThumbnailWidth">getThumbnailWidth</a></li><li><a href="global.html#hideLoading">hideLoading</a></li><li><a href="global.html#LONG_SNIPPET_LENGTH">LONG_SNIPPET_LENGTH</a></li><li><a href="global.html#MAX_VISIBLE_PAGES">MAX_VISIBLE_PAGES</a></li><li><a href="global.html#prepareESObject">prepareESObject</a></li><li><a href="global.html#prepareSearchData">prepareSearchData</a></li><li><a href="global.html#processResults">processResults</a></li><li><a href="global.html#recreatePagination">recreatePagination</a></li><li><a href="global.html#removeFirstPage">removeFirstPage</a></li><li><a href="global.html#removeLastPage">removeLastPage</a></li><li><a href="global.html#searchForEntries">searchForEntries</a></li><li><a href="global.html#setFormProperties">setFormProperties</a></li><li><a href="global.html#setNewActivePage">setNewActivePage</a></li><li><a href="global.html#setPagination">setPagination</a></li><li><a href="global.html#SHORT_SNIPPET_LENGTH">SHORT_SNIPPET_LENGTH</a></li><li><a href="global.html#showLoading">showLoading</a></li><li><a href="global.html#startSearch">startSearch</a></li><li><a href="global.html#THUMBNAIL_HEIGHT_LARGE">THUMBNAIL_HEIGHT_LARGE</a></li><li><a href="global.html#THUMBNAIL_HEIGHT_MEDIUM">THUMBNAIL_HEIGHT_MEDIUM</a></li><li><a href="global.html#THUMBNAIL_HEIGHT_SMALL">THUMBNAIL_HEIGHT_SMALL</a></li><li><a href="global.html#toggleCollapse">toggleCollapse</a></li><li><a href="global.html#url">url</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="changePage.html">changePage</a></li></ul><h3>Global</h3><ul><li><a href="global.html#%2522$(document).ready%2522">"$(document).ready"</a></li><li><a href="global.html#addNewPageEnd">addNewPageEnd</a></li><li><a href="global.html#addNewPageStart">addNewPageStart</a></li><li><a href="global.html#checkBrowser">checkBrowser</a></li><li><a href="global.html#checkNextButton">checkNextButton</a></li><li><a href="global.html#checkPrevButton">checkPrevButton</a></li><li><a href="global.html#clearTimeline">clearTimeline</a></li><li><a href="global.html#client">client</a></li><li><a href="global.html#createPDF">createPDF</a></li><li><a href="global.html#createTimelineEntry">createTimelineEntry</a></li><li><a href="global.html#createTimelineListeners">createTimelineListeners</a></li><li><a href="global.html#debug">debug</a></li><li><a href="global.html#DEFAULT_THUMBNAIL_HEIGHT">DEFAULT_THUMBNAIL_HEIGHT</a></li><li><a href="global.html#getCurrentActivePage">getCurrentActivePage</a></li><li><a href="global.html#getPatientID">getPatientID</a></li><li><a href="global.html#getShortMonth">getShortMonth</a></li><li><a href="global.html#getSnippet">getSnippet</a></li><li><a href="global.html#getThumbnailHeight">getThumbnailHeight</a></li><li><a href="global.html#getThumbnailWidth">getThumbnailWidth</a></li><li><a href="global.html#hideLoading">hideLoading</a></li><li><a href="global.html#LONG_SNIPPET_LENGTH">LONG_SNIPPET_LENGTH</a></li><li><a href="global.html#MAX_VISIBLE_PAGES">MAX_VISIBLE_PAGES</a></li><li><a href="global.html#prepareESObject">prepareESObject</a></li><li><a href="global.html#prepareSearchData">prepareSearchData</a></li><li><a href="global.html#processResults">processResults</a></li><li><a href="global.html#recreatePagination">recreatePagination</a></li><li><a href="global.html#removeFirstPage">removeFirstPage</a></li><li><a href="global.html#removeLastPage">removeLastPage</a></li><li><a href="global.html#scrollOneDown">scrollOneDown</a></li><li><a href="global.html#scrollOneUp">scrollOneUp</a></li><li><a href="global.html#scrollTo">scrollTo</a></li><li><a href="global.html#searchForEntries">searchForEntries</a></li><li><a href="global.html#setFormProperties">setFormProperties</a></li><li><a href="global.html#setNewActivePage">setNewActivePage</a></li><li><a href="global.html#setPagination">setPagination</a></li><li><a href="global.html#SHORT_SNIPPET_LENGTH">SHORT_SNIPPET_LENGTH</a></li><li><a href="global.html#showLoading">showLoading</a></li><li><a href="global.html#startSearch">startSearch</a></li><li><a href="global.html#toggleCollapse">toggleCollapse</a></li><li><a href="global.html#url">url</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Mon Jul 04 2016 10:15:28 GMT+0100 (GMT (czas letni))
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Wed Jul 06 2016 15:17:14 GMT+0100 (GMT Daylight Time)
 </footer>
 
 <script> prettyPrint(); </script>

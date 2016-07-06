@@ -80,6 +80,17 @@ $(document).ready(function() {
 		if(!($(this).hasClass("disabled")))
 			changePage.previousPage();
 	});
+	
+	$(document).keyup(function(e) {
+		if(e.which == 38) {
+			e.preventDefault();
+			scrollOneUp();
+		}
+		if(e.which == 40) {
+			e.preventDefault();
+			scrollOneDown()
+		}
+	});
 });
 
 /**

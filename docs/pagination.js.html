@@ -36,7 +36,7 @@ const MAX_VISIBLE_PAGES = 3;
  * Wrapper for getting the index (counting from 1) of the currently active page
  * @returns {Integer} currently active page
  */
-function getCurrentActivePage() {
+var getCurrentActivePage = function() {
 	return parseInt($(".pagination").find("li.page-item.active").text());
 }
 
@@ -44,7 +44,7 @@ function getCurrentActivePage() {
  * Changes currently active page
  * @param {Integer} page currently active page
  */
-function setNewActivePage(page) {
+var setNewActivePage = function(page) {
 	getCurrentActivePage().removeClass("active");
 	$("#page"+page).addClass("active");
 }
@@ -52,7 +52,7 @@ function setNewActivePage(page) {
 /**
  * Removes the first visible page (excluding 'prev' button which technically also belongs to the same class)
  */
-function removeFirstPage() {
+var removeFirstPage = function() {
 	var firstPageHandle = $(".pagination li.page-item").first().next();
 	$(firstPageHandle).remove();
 }
@@ -60,7 +60,7 @@ function removeFirstPage() {
 /**
  * Removes the last visible page (excluding 'next' button which technically also belongs to the same class)
  */
-function removeLastPage() {
+var removeLastPage = function() {
 	var lastPageHandle = $(".pagination li.page-item").last().prev();
 	$(lastPageHandle).remove();
 }
@@ -68,7 +68,7 @@ function removeLastPage() {
 /**
  * Adds new page with appropriate index at the end of the pagination
  */
-function addNewPageEnd() {
+var addNewPageEnd = function() {
 	var lastPageHandle = $(".pagination li.page-item").last().prev();
 	var pageNumber = parseInt(lastPageHandle.text()) + 1;
 
@@ -87,7 +87,7 @@ function addNewPageEnd() {
 /**
  * Adds new page with appropriate index at the beginning of the pagination
  */
-function addNewPageStart() {
+var addNewPageStart = function() {
 	var firstPageHandle = $(".pagination li.page-item").first();
 	var pageNumber;
 
@@ -112,7 +112,7 @@ function addNewPageStart() {
  * Checks the status of the "prev-button" (if it is disabled or enabled) and sets it appropriately
  * @param {Integer} targetPage page to which the pagination is going to be set
  */
-function checkPrevButton(targetPage) {
+var checkPrevButton = function(targetPage) {
 	var prevPageHandle = $("#prevPage");
 	if($(prevPageHandle).hasClass("disabled") &amp;&amp; targetPage > 1) {
 		$(prevPageHandle).removeClass("disabled");
@@ -129,7 +129,7 @@ function checkPrevButton(targetPage) {
  * Checks the status of the "next-button" (if it is disabled or enabled) and sets it appropriately
  * @param {Integer} targetPage page to which the pagination is going to be set
  */
-function checkNextButton(targetPage) {
+var checkNextButton = function(targetPage) {
 	var nextPageHandle = $("#nextPage");
 	var lastPageValue = $(".pagination li.page-item").last().prev().text();
 
@@ -217,7 +217,8 @@ var changePage = {
  * Recreates the whole pagination by removing every page apart from the starting page that should be visible and "next" + "prev" button as well as page 1
  * @param {Integer} startingPage
  */
-function recreatePagination(startingPage = 1) {
+var recreatePagination = function(startingPage) {
+	startingPage = typeof startingPage !== "undefined" ? startingPage : 1;	
 	var exists = false;
 	$.each($(".pagination li.page-item"), function(index, value) {
 		if($(value)[0].id != "nextPage" &amp;&amp; $(value)[0].id != "prevPage")
@@ -249,7 +250,7 @@ function recreatePagination(startingPage = 1) {
  * @param {Integer} startingIndex starting index of the querry, i.e. "from" field in the elasticSearch query
  * @param {Integer} numberOfEntriesFound number of entries the query has returned
  */
-function setPagination(resultsPerPage, startingIndex, numberOfEntriesFound) {
+var setPagination = function(resultsPerPage, startingIndex, numberOfEntriesFound) {
 	var startingPage = Math.ceil((startingIndex + 1) / resultsPerPage)
 	recreatePagination(startingPage);
 	changePage.startingIndex = startingIndex;
@@ -273,13 +274,13 @@ function setPagination(resultsPerPage, startingIndex, numberOfEntriesFound) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="changePage.html">changePage</a></li></ul><h3>Global</h3><ul><li><a href="global.html#%2522$(document).ready%2522">"$(document).ready"</a></li><li><a href="global.html#addNewPageEnd">addNewPageEnd</a></li><li><a href="global.html#addNewPageStart">addNewPageStart</a></li><li><a href="global.html#checkNextButton">checkNextButton</a></li><li><a href="global.html#checkPrevButton">checkPrevButton</a></li><li><a href="global.html#clearTimeline">clearTimeline</a></li><li><a href="global.html#client">client</a></li><li><a href="global.html#createPDF">createPDF</a></li><li><a href="global.html#createTimelineEntry">createTimelineEntry</a></li><li><a href="global.html#createTimelineListeners">createTimelineListeners</a></li><li><a href="global.html#debug">debug</a></li><li><a href="global.html#getCurrentActivePage">getCurrentActivePage</a></li><li><a href="global.html#getPatientID">getPatientID</a></li><li><a href="global.html#getShortMonth">getShortMonth</a></li><li><a href="global.html#getSnippet">getSnippet</a></li><li><a href="global.html#getThumbnailHeight">getThumbnailHeight</a></li><li><a href="global.html#getThumbnailWidth">getThumbnailWidth</a></li><li><a href="global.html#hideLoading">hideLoading</a></li><li><a href="global.html#LONG_SNIPPET_LENGTH">LONG_SNIPPET_LENGTH</a></li><li><a href="global.html#MAX_VISIBLE_PAGES">MAX_VISIBLE_PAGES</a></li><li><a href="global.html#prepareESObject">prepareESObject</a></li><li><a href="global.html#prepareSearchData">prepareSearchData</a></li><li><a href="global.html#processResults">processResults</a></li><li><a href="global.html#recreatePagination">recreatePagination</a></li><li><a href="global.html#removeFirstPage">removeFirstPage</a></li><li><a href="global.html#removeLastPage">removeLastPage</a></li><li><a href="global.html#searchForEntries">searchForEntries</a></li><li><a href="global.html#setFormProperties">setFormProperties</a></li><li><a href="global.html#setNewActivePage">setNewActivePage</a></li><li><a href="global.html#setPagination">setPagination</a></li><li><a href="global.html#SHORT_SNIPPET_LENGTH">SHORT_SNIPPET_LENGTH</a></li><li><a href="global.html#showLoading">showLoading</a></li><li><a href="global.html#startSearch">startSearch</a></li><li><a href="global.html#THUMBNAIL_HEIGHT_LARGE">THUMBNAIL_HEIGHT_LARGE</a></li><li><a href="global.html#THUMBNAIL_HEIGHT_MEDIUM">THUMBNAIL_HEIGHT_MEDIUM</a></li><li><a href="global.html#THUMBNAIL_HEIGHT_SMALL">THUMBNAIL_HEIGHT_SMALL</a></li><li><a href="global.html#toggleCollapse">toggleCollapse</a></li><li><a href="global.html#url">url</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="changePage.html">changePage</a></li></ul><h3>Global</h3><ul><li><a href="global.html#%2522$(document).ready%2522">"$(document).ready"</a></li><li><a href="global.html#addNewPageEnd">addNewPageEnd</a></li><li><a href="global.html#addNewPageStart">addNewPageStart</a></li><li><a href="global.html#checkBrowser">checkBrowser</a></li><li><a href="global.html#checkNextButton">checkNextButton</a></li><li><a href="global.html#checkPrevButton">checkPrevButton</a></li><li><a href="global.html#clearTimeline">clearTimeline</a></li><li><a href="global.html#client">client</a></li><li><a href="global.html#createPDF">createPDF</a></li><li><a href="global.html#createTimelineEntry">createTimelineEntry</a></li><li><a href="global.html#createTimelineListeners">createTimelineListeners</a></li><li><a href="global.html#debug">debug</a></li><li><a href="global.html#DEFAULT_THUMBNAIL_HEIGHT">DEFAULT_THUMBNAIL_HEIGHT</a></li><li><a href="global.html#getCurrentActivePage">getCurrentActivePage</a></li><li><a href="global.html#getPatientID">getPatientID</a></li><li><a href="global.html#getShortMonth">getShortMonth</a></li><li><a href="global.html#getSnippet">getSnippet</a></li><li><a href="global.html#getThumbnailHeight">getThumbnailHeight</a></li><li><a href="global.html#getThumbnailWidth">getThumbnailWidth</a></li><li><a href="global.html#hideLoading">hideLoading</a></li><li><a href="global.html#LONG_SNIPPET_LENGTH">LONG_SNIPPET_LENGTH</a></li><li><a href="global.html#MAX_VISIBLE_PAGES">MAX_VISIBLE_PAGES</a></li><li><a href="global.html#prepareESObject">prepareESObject</a></li><li><a href="global.html#prepareSearchData">prepareSearchData</a></li><li><a href="global.html#processResults">processResults</a></li><li><a href="global.html#recreatePagination">recreatePagination</a></li><li><a href="global.html#removeFirstPage">removeFirstPage</a></li><li><a href="global.html#removeLastPage">removeLastPage</a></li><li><a href="global.html#scrollOneDown">scrollOneDown</a></li><li><a href="global.html#scrollOneUp">scrollOneUp</a></li><li><a href="global.html#scrollTo">scrollTo</a></li><li><a href="global.html#searchForEntries">searchForEntries</a></li><li><a href="global.html#setFormProperties">setFormProperties</a></li><li><a href="global.html#setNewActivePage">setNewActivePage</a></li><li><a href="global.html#setPagination">setPagination</a></li><li><a href="global.html#SHORT_SNIPPET_LENGTH">SHORT_SNIPPET_LENGTH</a></li><li><a href="global.html#showLoading">showLoading</a></li><li><a href="global.html#startSearch">startSearch</a></li><li><a href="global.html#toggleCollapse">toggleCollapse</a></li><li><a href="global.html#url">url</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Mon Jul 04 2016 10:15:28 GMT+0100 (GMT (czas letni))
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Wed Jul 06 2016 15:17:14 GMT+0100 (GMT Daylight Time)
 </footer>
 
 <script> prettyPrint(); </script>

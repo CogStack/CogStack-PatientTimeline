@@ -170,6 +170,10 @@ button#collapseButton {
     text-align: center;
 }
 
+.thumbIcon {
+	text-align: center;
+}
+
 body {
     background-color: #f1f2f6;
 }
