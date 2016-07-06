@@ -18,10 +18,10 @@ var scrollOneUp = function() {
 	var scrollToEntry = null;
 	$.each(collapsableHandle, function(index, entry) {
 	   var offsetToTop  = $(entry).offset().top;
-	    if (windowYPos > offsetToTop ) 
+	    if (windowYPos > offsetToTop && $(entry).attr("aria-expanded") == "true") 
 	    	scrollToEntry = entry;
 	    else 
-	    	return false;    
+	    	return true;    
   });
   if(scrollToEntry != null) {
     scrollTo(scrollToEntry);
@@ -45,7 +45,7 @@ var scrollOneDown = function() {
 var scrollTo = function(entry) {
     $('html, body').stop().animate({
         'scrollTop': $(entry).offset().top
-    }, 500, 'swing', function () {
+    }, 250, 'swing', function () {
         window.location.hash = entry;
     });
 };
