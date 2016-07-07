@@ -100,6 +100,7 @@ button#collapseButton {
 	font-size: 14px;
 	line-height: 26px;
 	cursor: default;
+	opacity: 0.5;
 }
 
 .help-tip:before{
@@ -167,6 +168,7 @@ button#searchButton {
 
 .downloadButton {
     margin-top: 5px;
+	margin-right: 5px;
     text-align: center;
 }
 
@@ -175,6 +177,22 @@ button#searchButton {
 	margin-right: 10px !important;
 }
 
+@media screen and (max-width: 500px) {
+   .timeline{
+	margin-left: 30px;
+	}
+	.events-object.img-rounded {
+		max-width: 200px;
+		max-height: 200px;
+	}
+	.events-body{
+	}
+	.downloadButton{
+		margin-bottom: 5px;
+	}
+}
+
 body {
     background-color: #f1f2f6;
+	width: 100%;
 }
