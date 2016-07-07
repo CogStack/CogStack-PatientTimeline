@@ -163,6 +163,10 @@ button#collapseButton {
 	margin-top:20px;
 }
 
+.thumbIcon {
+	margin-bottom:5px;
+}
+
 button#searchButton {
 	margin-top:10px;
 }
@@ -183,7 +187,7 @@ button.downloadButton {
 	margin-right: 10px !important;
 }
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 340px){
 	.timeline{
 	margin-left: 30px;
 	}
@@ -202,7 +206,26 @@ button.downloadButton {
 	}
 }
 
-@media screen and (max-width: 700px) and (min-width: 500px) {
+@media screen and (max-width: 450px) and (min-width: 341px){
+	.timeline{
+	margin-left: 30px;
+	}
+
+	.events-object.img-rounded {
+		max-width: 250px;
+		max-height: 250px;
+	}
+
+	.events-body{
+		clear: both;
+	}
+
+	button.downloadButton{
+		margin-bottom: 5px;
+	}
+}
+
+@media screen and (max-width: 700px) and (min-width: 451px) {
 	.timeline{
 		margin-left: 30px;
 	}
@@ -217,22 +240,7 @@ button.downloadButton {
 	}
 
 	.downloadButton {
-		margin-bottom: 5px;
-	}
-}
-
-@media screen and (max-width: 700px) and (min-width: 500px) {
-    .timeline{
-	margin-left: 30px;
-	}
-	.events-object.img-rounded {
-		max-width: 400px;
-		max-height: 400px;
-	}
-	.events-body{
-		clear: both;
-	}
-	.downloadButton{
+		margin-top: 15px;
 		margin-bottom: 5px;
 	}
 }
