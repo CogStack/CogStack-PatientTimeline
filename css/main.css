@@ -186,6 +186,7 @@ button#searchButton {
 		max-height: 200px;
 	}
 	.events-body{
+		clear: both;
 	}
 	.downloadButton{
 		margin-bottom: 5px;
