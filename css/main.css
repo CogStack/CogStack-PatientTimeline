@@ -156,7 +156,7 @@ button#collapseButton {
 	margin-top:20px;
 }
 
-#searchButton {
+button#searchButton {
 	margin-top:10px;
 }
 
@@ -170,8 +170,9 @@ button#collapseButton {
     text-align: center;
 }
 
-.thumbIcon {
-	text-align: center;
+.events-object.img-rounded {
+	margin-left: 10px !important;
+	margin-right: 10px !important;
 }
 
 body {
