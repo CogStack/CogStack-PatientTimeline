@@ -94,7 +94,7 @@ button#collapseButton {
 	top: 28px !important; 
 }
 
-.help-tip{
+.help-tip {
 	position: absolute;
 	top: 18px;
 	right: 18px;
@@ -109,13 +109,13 @@ button#collapseButton {
 	opacity: 0.5;
 }
 
-.help-tip:before{
+.help-tip:before {
 	content:'?';
 	font-weight: bold;
 	color:#fff;
 }
 
-.help-tip:hover p{
+.help-tip:hover p {
 	display:block;
 	transform-origin: 100% 0%;
 
@@ -124,7 +124,7 @@ button#collapseButton {
 
 }
 
-.help-tip p{	/* The tooltip */
+.help-tip p {	/* The tooltip */
 	display: none;
 	text-align: left;
 	background-color: #1E2021;
@@ -139,7 +139,7 @@ button#collapseButton {
 	line-height: 1.4;
 }
 
-.help-tip p:before{ /* The pointer of the tooltip */
+.help-tip p:before { /* The pointer of the tooltip */
 	position: absolute;
 	content: '';
 	width:0;
@@ -150,7 +150,7 @@ button#collapseButton {
 	top:-12px;
 }
 
-.help-tip p:after{ /* Prevents the tooltip from being hidden */
+.help-tip p:after { /* Prevents the tooltip from being hidden */
 	width:100%;
 	height:40px;
 	content:'';
@@ -198,6 +198,25 @@ button.downloadButton {
 	}
 
 	button.downloadButton{
+		margin-bottom: 5px;
+	}
+}
+
+@media screen and (max-width: 700px) and (min-width: 500px) {
+	.timeline{
+		margin-left: 30px;
+	}
+
+	.events-object.img-rounded {
+		max-width: 400px;
+		max-height: 400px;
+	}
+
+	.events-body {
+		clear: both;
+	}
+
+	.downloadButton {
 		margin-bottom: 5px;
 	}
 }
