@@ -53,14 +53,14 @@ var getPatientID = function() {
 	var patientID = $("#patientID").val();
 	if(!patientID){
 		$("#patientIDBox").removeClass("form-group").addClass("form-group has-error has-feedback");
-    	$("#patientIDSpan").addClass("glyphicon glyphicon-remove form-control-feedback");
+		$("#patientIDSpan").addClass("glyphicon glyphicon-remove form-control-feedback");
 		return false;
 	}
 	else {
 		$("#patientIDBox").removeClass("form-group has-error has-feedback").addClass("form-group");
 		$("#patientIDSpan").removeClass("glyphicon glyphicon-remove form-control-feedback");
-    }
-    return patientID;
+	}
+	return patientID;
 }
 
 /**

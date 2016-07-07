@@ -22,22 +22,21 @@ var debug = true;
  * @returns {Boolean} determines if user is using Internet Explorer
  */
 var checkBrowser = function() {
-    var ms_ie = false;
-    var ua = window.navigator.userAgent;
-    var old_ie = ua.indexOf('MSIE ');
-    var new_ie = ua.indexOf('Trident/');
+	var ms_ie = false;
+	var ua = window.navigator.userAgent;
+	var old_ie = ua.indexOf('MSIE ');
+	var new_ie = ua.indexOf('Trident/');
 
-    if ((old_ie > -1) || (new_ie > -1)) {
-        ms_ie = true;
-    }
-    if ( ms_ie ) {
+	if((old_ie > -1) || (new_ie > -1)) {
+		ms_ie = true;
+	}
+	if(ms_ie) {
 		$(".pwmodal-container").text("Sorry, this application does not support Microsoft Internet Explorer 11 or below. This application is best viewed on Chrome, Firefox, MS Edge or Safari.");
 		$(".uil-default-css").remove();
 		showLoading();
 		return true;
-    }
+	}
 }
-
 
 /**
 * Fired when the document is finished loading.
@@ -116,8 +115,8 @@ var setFormProperties = function() {
 	$('#datePickerTo').datetimepicker({
 		viewMode: 'years',
 		format: 'YYYY-MM-DD',
-	    defaultDate : new Date(), // default displayed date: todays date
-	    maxDate: new Date(), // default maximum date: todays date
+		defaultDate : new Date(), // default displayed date: todays date
+		maxDate: new Date(), // default maximum date: todays date
 		allowInputToggle : true // allows for displaying the calendar when the text box is clicked
 	});
 
@@ -139,21 +138,21 @@ var setFormProperties = function() {
 
 	// Ensures you can't set end date which is before the start date
 	$("#datePickerFrom").on("dp.change", function (e) {
-	    $('#datePickerTo').data("DateTimePicker").minDate(e.date);
+		$('#datePickerTo').data("DateTimePicker").minDate(e.date);
 	});
 
 	// Ensures you can't set start date which is after the end date
 	$("#datePickerTo").on("dp.change", function (e) {
-	    $('#datePickerFrom').data("DateTimePicker").maxDate(e.date);
+		$('#datePickerFrom').data("DateTimePicker").maxDate(e.date);
 	});
 
 	// Properties of the thumbnail size selector slider
 	$("#thumbnailSizeSlider").slider({
-	    ticks: [0.05, 0.5, 1.0, 1.5],
-	    ticks_labels: ["Tiny", "Small", "Medium", "Big"],
-	    ticks_snap_bounds: 0.05,
-	    step: 0.025,
-	    value: 0.5
+		ticks: [0.05, 0.5, 1.0, 1.5],
+		ticks_labels: ["Tiny", "Small", "Medium", "Big"],
+		ticks_snap_bounds: 0.05,
+		step: 0.025,
+		value: 0.5
 	});
 }
 
@@ -200,6 +199,6 @@ var showLoading = function() {
  * Hides the loading messages after results are fetched
  */
 var hideLoading = function() {
-    $("#waitMessage").fadeOut(300);
+	$("#waitMessage").fadeOut(300);
 }
 

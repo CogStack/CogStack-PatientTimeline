@@ -70,6 +70,6 @@ var getShortMonth = function(num) {
 var getSnippet = function(text, length) {
 	if (text.length < length)
 		return text;
-    var rx = new RegExp("^.{" + length + "}[^ ]*");
-    return rx.exec(text)[0]+"...";
+	var rx = new RegExp("^.{" + length + "}[^ ]*");
+	return rx.exec(text)[0]+"...";
 }
