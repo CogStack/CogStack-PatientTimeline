@@ -221,6 +221,22 @@ button.downloadButton {
 	}
 }
 
+@media screen and (max-width: 700px) and (min-width: 500px) {
+    .timeline{
+	margin-left: 30px;
+	}
+	.events-object.img-rounded {
+		max-width: 400px;
+		max-height: 400px;
+	}
+	.events-body{
+		clear: both;
+	}
+	.downloadButton{
+		margin-bottom: 5px;
+	}
+}
+
 body {
 	background-color: #f1f2f6;
 	width: 100%;
