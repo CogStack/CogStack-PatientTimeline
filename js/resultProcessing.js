@@ -12,7 +12,7 @@ var thumbnailSource = "http://192.168.99.42:8080/thumbs/"
  * @param {String} timestamp associated with the source timestamp
  * @param {String} source text to create the PDF from
  */
-function createPDF(patientID, timestamp, source) {
+var createPDF = function(patientID, timestamp, source) {
 	var pdf = new jsPDF("p", "pt", "a4");  // create new jsPDF object
 	specialElementHandlers = {
 		"#bypassme": function(element, renderer) {
@@ -51,7 +51,7 @@ function createPDF(patientID, timestamp, source) {
  * @param {Object} presentMonths very simple HashMap-like structure to check if given month-year is already present
  * @returns {Object} returns presentMonths to be used in the next call
  */
-function createTimelineEntry(value, presentMonths) {
+var createTimelineEntry = function(value, presentMonths) {
 	var timelineEntry = "";
 
 	var exactDate = new Date(value._source.timestamp);
@@ -78,11 +78,11 @@ function createTimelineEntry(value, presentMonths) {
 
 	timelineEntry += "<div class='collapse in' aria-expanded=true id=collapsableEntry" + value._id + ">";   
 	timelineEntry += "<dd class='pos-right clearfix'><div class='circ'></div><div class='time'>" + getShortMonth(exactDate.getMonth()) + " " + exactDate.getDate() + "</div><div class='events'>"; // circle with exact date on the side
-	timelineEntry += "<div class='pull-left'><a href=" + imageSource + " data-toggle='lightbox'><img class='events-object img-rounded' id=thumbIcon" + value._id + " src=" + imageSource + "></a></div><div class='events-body' id='entry" + value._id + "''>"; // TODO: REPLACE PLACEHOLDER IMAGE
+	timelineEntry += "<div class='pull-left'><div class='thumbIcon'><a href=" + imageSource + " data-toggle='lightbox'><img class='events-object img-rounded' id=thumbIcon" + value._id + " src=" + imageSource + "></a></div>";
+	timelineEntry += "<div class='downloadButton'><a href='" + PDFSource + "' class='btn btn-info' role='button' target='_blank' id=PDF" + value._id + ">Download Full PDF</a></div></div><div class='events-body' id='entry" + value._id + "''>"; 
 	timelineEntry += "<div class='help-tip'><p>Double click to expand/minimize the text</p></div>";   
     //timelineEntry += '<h4 class="events-heading">Sample Document</h4>'; // heading
 	timelineEntry += "<p style='width:90%' id=text" + value._id + ">" + shortTextSnippet + "</p>"; // BODY
-	timelineEntry += "<a href='" + PDFSource + "'class='btn btn-info' role='button' target='_blank' id=PDF" + value._id + ">Download Full PDF</a>";
 	timelineEntry += "</div></div></div></dd>"; // closing tags
 
 	$("#timelineList").append(timelineEntry);
@@ -102,7 +102,7 @@ function createTimelineEntry(value, presentMonths) {
  * @listens event:"dbclick" on entry
  * @listens event:"click" on 'Download PDF'
  */
-function createTimelineListeners(value, shortTextSnippet, longTextSnippet, pdfTimestamp, monthYearNoSpaces) {
+var createTimelineListeners = function(value, shortTextSnippet, longTextSnippet, pdfTimestamp, monthYearNoSpaces) {
 	
 	// when month-year element is clicked, given set of entries are collapsed/expanded
 	$("#"+monthYearNoSpaces).on("click", function() {
@@ -146,7 +146,7 @@ function createTimelineListeners(value, shortTextSnippet, longTextSnippet, pdfTi
  * Using the search results it generates and populates timeline entries
  * @param {Object} searchResult results of the ElasticSearch query
  */
-function processResults(searchResult, size) {
+var processResults = function(searchResult, size) {
 	$("#collapseButton").text("Collapse all");
 	
 	if(debug) 

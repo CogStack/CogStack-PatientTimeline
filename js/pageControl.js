@@ -23,9 +23,14 @@ var debug = true;
 * @function "$(document).ready"
 */
 $(document).ready(function() {
+	var checkIE = checkBrowser();
+	if(checkIE)
+		return;
+
 	$("#waitMessage").delay(100).fadeOut();
-	$(".paginationContainer").hide();
+
 	setFormProperties();
+	$(".paginationContainer").hide();
 
 	/**Listener required by the lightbox library*/
 	$(document).delegate("*[data-toggle='lightbox']", "click", function(event) {
@@ -54,7 +59,39 @@ $(document).ready(function() {
 			changePage.previousPage();
 	});
 
+	/**Listeners for the arrow up and down buttons*/
+	$(document).keyup(function(e) {
+		if(e.which == 38) {
+			e.preventDefault();
+			scrollOneUp();
+		}
+		if(e.which == 40) {
+			e.preventDefault();
+			scrollOneDown()
+		}
+	});
 });
+
+/**
+ * Checks if user is using Internet Explorer
+ * @returns {Boolean} determines if user is using Internet Explorer
+ */
+var checkBrowser = function() {
+    var ms_ie = false;
+    var ua = window.navigator.userAgent;
+    var old_ie = ua.indexOf('MSIE ');
+    var new_ie = ua.indexOf('Trident/');
+
+    if ((old_ie > -1) || (new_ie > -1)) {
+        ms_ie = true;
+    }
+    if ( ms_ie ) {
+		$(".pwmodal-container").text("Sorry, this application does not support Microsoft Internet Explorer 11 or below. This application is best viewed on Chrome, Firefox, MS Edge or Safari.");
+		$(".uil-default-css").remove();
+		showLoading();
+		return true;
+    }
+}
 
 /**
  * Function called by $(document).ready. It is responsible for setting properties of the form,
@@ -64,7 +101,7 @@ $(document).ready(function() {
  * @listens event:"dp.change" on datePickerFrom (listens for changes in datePickerTo)
  * @listens event:"dp.change" on datePickerTo (listens for changes in datePickerFrom)
 */
-function setFormProperties() {
+var setFormProperties = function() {
 	// Properties for the calendar for "from" date
 	$('#datePickerFrom').datetimepicker({
 		viewMode: 'years',
@@ -112,7 +149,7 @@ function setFormProperties() {
 
 	// Properties of the thumbnail size selector slider
 	$("#thumbnailSizeSlider").slider({
-	    ticks: [0.1, 0.5, 1.0, 1.5],
+	    ticks: [0.25, 0.75, 1.25, 1.75],
 	    ticks_labels: ["Tiny", "Small", "Medium", "Big"],
 	    ticks_snap_bounds: 0.05,
 	    step: 0.025,
@@ -123,7 +160,7 @@ function setFormProperties() {
 /**
  * Cleans up the timeline before the search is initialiased; empties its content (if it contained any data) and hides unnecessary elements
  */
-function clearTimeline() {
+var clearTimeline = function() {
 	$("#timelineList").empty();
 	$(".paginationContainer").hide();
 }
@@ -131,7 +168,7 @@ function clearTimeline() {
 /**
  * Collapses or expands all populated timeline entries
  */
-function toggleCollapse() {
+var toggleCollapse = function() {
 	var buttonHandle = $("#collapseButton");
 	var collapsableHandle = $("[id^=" + "collapsableEntry" + "]"); // looks for all elements with id beginning with "collapsableEntry"
 	var numberOfVisibleEntries = 0;
@@ -155,13 +192,13 @@ function toggleCollapse() {
 /**
  * Displays the loading message when the results are being fetched
  */
-function showLoading() {
+var showLoading = function() {
 	$('#waitMessage').fadeIn(300);
 };
 
 /**
  * Hides the loading messages after results are fetched
  */
-function hideLoading() {
+var hideLoading = function() {
     $("#waitMessage").fadeOut(300);
 }

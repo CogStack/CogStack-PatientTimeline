@@ -13,7 +13,7 @@ const MAX_VISIBLE_PAGES = 3;
  * Wrapper for getting the index (counting from 1) of the currently active page
  * @returns {Integer} currently active page
  */
-function getCurrentActivePage() {
+var getCurrentActivePage = function() {
 	return parseInt($(".pagination").find("li.page-item.active").text());
 }
 
@@ -21,7 +21,7 @@ function getCurrentActivePage() {
  * Changes currently active page
  * @param {Integer} page currently active page
  */
-function setNewActivePage(page) {
+var setNewActivePage = function(page) {
 	getCurrentActivePage().removeClass("active");
 	$("#page"+page).addClass("active");
 }
@@ -29,7 +29,7 @@ function setNewActivePage(page) {
 /**
  * Removes the first visible page (excluding 'prev' button which technically also belongs to the same class)
  */
-function removeFirstPage() {
+var removeFirstPage = function() {
 	var firstPageHandle = $(".pagination li.page-item").first().next();
 	$(firstPageHandle).remove();
 }
@@ -37,7 +37,7 @@ function removeFirstPage() {
 /**
  * Removes the last visible page (excluding 'next' button which technically also belongs to the same class)
  */
-function removeLastPage() {
+var removeLastPage = function() {
 	var lastPageHandle = $(".pagination li.page-item").last().prev();
 	$(lastPageHandle).remove();
 }
@@ -45,7 +45,7 @@ function removeLastPage() {
 /**
  * Adds new page with appropriate index at the end of the pagination
  */
-function addNewPageEnd() {
+var addNewPageEnd = function() {
 	var lastPageHandle = $(".pagination li.page-item").last().prev();
 	var pageNumber = parseInt(lastPageHandle.text()) + 1;
 
@@ -64,7 +64,7 @@ function addNewPageEnd() {
 /**
  * Adds new page with appropriate index at the beginning of the pagination
  */
-function addNewPageStart() {
+var addNewPageStart = function() {
 	var firstPageHandle = $(".pagination li.page-item").first();
 	var pageNumber;
 
@@ -89,7 +89,7 @@ function addNewPageStart() {
  * Checks the status of the "prev-button" (if it is disabled or enabled) and sets it appropriately
  * @param {Integer} targetPage page to which the pagination is going to be set
  */
-function checkPrevButton(targetPage) {
+var checkPrevButton = function(targetPage) {
 	var prevPageHandle = $("#prevPage");
 	if($(prevPageHandle).hasClass("disabled") && targetPage > 1) {
 		$(prevPageHandle).removeClass("disabled");
@@ -106,7 +106,7 @@ function checkPrevButton(targetPage) {
  * Checks the status of the "next-button" (if it is disabled or enabled) and sets it appropriately
  * @param {Integer} targetPage page to which the pagination is going to be set
  */
-function checkNextButton(targetPage) {
+var checkNextButton = function(targetPage) {
 	var nextPageHandle = $("#nextPage");
 	var lastPageValue = $(".pagination li.page-item").last().prev().text();
 
@@ -194,7 +194,7 @@ var changePage = {
  * Recreates the whole pagination by removing every page apart from the starting page that should be visible and "next" + "prev" button as well as page 1
  * @param {Integer} startingPage
  */
-function recreatePagination(startingPage) {
+var recreatePagination = function(startingPage) {
 	startingPage = typeof startingPage !== "undefined" ? startingPage : 1;	
 	var exists = false;
 	$.each($(".pagination li.page-item"), function(index, value) {
@@ -227,7 +227,7 @@ function recreatePagination(startingPage) {
  * @param {Integer} startingIndex starting index of the querry, i.e. "from" field in the elasticSearch query
  * @param {Integer} numberOfEntriesFound number of entries the query has returned
  */
-function setPagination(resultsPerPage, startingIndex, numberOfEntriesFound) {
+var setPagination = function(resultsPerPage, startingIndex, numberOfEntriesFound) {
 	var startingPage = Math.ceil((startingIndex + 1) / resultsPerPage)
 	recreatePagination(startingPage);
 	changePage.startingIndex = startingIndex;

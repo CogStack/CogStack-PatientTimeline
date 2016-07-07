@@ -11,7 +11,7 @@
  * @param {Number} naturalWidth original width of thumbnail/icon
  * @return {Number} desired width
  */
-function getThumbnailWidth(targetHeight, naturalHeight, naturalWidth) {
+var getThumbnailWidth = function(targetHeight, naturalHeight, naturalWidth) {
 	return targetHeight*naturalWidth/naturalHeight;
 }
 
@@ -19,7 +19,7 @@ function getThumbnailWidth(targetHeight, naturalHeight, naturalWidth) {
  * Get height of thumbnail/icon from the user selection
  * @return {Number} The desired height
 */
-function getThumbnailHeight() {
+var getThumbnailHeight = function() {
 	var scalingFactor = $("#thumbnailSizeSlider").slider('getValue');
 	return scalingFactor * DEFAULT_THUMBNAIL_HEIGHT;
 
@@ -41,7 +41,7 @@ function getThumbnailHeight() {
  * @param {Number} num number between 0-11
  * @return {String} desired motnh name
  */
-function getShortMonth(num) {
+var getShortMonth = function(num) {
 	switch(num) {
 		case 0: return "Jan";
 		case 1: return "Feb";
@@ -67,7 +67,7 @@ function getShortMonth(num) {
  * @param {Number} length desired length of the text
  * @return {String} shortened text
  */
-function getSnippet(text, length) {
+var getSnippet = function(text, length) {
 	if (text.length < length)
 		return text;
 	var rx = new RegExp("^.{" + length + "}[^ ]*");
