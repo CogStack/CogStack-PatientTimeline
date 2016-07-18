@@ -59,8 +59,8 @@ var createTimelineEntry = function(value, presentMonths) {
 	var monthYearNoSpaces = monthYear.replace(/ /g,"");
 	var pdfTimestamp = exactDate.getDate()+monthYearNoSpaces;
 
-	var shortTextSnippet = getSnippet(value._source.html,SHORT_SNIPPET_LENGTH);
-	var longTextSnippet = getSnippet(value._source.html,LONG_SNIPPET_LENGTH);
+	var shortTextSnippet = "Placeholder for content snippet once OCR is better"; //getSnippet(value._source.html,SHORT_SNIPPET_LENGTH);
+	var longTextSnippet = "Longer version of the content snippet once OCR is better"; //getSnippet(value._source.html,LONG_SNIPPET_LENGTH);
 
 	if(!(presentMonths[monthYearNoSpaces])) {
 		timelineEntry += "<dt id=" + monthYearNoSpaces + ">" + monthYear + "</dt>"; // Month-Year Tag

@@ -200,5 +200,5 @@ var showLoading = function() {
  * Hides the loading messages after results are fetched
  */
 var hideLoading = function() {
-    $("#waitMessage").fadeOut(300);
+	$("#waitMessage").fadeOut(300);
 }
