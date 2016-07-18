@@ -60,7 +60,7 @@ var createTimelineEntry = function(value, presentMonths) {
 	var pdfTimestamp = exactDate.getDate()+monthYearNoSpaces;
 
 	var shortTextSnippet = "Placeholder for snippet of the content once OCR quality is improved"; //getSnippet(value._source.html,SHORT_SNIPPET_LENGTH);
-	var longTextSnippet = "Longer version of the snippet of the content once OCR quality is improved; //getSnippet(value._source.html,LONG_SNIPPET_LENGTH);
+	var longTextSnippet = "Longer version of the snippet of the content once OCR quality is improved"; //getSnippet(value._source.html,LONG_SNIPPET_LENGTH);
 
 	if(!(presentMonths[monthYearNoSpaces])) {
 		timelineEntry += "<dt id=" + monthYearNoSpaces + ">" + monthYear + "</dt>"; // Month-Year Tag
