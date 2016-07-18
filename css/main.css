@@ -45,7 +45,7 @@ button#collapseButton {
 }
 
 .events {
-	padding: 10px !important;
+	padding: 15px !important;
 	line-height: 1.5em;
 }
 
@@ -176,11 +176,11 @@ button#searchButton {
 	margin-left: 5px;
 }
 
-button.downloadButton {
+.downloadButton {
 	margin-top: 5px;
 	margin-right: 5px;
 	text-align: center;
-	}
+}
 
 .events-object.img-rounded {
 	margin-left: 10px !important;

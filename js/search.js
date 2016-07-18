@@ -5,7 +5,7 @@
  */
 
 /**Variable specifying the address of the ElasticSearch server*/
-var url = "http://timeline-silverash.rhcloud.com";
+var url = "http://timeline2016-silverash.rhcloud.com";
 
 /**ElasticSearch client definition*/
 var client = new $.es.Client({
@@ -19,6 +19,7 @@ var client = new $.es.Client({
  */
 var searchForEntries = function(searchParams) {
 	showLoading();
+	$.support.cors = true;
 	client.search(searchParams).then(function(response) {
 		setPagination(parseInt(searchParams.size) - 1, searchParams.from, response.hits.hits.length)
 		processResults(response.hits.hits, searchParams.size);

@@ -77,12 +77,16 @@ var createTimelineEntry = function(value, presentMonths) {
 
 	timelineEntry += "<div class='collapse in' aria-expanded=true id=collapsableEntry" + value._id + ">";   
 	timelineEntry += "<dd class='pos-right clearfix'><div class='circ'></div><div class='time'>" + getShortMonth(exactDate.getMonth()) + " " + exactDate.getDate() + "</div><div class='events'>"; // circle with exact date on the side
-	timelineEntry += "<div class='pull-left'><div class='thumbIcon'><a href=" + imageSource + " data-toggle='lightbox'><img class='events-object img-rounded' id=thumbIcon" + value._id + " src=" + imageSource + "></a></div>";
-	timelineEntry += "<div class='downloadButton'><a href='" + PDFSource + "' class='btn btn-info' role='button' target='_blank' id=PDF" + value._id + ">Download Full PDF</a></div></div><div class='events-body' id='entry" + value._id + "''>"; 
+	timelineEntry += "<div class='pull-left'><div class='thumbIcon'><a href=" + imageSource + " data-toggle='lightbox'>";
+	timelineEntry += "<img class='events-object img-rounded' id=thumbIcon" + value._id + " src=" + imageSource + "></a></div>";
+	timelineEntry += "<div class='downloadButton'><a href='" + PDFSource + "' class='btn btn-info' role='button' target='_blank' id=PDF" + value._id + ">Download Full PDF</a></div></div>";
+	timelineEntry += "<div class='events-body' id='entry" + value._id + "''>"; 
 	timelineEntry += "<div class='help-tip'><p>Double click to expand/minimize the text</p></div>";   
 	//timelineEntry += '<h4 class="events-heading">Sample Document</h4>'; // heading
 	timelineEntry += "<p style='width:90%' id=text" + value._id + ">" + shortTextSnippet + "</p>"; // BODY
+	// timelineEntry += "</div></div></dd>"; // closing tags
 	timelineEntry += "</div></div></div></dd>"; // closing tags
+
 
 	$("#timelineList").append(timelineEntry);
 

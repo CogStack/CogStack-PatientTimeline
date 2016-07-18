@@ -1,7 +1,7 @@
 
 
 /**Constant specifying maximum number of visible pagination pages*/
-const MAX_VISIBLE_PAGES = 3;
+var MAX_VISIBLE_PAGES = 3;
 
 
 /**

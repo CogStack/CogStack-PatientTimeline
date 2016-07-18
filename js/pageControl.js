@@ -5,13 +5,13 @@
  */
 
 /**Constant specifying length of the initial text snippet*/
-const SHORT_SNIPPET_LENGTH = 100;
+var SHORT_SNIPPET_LENGTH = 100;
 
 /**Constant specifying length of the expanded text snippet*/
-const LONG_SNIPPET_LENGTH = 1000;
+var LONG_SNIPPET_LENGTH = 1000;
 
 /**Constant specifying height(in px) of medium thumbnail/icon*/
-const DEFAULT_THUMBNAIL_HEIGHT = 250;
+var DEFAULT_THUMBNAIL_HEIGHT = 250;
 
 /**Variable responsible for toggling debug mode for printing debug messages to the console*/
 var debug = true;
@@ -22,16 +22,21 @@ var debug = true;
  * @returns {Boolean} determines if user is using Internet Explorer
  */
 var checkBrowser = function() {
-	var ms_ie = false;
-	var ua = window.navigator.userAgent;
-	var old_ie = ua.indexOf('MSIE ');
-	var new_ie = ua.indexOf('Trident/');
 
-	if((old_ie > -1) || (new_ie > -1)) {
-		ms_ie = true;
-	}
+	/**Code for checking if IE 11 or below: */
+	// var ms_ie = false;
+	// var ua = window.navigator.userAgent;
+	// var old_ie = ua.indexOf('MSIE ');
+	// var new_ie = ua.indexOf('Trident/');
+	// var new_ie = -1
+
+	// if((old_ie > -1) || (new_ie > -1)) {
+	// 	ms_ie = true;
+	// }
+	var ms_ie = !-[1,]; // this hack detects if browser is IE5, 6, 7 or 8. It was fixed in IE9 and above. Explanation on how it works: http://stackoverflow.com/questions/5574842/
+
 	if(ms_ie) {
-		$(".pwmodal-container").text("Sorry, this application does not support Microsoft Internet Explorer 11 or below. This application is best viewed on Chrome, Firefox, MS Edge or Safari.");
+		$(".pwmodal-container").text("Sorry, this application does not support Microsoft Internet Explorer 8 or below. This application is best viewed on Chrome, Firefox, MS Edge or Safari.");
 		$(".uil-default-css").remove();
 		showLoading();
 		return true;
