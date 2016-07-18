@@ -4,6 +4,7 @@
 	margin: 0 auto;
 	position: relative;
 }
+
 button#collapseButton {
 	position: absolute;
 	top: 0;
@@ -11,6 +12,7 @@ button#collapseButton {
 	z-index: 10;
 	cursor: pointer;
 }
+
 .pwmodal-bg {
 	display: -webkit-box;
 	display: -webkit-flex;
@@ -32,6 +34,7 @@ button#collapseButton {
 	z-index: 999;
 	background-color: rgba(255,255,255,0.8);
 }
+
 .pwmodal-container {
 	margin-left: 100px;
 	margin-right: 100px;
@@ -40,14 +43,17 @@ button#collapseButton {
 	font-style: italic;
 	color: #555;
 }
+
 .events {
 	padding: 15px !important;
 	line-height: 1.5em;
 }
+
 .timelineContainer {
 	margin-top: 20px;
 	margin-bottom: 200px;
 }
+
 .timeline {
 	border-top: 1px solid #999;
 }
@@ -58,37 +64,37 @@ button#collapseButton {
 }
 
 .input-sm {
-    height: 35px;
-    padding: 5px 10px;
-    font-size: 12px;
-    line-height: 1.5;
-    border-radius: 3px;
+	height: 35px;
+	padding: 5px 10px;
+	font-size: 12px;
+	line-height: 1.5;
+	border-radius: 3px;
 }
 
 .form-control {
-    display: block;
-    width: 100%;
-    height: 35px;
-    padding: 6px 12px;
-    font-size: 14px;
-    line-height: 1.42857143;
-    color: #555;
-    background-color: #fff;
-    background-image: none;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
-    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
-    -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
-    -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
-    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+	display: block;
+	width: 100%;
+	height: 35px;
+	padding: 6px 12px;
+	font-size: 14px;
+	line-height: 1.42857143;
+	color: #555;
+	background-color: #fff;
+	background-image: none;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+	box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+	-webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+	-o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+	transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
 }
 
 #patientIDSpan {
 	top: 28px !important; 
 }
 
-.help-tip{
+.help-tip {
 	position: absolute;
 	top: 18px;
 	right: 18px;
@@ -100,15 +106,16 @@ button#collapseButton {
 	font-size: 14px;
 	line-height: 26px;
 	cursor: default;
+	opacity: 0.5;
 }
 
-.help-tip:before{
+.help-tip:before {
 	content:'?';
 	font-weight: bold;
 	color:#fff;
 }
 
-.help-tip:hover p{
+.help-tip:hover p {
 	display:block;
 	transform-origin: 100% 0%;
 
@@ -117,7 +124,7 @@ button#collapseButton {
 
 }
 
-.help-tip p{	/* The tooltip */
+.help-tip p {	/* The tooltip */
 	display: none;
 	text-align: left;
 	background-color: #1E2021;
@@ -132,7 +139,7 @@ button#collapseButton {
 	line-height: 1.4;
 }
 
-.help-tip p:before{ /* The pointer of the tooltip */
+.help-tip p:before { /* The pointer of the tooltip */
 	position: absolute;
 	content: '';
 	width:0;
@@ -143,7 +150,7 @@ button#collapseButton {
 	top:-12px;
 }
 
-.help-tip p:after{ /* Prevents the tooltip from being hidden */
+.help-tip p:after { /* Prevents the tooltip from being hidden */
 	width:100%;
 	height:40px;
 	content:'';
@@ -156,18 +163,23 @@ button#collapseButton {
 	margin-top:20px;
 }
 
+.thumbIcon {
+	margin-bottom:5px;
+}
+
 button#searchButton {
 	margin-top:10px;
 }
 
 .slider.slider-horizontal {
-  margin-top: 5px;
-  margin-left: 5px;
+	margin-top: 5px;
+	margin-left: 5px;
 }
 
 .downloadButton {
-    margin-top: 5px;
-    text-align: center;
+	margin-top: 5px;
+	margin-right: 5px;
+	text-align: center;
 }
 
 .events-object.img-rounded {
@@ -175,6 +187,65 @@ button#searchButton {
 	margin-right: 10px !important;
 }
 
+@media screen and (max-width: 340px){
+	.timeline{
+	margin-left: 30px;
+	}
+
+	.events-object.img-rounded {
+		max-width: 200px;
+		max-height: 200px;
+	}
+
+	.events-body{
+		clear: both;
+	}
+
+	button.downloadButton{
+		margin-bottom: 5px;
+	}
+}
+
+@media screen and (max-width: 450px) and (min-width: 341px){
+	.timeline{
+	margin-left: 30px;
+	}
+
+	.events-object.img-rounded {
+		max-width: 250px;
+		max-height: 250px;
+	}
+
+	.events-body{
+		clear: both;
+	}
+
+	button.downloadButton{
+		margin-bottom: 5px;
+	}
+}
+
+@media screen and (max-width: 700px) and (min-width: 451px) {
+	.timeline{
+		margin-left: 30px;
+	}
+
+	.events-object.img-rounded {
+		max-width: 400px;
+		max-height: 400px;
+	}
+
+	.events-body {
+		clear: both;
+	}
+
+	.downloadButton {
+		margin-top: 15px;
+		margin-bottom: 5px;
+	}
+}
+
 body {
-    background-color: #f1f2f6;
+	background-color: #f1f2f6;
+	width: 100%;
 }

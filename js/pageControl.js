@@ -5,17 +5,42 @@
  */
 
 /**Constant specifying length of the initial text snippet*/
-const SHORT_SNIPPET_LENGTH = 100;
+var SHORT_SNIPPET_LENGTH = 100;
 
 /**Constant specifying length of the expanded text snippet*/
-const LONG_SNIPPET_LENGTH = 1000;
+var LONG_SNIPPET_LENGTH = 1000;
 
 /**Constant specifying height(in px) of medium thumbnail/icon*/
-const DEFAULT_THUMBNAIL_HEIGHT = 250;
+var DEFAULT_THUMBNAIL_HEIGHT = 250;
 
 /**Variable responsible for toggling debug mode for printing debug messages to the console*/
 var debug = true;
 
+
+/**
+ * Checks if user is using old version of Internet Explorer
+ * @returns {Boolean} determines if user is using Internet Explorer
+ */
+var checkBrowser = function() {
+
+	/**Code for checking if IE 11 or below: */
+	// var ms_ie = false;
+	// var ua = window.navigator.userAgent;
+	// var old_ie = ua.indexOf('MSIE '); FOR IE10 and less
+	// var new_ie = ua.indexOf('Trident/'); // FOR IE11
+
+	// if((old_ie > -1) || (new_ie > -1)) {
+	// 	ms_ie = true;
+	// }
+	var ms_ie = !-[1,]; // this hack detects if browser is IE5, 6, 7 or 8. It was fixed in IE9 and above. Explanation on how it works: http://stackoverflow.com/questions/5574842/
+
+	if(ms_ie) {
+		$(".pwmodal-container").text("Sorry, this application does not support Microsoft Internet Explorer 8 or below. This application is best viewed on Chrome, Firefox, MS Edge or Safari.");
+		$(".uil-default-css").remove();
+		showLoading();
+		return true;
+	}
+}
 
 /**
 * Fired when the document is finished loading.
@@ -73,27 +98,6 @@ $(document).ready(function() {
 });
 
 /**
- * Checks if user is using Internet Explorer
- * @returns {Boolean} determines if user is using Internet Explorer
- */
-var checkBrowser = function() {
-    var ms_ie = false;
-    var ua = window.navigator.userAgent;
-    var old_ie = ua.indexOf('MSIE ');
-    var new_ie = ua.indexOf('Trident/');
-
-    if ((old_ie > -1) || (new_ie > -1)) {
-        ms_ie = true;
-    }
-    if ( ms_ie ) {
-		$(".pwmodal-container").text("Sorry, this application does not support Microsoft Internet Explorer 11 or below. This application is best viewed on Chrome, Firefox, MS Edge or Safari.");
-		$(".uil-default-css").remove();
-		showLoading();
-		return true;
-    }
-}
-
-/**
  * Function called by $(document).ready. It is responsible for setting properties of the form,
  * such as formatting of the input calendars as well as listeners for changes in them or return key press.
  * @listens event:"keydown" on patientID (listens for return key press)
@@ -116,8 +120,8 @@ var setFormProperties = function() {
 	$('#datePickerTo').datetimepicker({
 		viewMode: 'years',
 		format: 'YYYY-MM-DD',
-	    defaultDate : new Date(), // default displayed date: todays date
-	    maxDate: new Date(), // default maximum date: todays date
+		defaultDate : new Date(), // default displayed date: todays date
+		maxDate: new Date(), // default maximum date: todays date
 		allowInputToggle : true // allows for displaying the calendar when the text box is clicked
 	});
 
@@ -139,21 +143,21 @@ var setFormProperties = function() {
 
 	// Ensures you can't set end date which is before the start date
 	$("#datePickerFrom").on("dp.change", function (e) {
-	    $('#datePickerTo').data("DateTimePicker").minDate(e.date);
+		$('#datePickerTo').data("DateTimePicker").minDate(e.date);
 	});
 
 	// Ensures you can't set start date which is after the end date
 	$("#datePickerTo").on("dp.change", function (e) {
-	    $('#datePickerFrom').data("DateTimePicker").maxDate(e.date);
+		$('#datePickerFrom').data("DateTimePicker").maxDate(e.date);
 	});
 
 	// Properties of the thumbnail size selector slider
 	$("#thumbnailSizeSlider").slider({
-	    ticks: [0.25, 0.75, 1.25, 1.75],
-	    ticks_labels: ["Tiny", "Small", "Medium", "Big"],
-	    ticks_snap_bounds: 0.05,
-	    step: 0.025,
-	    value: 0.5
+		ticks: [0.25, 0.75, 1.25, 1.75],
+		ticks_labels: ["Tiny", "Small", "Medium", "Big"],
+		ticks_snap_bounds: 0.05,
+		step: 0.025,
+		value: 0.5
 	});
 }
 

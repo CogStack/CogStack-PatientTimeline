@@ -20,24 +20,24 @@ var createPDF = function(patientID, timestamp, source) {
 		}
 	}
 	margins = {
-	    top: 50,
-	    left: 60,
-	    width: 480
+		top: 50,
+		left: 60,
+		width: 480
 	};
 	pdf.fromHTML(
-	  	source,
-	  	margins.left,
-	  	margins.top,
-	  	{
-	  		"width": margins.width, // max width of content on PDF 
-	  		"elementHandlers": specialElementHandlers
-	  	},
+		source,
+		margins.left,
+		margins.top,
+		{
+			"width": margins.width, // max width of content on PDF 
+			"elementHandlers": specialElementHandlers
+		},
 		
-	  	function (dispose) {
-	  	// dispose: object with X, Y of the last line add to the PDF
-	  	//          this allow the insertion of new lines after html
-	      pdf.save(timestamp+"_"+patientID+".pdf");
-	    },
+		function (dispose) {
+			// dispose: object with X, Y of the last line add to the PDF
+			//          this allow the insertion of new lines after html
+			pdf.save(timestamp+"_"+patientID+".pdf");
+		},
 		{
 			top : 70,
 			bottom : 70
@@ -59,8 +59,8 @@ var createTimelineEntry = function(value, presentMonths) {
 	var monthYearNoSpaces = monthYear.replace(/ /g,"");
 	var pdfTimestamp = exactDate.getDate()+monthYearNoSpaces;
 
-	var shortTextSnippet = "Placeholder for content snippet once OCR is better"; //getSnippet(value._source.html,SHORT_SNIPPET_LENGTH);
-	var longTextSnippet = "Longer version of the content snippet once OCR is better"; //getSnippet(value._source.html,LONG_SNIPPET_LENGTH);
+	var shortTextSnippet = "Placeholder for snippet of the content once OCR quality is improved"; //getSnippet(value._source.html,SHORT_SNIPPET_LENGTH);
+	var longTextSnippet = "Longer version of the snippet of the content once OCR quality is improved; //getSnippet(value._source.html,LONG_SNIPPET_LENGTH);
 
 	if(!(presentMonths[monthYearNoSpaces])) {
 		timelineEntry += "<dt id=" + monthYearNoSpaces + ">" + monthYear + "</dt>"; // Month-Year Tag
@@ -69,7 +69,7 @@ var createTimelineEntry = function(value, presentMonths) {
 
 	var imageSource = "";
 	var PDFSource = "#";
-	if(value._source.thumbnail) { 
+	if(value._source.thumbnail) {
 		imageSource = thumbnailSource + value._source.thumbnail;
 		PDFSource = thumbnailSource + value._source.thumbnail.slice(0, -3) + "pdf";
 	}
@@ -78,9 +78,11 @@ var createTimelineEntry = function(value, presentMonths) {
 
 	timelineEntry += "<div class='collapse in' aria-expanded=true id=collapsableEntry" + value._id + ">";   
 	timelineEntry += "<dd class='pos-right clearfix'><div class='circ'></div><div class='time'>" + getShortMonth(exactDate.getMonth()) + " " + exactDate.getDate() + "</div><div class='events'>"; // circle with exact date on the side
-	timelineEntry += "<div class='pull-left'><div class='thumbIcon'><a href=" + imageSource + " data-toggle='lightbox'><img class='events-object img-rounded' id=thumbIcon" + value._id + " src=" + imageSource + "></a></div>";
-	timelineEntry += "<div class='downloadButton'><a href='" + PDFSource + "' class='btn btn-info' role='button' target='_blank' id=PDF" + value._id + ">Download Full PDF</a></div></div><div class='events-body' id='entry" + value._id + "''>"; 
-	timelineEntry += "<div class='help-tip'><p>Double click to expand/minimize the text</p></div>";   
+	timelineEntry += "<div class='pull-left'><div class='thumbIcon'><a href=" + imageSource + " data-toggle='lightbox'>";
+	timelineEntry += "<img class='events-object img-rounded' id=thumbIcon" + value._id + " src=" + imageSource + "></a></div>";
+	timelineEntry += "<div class='downloadButton'><a href='" + PDFSource + "' class='btn btn-info' role='button' target='_blank' id=PDF" + value._id + ">Download Full PDF</a></div></div>";
+	timelineEntry += "<div class='events-body' id='entry" + value._id + "''>"; 
+	timelineEntry += "<div class='help-tip'><p>Double click to expand/minimize the text</p></div>";
     //timelineEntry += '<h4 class="events-heading">Sample Document</h4>'; // heading
 	timelineEntry += "<p style='width:90%' id=text" + value._id + ">" + shortTextSnippet + "</p>"; // BODY
 	timelineEntry += "</div></div></div></dd>"; // closing tags
@@ -119,12 +121,11 @@ var createTimelineListeners = function(value, shortTextSnippet, longTextSnippet,
 			$(textHandle).text(longTextSnippet);
 	});
 
-	// TODO:
-	// UPDATE WHEN THUMBNAIL AND FINAL PDFs AVAILABLE!
+
 	// download pdf when the link is clicked
 	if(!value._source.thumbnail) {
 		$("#PDF"+value._id).on("click",function(e) {
-			window.alert("something went wrong");
+			window.alert("If you see this window, contact the developer saying which entry you tried to view.");
 			e.preventDefault();
 			createPDF(value._source.docId, pdfTimestamp, value._source.html);
 			return false; 
