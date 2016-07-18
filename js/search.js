@@ -19,7 +19,6 @@ var client = new $.es.Client({
  */
 var searchForEntries = function(searchParams) {
 	showLoading();
-	$.support.cors = true;
 	client.search(searchParams).then(function(response) {
 		setPagination(parseInt(searchParams.size) - 1, searchParams.from, response.hits.hits.length)
 		processResults(response.hits.hits, searchParams.size);

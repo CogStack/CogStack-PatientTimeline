@@ -54,6 +54,7 @@ $(document).ready(function() {
 
 	$("#waitMessage").delay(100).fadeOut();
 
+	$.support.cors = true;
 	setFormProperties();
 	$(".paginationContainer").hide();
 
