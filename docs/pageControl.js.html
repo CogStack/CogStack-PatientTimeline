@@ -32,65 +32,179 @@
  * @author Ali Aliyev 
  */
 
-/**Constant specifying length of the initial text snippet*/
-const SHORT_SNIPPET_LENGTH = 100;
-
-/**Constant specifying length of the expanded text snippet*/
-const LONG_SNIPPET_LENGTH = 1000;
-
-/**Constant specifying height(in px) of small thumbnail/icon*/
-const THUMBNAIL_HEIGHT_SMALL = 75;
-
-/**Constant specifying height(in px) of medium thumbnail/icon*/
-const THUMBNAIL_HEIGHT_MEDIUM = 150;
-
-/**Constant specifying height(in px) of large thumbnail/icon*/
-const THUMBNAIL_HEIGHT_LARGE = 250;
-
-/**Variable responsible for toggling debug mode for printing debug messages to the console*/
-var debug = true;
-
-
 /**
 * Fired when the document is finished loading.
 * Responsible for settng initial components, such as hiding the timeline, collapse button, etc.
 * @function "$(document).ready"
 */
 $(document).ready(function() {
-	$("#waitMessage").delay(100).fadeOut();
-	$(".paginationContainer").hide();
-	setFormProperties();
+	var checkIE = checkBrowser();
+	if(checkIE)
+		return;
 
-	/**Listener required by the lightbox library*/
+	$("#waitMessage").delay(100).fadeOut();
+
+	$.support.cors = true;
+	setFormProperties();
+	$(".paginationContainer").hide();
+
+	// Listener required by the lightbox library
 	$(document).delegate("*[data-toggle='lightbox']", "click", function(event) {
-	    event.preventDefault();
-	    $(this).ekkoLightbox();
+		event.preventDefault();
+		$(this).ekkoLightbox();
 	}); 
 
-	$(function(){
-		$("input:radio[name ='thumbnailSize']").change(function(){
-			var thumbIconHandles = $("[id^=" + "thumbIcon" + "]"); 
-			$.each(thumbIconHandles, function(index, img) {
-				$(img).load();
-			});
+	// Resizes all thumbnails on slider change
+	$("#thumbnailSizeSlider").on("change", function(){
+		var thumbIconHandles = $("[id^=" + "thumbIcon" + "]"); 
+		$.each(thumbIconHandles, function(index, img) {
+			$(img).load();
 		});
 	});
 
-	/**Listener for the next-page button*/
+	// Starts search on button click
+	$("#searchButton").on("click", function(e) {
+		e.preventDefault();
+		startSearch();
+	});
+
+	// Collapses all entries on button click
+	$("#collapseButton").on("click", function(e) {
+		e.preventDefault();
+		toggleCollapse();
+	})
+
+	// Listener for the next-page button
 	$("#nextPage").on("click", function(e){
 		e.preventDefault();
 		if(!($(this).hasClass("disabled")))
 			changePage.nextPage();
 	});
 
-	/**Listener for the next-page button*/
+	// Listener for the next-page button
 	$("#prevPage").on("click", function(e){
 		e.preventDefault();
 		if(!($(this).hasClass("disabled")))
 			changePage.previousPage();
 	});
 
+	// Moves between documents on arrow up and arrow down
+	$(document).on("keyup", function(e) {
+		if(e.which == 38) {
+			e.preventDefault();
+			scrollOneUp();
+		}
+		if(e.which == 40) {
+			e.preventDefault();
+			scrollOneDown()
+		}
+	});
+
+
+	setupFeedbackMechanism()
+    $('[data-toggle="tooltip"]').tooltip(); 
 });
+
+/**
+ * Checks if user is using old version of Internet Explorer
+ * @returns {Boolean} determines if user is using Internet Explorer
+ */
+var checkBrowser = function() {
+
+	/**Code for checking if IE 11 or below: */
+	// var ms_ie = false;
+	// var ua = window.navigator.userAgent;
+	// var old_ie = ua.indexOf('MSIE '); FOR IE10 and less
+	// var new_ie = ua.indexOf('Trident/'); // FOR IE11
+
+	// if((old_ie > -1) || (new_ie > -1)) {
+	// 	ms_ie = true;
+	// }
+	var ms_ie = !-[1,]; // this hack detects if browser is IE5, 6, 7 or 8. It was fixed in IE9 and above. Explanation on how it works: http://stackoverflow.com/questions/5574842/
+
+	if(ms_ie) {
+		$(".pwmodal-container").text("Sorry, this application does not support Microsoft Internet Explorer 8 or below. This application is best viewed on Chrome, Firefox, MS Edge or Safari.");
+		$(".uil-default-css").remove();
+		showLoading();
+		return true;
+	}
+}
+
+/**
+ * Setups listeners on the 'Report problem' and 'send feedback' buttons to act appropriately.
+ * Code for that part was taken from the previous version written by Ismail Kartoglu
+ */
+var setupFeedbackMechanism = function() {
+	$("#feedback-button").click(function() {
+		var $feedbackDialog = $("#feedback-dialog");
+		$feedbackDialog.jqm({
+			modal:true
+
+		});
+		$feedbackDialog.jqmShow();
+		$("#send-feedback-button").prop("disabled", false);
+		$("#feedback-response").html("");
+	});
+
+
+	$(".jqmWindow").on("keydown", function(e){
+		if (e.keyCode == 27) {
+			e.preventDefault();
+			$(".jqmWindow").jqmHide();
+		}
+	});
+
+
+	$("#send-feedback-button").click(function() {
+		var request = [];
+
+		var containingKeywords = $("#containingKeywords").val();
+		var patientId = $("#patientID").val();
+		var startDate = $("#datePickerFrom").data("date");
+		var endDate = $("#datePickerTo").data("date");
+
+		request.push({
+			"patientId" : patientId,
+			"startDate" : startDate,
+			"endDate" : endDate,
+			"containingKeywords" : containingKeywords,
+		})	
+
+        var $questions = $(".questionnaire");
+		$questions.each(function() {
+			var $question = $(this);
+			var $p = $question.find("p");
+			var question = $p.html();
+			var $textarea = $question.find("textarea");
+			var answer = $textarea.val();
+
+			request.push({
+				"question" : question,
+				"answer" : answer,
+			});
+		});
+
+		$("#feedback-response").html("&lt;b>Please wait...&lt;/b>");
+		$("#send-feedback-button").prop("disabled", true);
+
+		if(debug)
+			console.log(request)
+
+		$.ajax({
+			type: "POST",
+			url: feedbackURL, // specified in config.js
+			dataType: "json",
+			contentType: 'application/json',
+			data: request,
+			success: function() {
+				$("#feedback-response").html('&lt;b>We have received your feedback, thanks.&lt;/b>');
+			},
+			error: function() {
+				$("#feedback-response").html('&lt;b>There was an issue when sending your request. If this problem persists, please contact us via email.&lt;/b>');
+			}
+		});
+	});
+}
 
 /**
  * Function called by $(document).ready. It is responsible for setting properties of the form,
@@ -100,7 +214,7 @@ $(document).ready(function() {
  * @listens event:"dp.change" on datePickerFrom (listens for changes in datePickerTo)
  * @listens event:"dp.change" on datePickerTo (listens for changes in datePickerFrom)
 */
-function setFormProperties() {
+var setFormProperties = function() {
 	// Properties for the calendar for "from" date
 	$('#datePickerFrom').datetimepicker({
 		viewMode: 'years',
@@ -115,8 +229,8 @@ function setFormProperties() {
 	$('#datePickerTo').datetimepicker({
 		viewMode: 'years',
 		format: 'YYYY-MM-DD',
-	    defaultDate : new Date(), // default displayed date: todays date
-	    maxDate: new Date(), // default maximum date: todays date
+		defaultDate : new Date(), // default displayed date: todays date
+		maxDate: new Date(), // default maximum date: todays date
 		allowInputToggle : true // allows for displaying the calendar when the text box is clicked
 	});
 
@@ -138,19 +252,29 @@ function setFormProperties() {
 
 	// Ensures you can't set end date which is before the start date
 	$("#datePickerFrom").on("dp.change", function (e) {
-	    $('#datePickerTo').data("DateTimePicker").minDate(e.date);
+		$('#datePickerTo').data("DateTimePicker").minDate(e.date);
 	});
 
 	// Ensures you can't set start date which is after the end date
 	$("#datePickerTo").on("dp.change", function (e) {
-	    $('#datePickerFrom').data("DateTimePicker").maxDate(e.date);
+		$('#datePickerFrom').data("DateTimePicker").maxDate(e.date);
+	});
+
+	// Properties of the thumbnail size selector slider
+	$("#thumbnailSizeSlider").slider({
+		ticks: scalingTicks, // specified in config.js
+		ticks_labels: ["Tiny", "Small", "Medium", "Big"],
+		ticks_snap_bounds: 0.05,
+		step: 0.025,
+		value: 0.5,
+		tooltip : "hide"
 	});
 }
 
 /**
  * Cleans up the timeline before the search is initialiased; empties its content (if it contained any data) and hides unnecessary elements
  */
-function clearTimeline() {
+var clearTimeline = function() {
 	$("#timelineList").empty();
 	$(".paginationContainer").hide();
 }
@@ -158,7 +282,7 @@ function clearTimeline() {
 /**
  * Collapses or expands all populated timeline entries
  */
-function toggleCollapse() {
+var toggleCollapse = function() {
 	var buttonHandle = $("#collapseButton");
 	var collapsableHandle = $("[id^=" + "collapsableEntry" + "]"); // looks for all elements with id beginning with "collapsableEntry"
 	var numberOfVisibleEntries = 0;
@@ -182,15 +306,15 @@ function toggleCollapse() {
 /**
  * Displays the loading message when the results are being fetched
  */
-function showLoading() {
+var showLoading = function() {
 	$('#waitMessage').fadeIn(300);
 };
 
 /**
  * Hides the loading messages after results are fetched
  */
-function hideLoading() {
-    $("#waitMessage").fadeOut(300);
+var hideLoading = function() {
+	$("#waitMessage").fadeOut(300);
 }</code></pre>
         </article>
     </section>
@@ -201,13 +325,13 @@ function hideLoading() {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="changePage.html">changePage</a></li></ul><h3>Global</h3><ul><li><a href="global.html#%2522$(document).ready%2522">"$(document).ready"</a></li><li><a href="global.html#addNewPageEnd">addNewPageEnd</a></li><li><a href="global.html#addNewPageStart">addNewPageStart</a></li><li><a href="global.html#checkNextButton">checkNextButton</a></li><li><a href="global.html#checkPrevButton">checkPrevButton</a></li><li><a href="global.html#clearTimeline">clearTimeline</a></li><li><a href="global.html#client">client</a></li><li><a href="global.html#createPDF">createPDF</a></li><li><a href="global.html#createTimelineEntry">createTimelineEntry</a></li><li><a href="global.html#createTimelineListeners">createTimelineListeners</a></li><li><a href="global.html#debug">debug</a></li><li><a href="global.html#getCurrentActivePage">getCurrentActivePage</a></li><li><a href="global.html#getPatientID">getPatientID</a></li><li><a href="global.html#getShortMonth">getShortMonth</a></li><li><a href="global.html#getSnippet">getSnippet</a></li><li><a href="global.html#getThumbnailHeight">getThumbnailHeight</a></li><li><a href="global.html#getThumbnailWidth">getThumbnailWidth</a></li><li><a href="global.html#hideLoading">hideLoading</a></li><li><a href="global.html#LONG_SNIPPET_LENGTH">LONG_SNIPPET_LENGTH</a></li><li><a href="global.html#MAX_VISIBLE_PAGES">MAX_VISIBLE_PAGES</a></li><li><a href="global.html#prepareESObject">prepareESObject</a></li><li><a href="global.html#prepareSearchData">prepareSearchData</a></li><li><a href="global.html#processResults">processResults</a></li><li><a href="global.html#recreatePagination">recreatePagination</a></li><li><a href="global.html#removeFirstPage">removeFirstPage</a></li><li><a href="global.html#removeLastPage">removeLastPage</a></li><li><a href="global.html#searchForEntries">searchForEntries</a></li><li><a href="global.html#setFormProperties">setFormProperties</a></li><li><a href="global.html#setNewActivePage">setNewActivePage</a></li><li><a href="global.html#setPagination">setPagination</a></li><li><a href="global.html#SHORT_SNIPPET_LENGTH">SHORT_SNIPPET_LENGTH</a></li><li><a href="global.html#showLoading">showLoading</a></li><li><a href="global.html#startSearch">startSearch</a></li><li><a href="global.html#THUMBNAIL_HEIGHT_LARGE">THUMBNAIL_HEIGHT_LARGE</a></li><li><a href="global.html#THUMBNAIL_HEIGHT_MEDIUM">THUMBNAIL_HEIGHT_MEDIUM</a></li><li><a href="global.html#THUMBNAIL_HEIGHT_SMALL">THUMBNAIL_HEIGHT_SMALL</a></li><li><a href="global.html#toggleCollapse">toggleCollapse</a></li><li><a href="global.html#url">url</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="changePage.html">changePage</a></li></ul><h3>Global</h3><ul><li><a href="global.html#%2522$(document).ready%2522">"$(document).ready"</a></li><li><a href="global.html#addNewPageEnd">addNewPageEnd</a></li><li><a href="global.html#addNewPageStart">addNewPageStart</a></li><li><a href="global.html#checkBrowser">checkBrowser</a></li><li><a href="global.html#checkNextButton">checkNextButton</a></li><li><a href="global.html#checkPrevButton">checkPrevButton</a></li><li><a href="global.html#clearTimeline">clearTimeline</a></li><li><a href="global.html#client">client</a></li><li><a href="global.html#createPDF">createPDF</a></li><li><a href="global.html#createTimelineEntry">createTimelineEntry</a></li><li><a href="global.html#createTimelineListeners">createTimelineListeners</a></li><li><a href="global.html#debug">debug</a></li><li><a href="global.html#DEFAULT_THUMBNAIL_HEIGHT">DEFAULT_THUMBNAIL_HEIGHT</a></li><li><a href="global.html#elasticSearchURL">elasticSearchURL</a></li><li><a href="global.html#feedbackURL">feedbackURL</a></li><li><a href="global.html#getCurrentActivePage">getCurrentActivePage</a></li><li><a href="global.html#getPatientID">getPatientID</a></li><li><a href="global.html#getShortMonth">getShortMonth</a></li><li><a href="global.html#getSnippet">getSnippet</a></li><li><a href="global.html#getThumbnailHeight">getThumbnailHeight</a></li><li><a href="global.html#getThumbnailWidth">getThumbnailWidth</a></li><li><a href="global.html#hideLoading">hideLoading</a></li><li><a href="global.html#LONG_SNIPPET_LENGTH">LONG_SNIPPET_LENGTH</a></li><li><a href="global.html#MAX_VISIBLE_PAGES">MAX_VISIBLE_PAGES</a></li><li><a href="global.html#prepareESObject">prepareESObject</a></li><li><a href="global.html#prepareSearchData">prepareSearchData</a></li><li><a href="global.html#processResults">processResults</a></li><li><a href="global.html#recreatePagination">recreatePagination</a></li><li><a href="global.html#removeFirstPage">removeFirstPage</a></li><li><a href="global.html#removeLastPage">removeLastPage</a></li><li><a href="global.html#scalingTicks">scalingTicks</a></li><li><a href="global.html#scrollOneDown">scrollOneDown</a></li><li><a href="global.html#scrollOneUp">scrollOneUp</a></li><li><a href="global.html#scrollTo">scrollTo</a></li><li><a href="global.html#searchForEntries">searchForEntries</a></li><li><a href="global.html#setFormProperties">setFormProperties</a></li><li><a href="global.html#setNewActivePage">setNewActivePage</a></li><li><a href="global.html#setPagination">setPagination</a></li><li><a href="global.html#setupFeedbackMechanism">setupFeedbackMechanism</a></li><li><a href="global.html#SHORT_SNIPPET_LENGTH">SHORT_SNIPPET_LENGTH</a></li><li><a href="global.html#showLoading">showLoading</a></li><li><a href="global.html#startSearch">startSearch</a></li><li><a href="global.html#thumbnailSource">thumbnailSource</a></li><li><a href="global.html#toggleCollapse">toggleCollapse</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Mon Jul 04 2016 10:15:28 GMT+0100 (GMT (czas letni))
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Thu Jul 21 2016 13:22:46 GMT+0100 (GMT Summer Time)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -4,18 +4,78 @@
  * @author Ali Aliyev 
  */
 
-/**Constant specifying length of the initial text snippet*/
-var SHORT_SNIPPET_LENGTH = 100;
+/**
+* Fired when the document is finished loading.
+* Responsible for settng initial components, such as hiding the timeline, collapse button, etc.
+* @function "$(document).ready"
+*/
+$(document).ready(function() {
+	var checkIE = checkBrowser();
+	if(checkIE)
+		return;
 
-/**Constant specifying length of the expanded text snippet*/
-var LONG_SNIPPET_LENGTH = 1000;
+	$("#waitMessage").delay(100).fadeOut();
 
-/**Constant specifying height(in px) of medium thumbnail/icon*/
-var DEFAULT_THUMBNAIL_HEIGHT = 250;
+	$.support.cors = true;
+	setFormProperties();
+	$(".paginationContainer").hide();
 
-/**Variable responsible for toggling debug mode for printing debug messages to the console*/
-var debug = true;
+	// Listener required by the lightbox library
+	$(document).delegate("*[data-toggle='lightbox']", "click", function(event) {
+		event.preventDefault();
+		$(this).ekkoLightbox();
+	}); 
 
+	// Resizes all thumbnails on slider change
+	$("#thumbnailSizeSlider").on("change", function(){
+		var thumbIconHandles = $("[id^=" + "thumbIcon" + "]"); 
+		$.each(thumbIconHandles, function(index, img) {
+			$(img).load();
+		});
+	});
+
+	// Starts search on button click
+	$("#searchButton").on("click", function(e) {
+		e.preventDefault();
+		startSearch();
+	});
+
+	// Collapses all entries on button click
+	$("#collapseButton").on("click", function(e) {
+		e.preventDefault();
+		toggleCollapse();
+	})
+
+	// Listener for the next-page button
+	$("#nextPage").on("click", function(e){
+		e.preventDefault();
+		if(!($(this).hasClass("disabled")))
+			changePage.nextPage();
+	});
+
+	// Listener for the next-page button
+	$("#prevPage").on("click", function(e){
+		e.preventDefault();
+		if(!($(this).hasClass("disabled")))
+			changePage.previousPage();
+	});
+
+	// Moves between documents on arrow up and arrow down
+	$(document).on("keyup", function(e) {
+		if(e.which == 38) {
+			e.preventDefault();
+			scrollOneUp();
+		}
+		if(e.which == 40) {
+			e.preventDefault();
+			scrollOneDown()
+		}
+	});
+
+
+	setupFeedbackMechanism()
+    $('[data-toggle="tooltip"]').tooltip(); 
+});
 
 /**
  * Checks if user is using old version of Internet Explorer
@@ -43,60 +103,80 @@ var checkBrowser = function() {
 }
 
 /**
-* Fired when the document is finished loading.
-* Responsible for settng initial components, such as hiding the timeline, collapse button, etc.
-* @function "$(document).ready"
-*/
-$(document).ready(function() {
-	var checkIE = checkBrowser();
-	if(checkIE)
-		return;
+ * Setups listeners on the 'Report problem' and 'send feedback' buttons to act appropriately.
+ * Code for that part was taken from the previous version written by Ismail Kartoglu
+ */
+var setupFeedbackMechanism = function() {
+	$("#feedback-button").click(function() {
+		var $feedbackDialog = $("#feedback-dialog");
+		$feedbackDialog.jqm({
+			modal:true
 
-	$("#waitMessage").delay(100).fadeOut();
+		});
+		$feedbackDialog.jqmShow();
+		$("#send-feedback-button").prop("disabled", false);
+		$("#feedback-response").html("");
+	});
 
-	$.support.cors = true;
-	setFormProperties();
-	$(".paginationContainer").hide();
 
-	/**Listener required by the lightbox library*/
-	$(document).delegate("*[data-toggle='lightbox']", "click", function(event) {
-	    event.preventDefault();
-	    $(this).ekkoLightbox();
-	}); 
+	$(".jqmWindow").on("keydown", function(e){
+		if (e.keyCode == 27) {
+			e.preventDefault();
+			$(".jqmWindow").jqmHide();
+		}
+	});
 
-	$("#thumbnailSizeSlider").on("change", function(){
-		var thumbIconHandles = $("[id^=" + "thumbIcon" + "]"); 
-		$.each(thumbIconHandles, function(index, img) {
-			$(img).load();
+
+	$("#send-feedback-button").click(function() {
+		var request = [];
+
+		var containingKeywords = $("#containingKeywords").val();
+		var patientId = $("#patientID").val();
+		var startDate = $("#datePickerFrom").data("date");
+		var endDate = $("#datePickerTo").data("date");
+
+		request.push({
+			"patientId" : patientId,
+			"startDate" : startDate,
+			"endDate" : endDate,
+			"containingKeywords" : containingKeywords,
+		})	
+
+        var $questions = $(".questionnaire");
+		$questions.each(function() {
+			var $question = $(this);
+			var $p = $question.find("p");
+			var question = $p.html();
+			var $textarea = $question.find("textarea");
+			var answer = $textarea.val();
+
+			request.push({
+				"question" : question,
+				"answer" : answer,
+			});
+		});
+
+		$("#feedback-response").html("<b>Please wait...</b>");
+		$("#send-feedback-button").prop("disabled", true);
+
+		if(debug)
+			console.log(request)
+
+		$.ajax({
+			type: "POST",
+			url: feedbackURL, // specified in config.js
+			dataType: "json",
+			contentType: 'application/json',
+			data: request,
+			success: function() {
+				$("#feedback-response").html('<b>We have received your feedback, thanks.</b>');
+			},
+			error: function() {
+				$("#feedback-response").html('<b>There was an issue when sending your request. If this problem persists, please contact us via email.</b>');
+			}
 		});
 	});
-
-	/**Listener for the next-page button*/
-	$("#nextPage").on("click", function(e){
-		e.preventDefault();
-		if(!($(this).hasClass("disabled")))
-			changePage.nextPage();
-	});
-
-	/**Listener for the next-page button*/
-	$("#prevPage").on("click", function(e){
-		e.preventDefault();
-		if(!($(this).hasClass("disabled")))
-			changePage.previousPage();
-	});
-
-	/**Listeners for the arrow up and down buttons*/
-	$(document).keyup(function(e) {
-		if(e.which == 38) {
-			e.preventDefault();
-			scrollOneUp();
-		}
-		if(e.which == 40) {
-			e.preventDefault();
-			scrollOneDown()
-		}
-	});
-});
+}
 
 /**
  * Function called by $(document).ready. It is responsible for setting properties of the form,
@@ -154,11 +234,12 @@ var setFormProperties = function() {
 
 	// Properties of the thumbnail size selector slider
 	$("#thumbnailSizeSlider").slider({
-		ticks: [0.25, 0.75, 1.25, 1.75],
+		ticks: scalingTicks, // specified in config.js
 		ticks_labels: ["Tiny", "Small", "Medium", "Big"],
 		ticks_snap_bounds: 0.05,
 		step: 0.025,
-		value: 0.5
+		value: 0.5,
+		tooltip : "hide"
 	});
 }
 

@@ -38,7 +38,7 @@
  * @param {String} timestamp associated with the source timestamp
  * @param {String} source text to create the PDF from
  */
-function createPDF(patientID, timestamp, source) {
+var createPDF = function(patientID, timestamp, source) {
 	var pdf = new jsPDF("p", "pt", "a4");  // create new jsPDF object
 	specialElementHandlers = {
 		"#bypassme": function(element, renderer) {
@@ -46,24 +46,24 @@ function createPDF(patientID, timestamp, source) {
 		}
 	}
 	margins = {
-	    top: 50,
-	    left: 60,
-	    width: 480
+		top: 50,
+		left: 60,
+		width: 480
 	};
 	pdf.fromHTML(
-	  	source,
-	  	margins.left,
-	  	margins.top,
-	  	{
-	  		"width": margins.width, // max width of content on PDF 
-	  		"elementHandlers": specialElementHandlers
-	  	},
+		source,
+		margins.left,
+		margins.top,
+		{
+			"width": margins.width, // max width of content on PDF 
+			"elementHandlers": specialElementHandlers
+		},
 		
-	  	function (dispose) {
-	  	// dispose: object with X, Y of the last line add to the PDF
-	  	//          this allow the insertion of new lines after html
-	      pdf.save(timestamp+"_"+patientID+".pdf");
-	    },
+		function (dispose) {
+			// dispose: object with X, Y of the last line add to the PDF
+			//          this allow the insertion of new lines after html
+			pdf.save(timestamp+"_"+patientID+".pdf");
+		},
 		{
 			top : 70,
 			bottom : 70
@@ -77,16 +77,16 @@ function createPDF(patientID, timestamp, source) {
  * @param {Object} presentMonths very simple HashMap-like structure to check if given month-year is already present
  * @returns {Object} returns presentMonths to be used in the next call
  */
-function createTimelineEntry(value, presentMonths) {
+var createTimelineEntry = function(value, presentMonths) {
 	var timelineEntry = "";
 
-	var exactDate = new Date(value._source.created);
-	var monthYear = getShortMonth(exactDate.getMonth())+" "+exactDate.getFullYear();
+	var exactDate = new Date(value._source.timestamp);
+	var monthYear = getShortMonth(exactDate.getMonth()) + " " + exactDate.getFullYear();
 	var monthYearNoSpaces = monthYear.replace(/ /g,"");
 	var pdfTimestamp = exactDate.getDate()+monthYearNoSpaces;
 
-	var shortTextSnippet = getSnippet(value._source.text,SHORT_SNIPPET_LENGTH);
-	var longTextSnippet = getSnippet(value._source.text,LONG_SNIPPET_LENGTH);
+	var shortTextSnippet = "Placeholder for snippet of the content once OCR quality is improved"; //getSnippet(value._source.html,SHORT_SNIPPET_LENGTH);
+	var longTextSnippet = "Longer version of the snippet of the content once OCR quality is improved"; //getSnippet(value._source.html,LONG_SNIPPET_LENGTH);
 
 	if(!(presentMonths[monthYearNoSpaces])) {
 		timelineEntry += "&lt;dt id=" + monthYearNoSpaces + ">" + monthYear + "&lt;/dt>"; // Month-Year Tag
@@ -94,19 +94,23 @@ function createTimelineEntry(value, presentMonths) {
 	}
 
 	var imageSource = "";
-
-	if(value._source.thumbnail) 
-		imageSource = "img/thumbnail_placeholder.png"; // todo: replace with actual thumbnail when available
+	var PDFSource = "#";
+	if(value._source.thumbnail) {
+		imageSource = thumbnailSource + value._source.thumbnail;
+		PDFSource = thumbnailSource + value._source.thumbnail.slice(0, -3) + "pdf";
+	}
 	else
 		imageSource = "img/Icon-Placeholder.png";
 
 	timelineEntry += "&lt;div class='collapse in' aria-expanded=true id=collapsableEntry" + value._id + ">";   
 	timelineEntry += "&lt;dd class='pos-right clearfix'>&lt;div class='circ'>&lt;/div>&lt;div class='time'>" + getShortMonth(exactDate.getMonth()) + " " + exactDate.getDate() + "&lt;/div>&lt;div class='events'>"; // circle with exact date on the side
-	timelineEntry += "&lt;div class='pull-left'>&lt;a href=" + imageSource + " data-toggle='lightbox'>&lt;img class='events-object img-rounded' id=thumbIcon" + value._id + " src=" + imageSource + ">&lt;/a>&lt;/div>&lt;div class='events-body' id='entry" + value._id + "''>"; // TODO: REPLACE PLACEHOLDER IMAGE
-	timelineEntry += "&lt;div class='help-tip'>&lt;p>Double click to expand/minimize the text&lt;/p>&lt;/div>";   
+	timelineEntry += "&lt;div class='pull-left'>&lt;div class='thumbIcon'>&lt;a href=" + imageSource + " data-toggle='lightbox'>";
+	timelineEntry += "&lt;img class='events-object img-rounded' id=thumbIcon" + value._id + " src=" + imageSource + ">&lt;/a>&lt;/div>";
+	timelineEntry += "&lt;div class='downloadButton'>&lt;a href='" + PDFSource + "' class='btn btn-info' role='button' target='_blank' id=PDF" + value._id + ">Download Full PDF&lt;/a>&lt;/div>&lt;/div>";
+	timelineEntry += "&lt;div class='events-body' id='entry" + value._id + "''>"; 
+	timelineEntry += "&lt;div class='help-tip'>&lt;p>Double click to expand/minimize the text&lt;/p>&lt;/div>";
     //timelineEntry += '&lt;h4 class="events-heading">Sample Document&lt;/h4>'; // heading
 	timelineEntry += "&lt;p style='width:90%' id=text" + value._id + ">" + shortTextSnippet + "&lt;/p>"; // BODY
-	timelineEntry += "&lt;a href='#' id=PDF" + value._id + ">Download Full PDF&lt;/a>";
 	timelineEntry += "&lt;/div>&lt;/div>&lt;/div>&lt;/dd>"; // closing tags
 
 	$("#timelineList").append(timelineEntry);
@@ -126,31 +130,33 @@ function createTimelineEntry(value, presentMonths) {
  * @listens event:"dbclick" on entry
  * @listens event:"click" on 'Download PDF'
  */
-function createTimelineListeners(value, shortTextSnippet, longTextSnippet, pdfTimestamp, monthYearNoSpaces) {
+var createTimelineListeners = function(value, shortTextSnippet, longTextSnippet, pdfTimestamp, monthYearNoSpaces) {
 	
 	// when month-year element is clicked, given set of entries are collapsed/expanded
 	$("#"+monthYearNoSpaces).on("click", function() {
-		var collapsableEntryHandle = $("#collapsableEntry"+value._id);
+		var collapsableEntryHandle = $("#collapsableEntry" + value._id);
 		collapsableEntryHandle.collapse("toggle");
 	});
 
 	// when the text of the entry is double clicked, it is changed between short and longer version
 	$("#entry"+value._id).on("dblclick",function() {
-		var textHandle = "#text"+value._id;
+		var textHandle = "#text" + value._id;
 		if($(textHandle).text().length > shortTextSnippet.length)
 			$(textHandle).text(shortTextSnippet);
 		else
 			$(textHandle).text(longTextSnippet);
 	});
 
-	// TODO:
-	// UPDATE WHEN THUMBNAIL AND FINAL PDFs AVAILABLE!
+
 	// download pdf when the link is clicked
-	$("#PDF"+value._id).on("click",function(e) {
-		e.preventDefault();
-		createPDF(value._source.brcid, pdfTimestamp, value._source.text);
-		return false; 
-	});
+	if(!value._source.thumbnail) {
+		$("#PDF"+value._id).on("click",function(e) {
+			window.alert("If you see this window, contact the developer saying which entry you tried to view.");
+			e.preventDefault();
+			createPDF(value._source.docId, pdfTimestamp, value._source.html);
+			return false; 
+		});
+	}
 
 	// when thumbnails are loaded, they are resized to target size
 	$("#thumbIcon"+value._id).load(function(){
@@ -167,7 +173,7 @@ function createTimelineListeners(value, shortTextSnippet, longTextSnippet, pdfTi
  * Using the search results it generates and populates timeline entries
  * @param {Object} searchResult results of the ElasticSearch query
  */
-function processResults(searchResult, size) {
+var processResults = function(searchResult, size) {
 	$("#collapseButton").text("Collapse all");
 	
 	if(debug) 
@@ -201,13 +207,13 @@ function processResults(searchResult, size) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="changePage.html">changePage</a></li></ul><h3>Global</h3><ul><li><a href="global.html#%2522$(document).ready%2522">"$(document).ready"</a></li><li><a href="global.html#addNewPageEnd">addNewPageEnd</a></li><li><a href="global.html#addNewPageStart">addNewPageStart</a></li><li><a href="global.html#checkNextButton">checkNextButton</a></li><li><a href="global.html#checkPrevButton">checkPrevButton</a></li><li><a href="global.html#clearTimeline">clearTimeline</a></li><li><a href="global.html#client">client</a></li><li><a href="global.html#createPDF">createPDF</a></li><li><a href="global.html#createTimelineEntry">createTimelineEntry</a></li><li><a href="global.html#createTimelineListeners">createTimelineListeners</a></li><li><a href="global.html#debug">debug</a></li><li><a href="global.html#getCurrentActivePage">getCurrentActivePage</a></li><li><a href="global.html#getPatientID">getPatientID</a></li><li><a href="global.html#getShortMonth">getShortMonth</a></li><li><a href="global.html#getSnippet">getSnippet</a></li><li><a href="global.html#getThumbnailHeight">getThumbnailHeight</a></li><li><a href="global.html#getThumbnailWidth">getThumbnailWidth</a></li><li><a href="global.html#hideLoading">hideLoading</a></li><li><a href="global.html#LONG_SNIPPET_LENGTH">LONG_SNIPPET_LENGTH</a></li><li><a href="global.html#MAX_VISIBLE_PAGES">MAX_VISIBLE_PAGES</a></li><li><a href="global.html#prepareESObject">prepareESObject</a></li><li><a href="global.html#prepareSearchData">prepareSearchData</a></li><li><a href="global.html#processResults">processResults</a></li><li><a href="global.html#recreatePagination">recreatePagination</a></li><li><a href="global.html#removeFirstPage">removeFirstPage</a></li><li><a href="global.html#removeLastPage">removeLastPage</a></li><li><a href="global.html#searchForEntries">searchForEntries</a></li><li><a href="global.html#setFormProperties">setFormProperties</a></li><li><a href="global.html#setNewActivePage">setNewActivePage</a></li><li><a href="global.html#setPagination">setPagination</a></li><li><a href="global.html#SHORT_SNIPPET_LENGTH">SHORT_SNIPPET_LENGTH</a></li><li><a href="global.html#showLoading">showLoading</a></li><li><a href="global.html#startSearch">startSearch</a></li><li><a href="global.html#THUMBNAIL_HEIGHT_LARGE">THUMBNAIL_HEIGHT_LARGE</a></li><li><a href="global.html#THUMBNAIL_HEIGHT_MEDIUM">THUMBNAIL_HEIGHT_MEDIUM</a></li><li><a href="global.html#THUMBNAIL_HEIGHT_SMALL">THUMBNAIL_HEIGHT_SMALL</a></li><li><a href="global.html#toggleCollapse">toggleCollapse</a></li><li><a href="global.html#url">url</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="changePage.html">changePage</a></li></ul><h3>Global</h3><ul><li><a href="global.html#%2522$(document).ready%2522">"$(document).ready"</a></li><li><a href="global.html#addNewPageEnd">addNewPageEnd</a></li><li><a href="global.html#addNewPageStart">addNewPageStart</a></li><li><a href="global.html#checkBrowser">checkBrowser</a></li><li><a href="global.html#checkNextButton">checkNextButton</a></li><li><a href="global.html#checkPrevButton">checkPrevButton</a></li><li><a href="global.html#clearTimeline">clearTimeline</a></li><li><a href="global.html#client">client</a></li><li><a href="global.html#createPDF">createPDF</a></li><li><a href="global.html#createTimelineEntry">createTimelineEntry</a></li><li><a href="global.html#createTimelineListeners">createTimelineListeners</a></li><li><a href="global.html#debug">debug</a></li><li><a href="global.html#DEFAULT_THUMBNAIL_HEIGHT">DEFAULT_THUMBNAIL_HEIGHT</a></li><li><a href="global.html#elasticSearchURL">elasticSearchURL</a></li><li><a href="global.html#feedbackURL">feedbackURL</a></li><li><a href="global.html#getCurrentActivePage">getCurrentActivePage</a></li><li><a href="global.html#getPatientID">getPatientID</a></li><li><a href="global.html#getShortMonth">getShortMonth</a></li><li><a href="global.html#getSnippet">getSnippet</a></li><li><a href="global.html#getThumbnailHeight">getThumbnailHeight</a></li><li><a href="global.html#getThumbnailWidth">getThumbnailWidth</a></li><li><a href="global.html#hideLoading">hideLoading</a></li><li><a href="global.html#LONG_SNIPPET_LENGTH">LONG_SNIPPET_LENGTH</a></li><li><a href="global.html#MAX_VISIBLE_PAGES">MAX_VISIBLE_PAGES</a></li><li><a href="global.html#prepareESObject">prepareESObject</a></li><li><a href="global.html#prepareSearchData">prepareSearchData</a></li><li><a href="global.html#processResults">processResults</a></li><li><a href="global.html#recreatePagination">recreatePagination</a></li><li><a href="global.html#removeFirstPage">removeFirstPage</a></li><li><a href="global.html#removeLastPage">removeLastPage</a></li><li><a href="global.html#scalingTicks">scalingTicks</a></li><li><a href="global.html#scrollOneDown">scrollOneDown</a></li><li><a href="global.html#scrollOneUp">scrollOneUp</a></li><li><a href="global.html#scrollTo">scrollTo</a></li><li><a href="global.html#searchForEntries">searchForEntries</a></li><li><a href="global.html#setFormProperties">setFormProperties</a></li><li><a href="global.html#setNewActivePage">setNewActivePage</a></li><li><a href="global.html#setPagination">setPagination</a></li><li><a href="global.html#setupFeedbackMechanism">setupFeedbackMechanism</a></li><li><a href="global.html#SHORT_SNIPPET_LENGTH">SHORT_SNIPPET_LENGTH</a></li><li><a href="global.html#showLoading">showLoading</a></li><li><a href="global.html#startSearch">startSearch</a></li><li><a href="global.html#thumbnailSource">thumbnailSource</a></li><li><a href="global.html#toggleCollapse">toggleCollapse</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Mon Jul 04 2016 10:15:28 GMT+0100 (GMT (czas letni))
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Thu Jul 21 2016 13:22:46 GMT+0100 (GMT Summer Time)
 </footer>
 
 <script> prettyPrint(); </script>

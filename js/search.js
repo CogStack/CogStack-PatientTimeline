@@ -4,12 +4,9 @@
  * @author Ali Aliyev 
  */
 
-/**Variable specifying the address of the ElasticSearch server*/
-var url = "http://192.168.99.47:9200";
-
 /**ElasticSearch client definition*/
 var client = new $.es.Client({
-	host: url,
+	host: elasticSearchURL,
 	log: "info"
 });
 

@@ -4,8 +4,6 @@
  * @author Ali Aliyev 
  */
 
-var thumbnailSource = "http://192.168.99.42:8080/thumbs/"
-
 /** 
  * Create PDF of given text/document 
  * @param {String} patientID associated with the source ID of patient

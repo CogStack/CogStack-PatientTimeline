@@ -1,13 +1,8 @@
 /**
- * @file Script file responsible for creating the pagination
+ * @file Script file responsible for controlling the pagination
  * @author Jedrzej Stuczynski
  * @author Ali Aliyev 
  */
-
-
-/**Constant specifying maximum number of visible pagination pages*/
-var MAX_VISIBLE_PAGES = 3;
-
 
 /**
  * Wrapper for getting the index (counting from 1) of the currently active page

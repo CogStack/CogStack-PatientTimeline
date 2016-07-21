@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: auxiliary.js</title>
+    <title>JSDoc: Source: config.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: auxiliary.js</h1>
+    <h1 class="page-title">Source: config.js</h1>
 
     
 
@@ -27,89 +27,38 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/**
- * @file Script file providing auxiliary functionalities for the search and processing
+ * @file File with the configurable variables that might require tweaking.
  * @author Jedrzej Stuczynski
  * @author Ali Aliyev 
  */
 
-/** 
- * Get width of thumbnail/icon 
- * @param {Number} targetHeight provided constant height value
- * @param {Number} naturalHeight original height of thumbnail/icon
- * @param {Number} naturalWidth original width of thumbnail/icon
- * @return {Number} desired width
- */
-var getThumbnailWidth = function(targetHeight, naturalHeight, naturalWidth) {
-	return targetHeight*naturalWidth/naturalHeight;
-}
+/**Variable specifying the address of the ElasticSearch server*/
+var elasticSearchURL = "http://192.168.99.47:9200";
 
-/** 
- * Get height of thumbnail/icon from the user selection
- * @return {Number} The desired height
-*/
-var getThumbnailHeight = function() {
-	var scalingFactor = $("#thumbnailSizeSlider").slider('getValue');
-	return scalingFactor * DEFAULT_THUMBNAIL_HEIGHT;
+/**Variable specyfying address of the server with the thumbnails and PDFs of the documents*/
+var thumbnailSource = "http://192.168.99.42:8080/thumbs/"
 
+/**Variable specifying address of the server to which feedback form is sent*/
+var feedbackURL = "TODO"
 
-	//OLD IMPLEMENTATION WITH RADIO BUTTONS: (LEAVE HERE IF WE DECIDE TO REVERT)
-	/*
-	var thumbnailSize = $("input:radio[name ='thumbnailSize']:checked").val();
-	if(thumbnailSize == "small")
-		return THUMBNAIL_HEIGHT_SMALL
-	else if(thumbnailSize == "medium")
-		return THUMBNAIL_HEIGHT_MEDIUM;
-	else
-		return THUMBNAIL_HEIGHT_LARGE;
-	*/
-}
+/**Variable responsible for toggling debug mode for printing debug messages to the console*/
+var debug = true;
 
-/** 
- * Provides shortened names of months 
- * @param {Number} num number between 0-11
- * @return {String} desired motnh name
- */
-var getShortMonth = function(num) {
-	switch(num) {
-		case 0: return "Jan";
-		case 1: return "Feb";
-		case 2: return "Mar";
-		case 3: return "Apr";
-		case 4: return "May";
-		case 5: return "Jun";
-		case 6: return "Jul";
-		case 7: return "Aug";
-		case 8: return "Sep";
-		case 9: return "Oct";
-		case 10: return "Nov";
-		case 11: return "Dec";																				
-	}
-}
+/**Constant specifying length of the initial text snippet*/
+var SHORT_SNIPPET_LENGTH = 100;
 
-/** 
- * Get snippet of input text of specified length. It ensures words are not cut in the middle.
- * @example 
- * // returns "Lorem ipsum..."
- * getSnippet("Lorem ipsum dolor sit amet", 8);
- * @param {String} text source text
- * @param {Number} length desired length of the text
- * @return {String} shortened text
- */
-var getSnippet = function(text, length) {
-	if (text.length &lt; length)
-		return text;
-	var rx = new RegExp("^.{" + length + "}[^ ]*");
-	var rxResult = rx.exec(text);
-	if(rxResult) {
-		console.log("returning regex");
-		return rxResult[0]+"...";
-	}
-	else {
-		console.log("returning substring");
-		var bodyLocation = text.indexOf("&lt;body>") + 6;
-		return text.substring(bodyLocation,bodyLocation+length)+"...";
-	}
-}
+/**Constant specifying length of the expanded text snippet*/
+var LONG_SNIPPET_LENGTH = 1000;
+
+/**Constant specifying height(in px) of medium thumbnail/icon*/
+var DEFAULT_THUMBNAIL_HEIGHT = 250;
+
+/**Constant specifying maximum number of visible pagination pages*/
+var MAX_VISIBLE_PAGES = 3;
+
+/**Variable used in the thumbnail size slider. It rescales the original image by those factors. The initial value, i.e. of 1.0 is based on DEFAULT_THUMBNAIL_HEIGHT*/
+var scalingTicks = [0.05, 0.5, 1.0, 1.5]; 
+
 </code></pre>
         </article>
     </section>

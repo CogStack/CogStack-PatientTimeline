@@ -6,6 +6,8 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 
 		<title>The Timeliner Application</title>
+		<link rel="icon" href="img/favicon.ico">
+
 
 		<link rel="stylesheet" type="text/css" href="css/bootflat.css" />
 		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
@@ -13,6 +15,7 @@
 		<link rel="stylesheet" type="text/css" href="css/ekko-lightbox.min.css" />
 		<link rel="stylesheet" type="text/css" href="css/loading-animation.min.css" />
 		<link rel="stylesheet" type="text/css" href="css/bootstrap-slider.css">
+		<link rel="stylesheet" type="text/css" href="css/jqModal.css" />
 		<link rel="stylesheet" type="text/css" href="css/main.css" />
 
 
@@ -25,6 +28,8 @@
 		<script src="js/jspdf.js"></script>
 		<script src="js/ekko-lightbox.min.js"></script>
 		<script src="js/bootstrap-slider.js"></script>
+		<script src="js/jqModal.js"></script>
+		<script src="js/config.js"></script>
 		<script src="js/pageControl.js"></script>
 		<script src="js/search.js"></script>
 		<script src="js/auxiliary.js"></script>
@@ -33,6 +38,20 @@
 		<script src="js/scrolling.js"></script>
 	</head>
 	<body>
+
+		<nav class="navbar navbar-default">
+		   <div class="container">
+				<div id="navbar" class="navbar-collapse">
+					<ul class="nav navbar-nav">
+						<li>
+							<a href="#" id="homeRef">Home</a>
+						</li>
+					</ul>
+					<button class="btn btn-primary" id="feedback-button">Report a problem!</button>
+				</div>
+		   </div>
+		</nav>
+
 		<div class="container">
 			<div class='col-md-5'>
 				<h2><b>Timeliner Application</b></h2>
@@ -42,6 +61,7 @@
 			<div class="container">
 				<div class='col-md-5'>
 					<div class="form-group">
+						<span data-toggle="tooltip" title="The date is based on the last time the document was saved. You may want to be flexible with your search as it may not reflect the actual date of document." class="glyphicon glyphicon-info-sign"></span>
 						<label for="datePickerTo">Start Date:</label>
 						<div class='input-group date' id='datePickerFrom'>
 							<input type='text' class="form-control" placeholder="Date From..." />
@@ -54,6 +74,7 @@
 
 				<div class='col-md-5'>
 					<div class="form-group">
+						<span data-toggle="tooltip" title="The date is based on the last time the document was saved. You may want to be flexible with your search as it may not reflect the actual date of document." class="glyphicon glyphicon-info-sign"></span>
 						<label for="datePickerTo">End Date:</label>
 						<div class='input-group date' id='datePickerTo'>
 							<input type='text' class="form-control" placeholder="Date To..."/>
@@ -66,6 +87,7 @@
 
 				<div class='col-md-5'>
 					<div class="form-group" id="patientIDBox">
+						<span data-toggle="tooltip" title="To access a different patient's documents via Timeline, please close the application and relaunch from the new patients record within ePJS." class="glyphicon glyphicon-info-sign"></span>
 						<label class ="control-label" for="patientID">Patient ID:</label>
 						<input class="form-control input-sm" id="patientID" type="text" placeholder="Enter patient ID">
 						<span class="" id=patientIDSpan></span>
@@ -86,6 +108,7 @@
 
 				<div class='col-md-5'>
 					<div class="form-group">
+						<span data-toggle="tooltip" title="This function looks for documents containing the keyword(s) you enter.  Please note that the results may not be accurate, it is dependant on the quality of scanned document and whether the spelling within the document matches the word you entered." class="glyphicon glyphicon-info-sign"></span>
 						<label for="containingKeywords">Containing:</label>
 						<input class="form-control input-sm" id="containingKeywords" type="text" placeholder="Key words, phrases, etc.">
 					</div>
@@ -105,7 +128,7 @@
 
 				<div class='col-md-10'>
 					<label for="searchButton">&nbsp;</label>
-					<button type="button" class="btn btn-primary" id="searchButton" onclick="startSearch()">Search Documents</button>
+					<button type="button" class="btn btn-primary" id="searchButton">Search Documents</button>
 				</div>
 			</div>
 		</form>
@@ -132,13 +155,41 @@
 			<div class="siteContainer">
 				<div class="timelineContainer">
 					<div class="timeline">
-						<button type="button" class="btn btn-secondary btn-sm" id="collapseButton" onclick="toggleCollapse()">Collapse all</button>
+						<button type="button" class="btn btn-secondary btn-sm" id="collapseButton">Collapse all</button>
 						<dl id=timelineList>
 						</dl>
 					</div>
 				</div>
 			</div>
 		</div>
+
+		<div class="jqmWindow" id="feedback-dialog">
+			<a href="#" class="btn btn-link btn-lg jqmClose">Close</a>
+			<div class="content">
+				<div class="questionnaire">
+					<b><p>Why do you think something went wrong?</p></b>
+					<textarea cols="50" rows="3"></textarea>
+				</div>
+
+				<div class="questionnaire">
+					<b><p>What were you trying to achieve?</p></b>
+					<textarea cols="50" rows="3"></textarea>
+				</div>
+
+				<div class="questionnaire">
+					<b><p>How were you trying to achieve it?</p></b>
+					<textarea cols="50" rows="3"></textarea>
+				</div>
+
+				<div class="questionnaire">
+					<b><p>What were you expecting to happen?</p></b>
+					<textarea cols="50" rows="3"></textarea>
+				</div>
+				<button class="btn btn-secondary" id="send-feedback-button">Send</button>
+				<p id="feedback-response"></p>
+			</div>
+		</div>
+
 
 		<div class="pwmodal-bg" id="waitMessage">
 			<div class="pwmodal-container">Please wait...</div>
