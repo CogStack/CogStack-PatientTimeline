@@ -163,7 +163,6 @@ var setupFeedbackMechanism = function() {
 		if(debug)
 			console.log(request)
 
-		showLoading();
 		$.ajax({
 			type: "POST",
 			url: feedbackURL,
@@ -174,10 +173,9 @@ var setupFeedbackMechanism = function() {
 				$("#feedback-response").html('<b>We have received your feedback, thanks.</b>');
 			},
 			error: function() {
-				$("#feedback-response").html('<b>There was an issue when sending your request. If this problem persist, please contact us via email.</b>');
+				$("#feedback-response").html('<b>There was an issue when sending your request. If this problem persists, please contact us via email.</b>');
 			}
 		});
-		hideLoading();
 	});
 }
 
@@ -241,7 +239,8 @@ var setFormProperties = function() {
 		ticks_labels: ["Tiny", "Small", "Medium", "Big"],
 		ticks_snap_bounds: 0.05,
 		step: 0.025,
-		value: 0.5
+		value: 0.5,
+		tooltip : "hide"
 	});
 }
 

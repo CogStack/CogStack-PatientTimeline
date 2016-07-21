@@ -194,11 +194,24 @@ button#searchButton {
 button#feedback-button {
 	top: 5px; 
 	left: 85%;
-
 	position: absolute; 
 }
 
+button#send-feedback-button {
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
 
+#feedback-dialog {
+	top: 5px;
+	padding: 25px 25px 25px 25px;
+	width: auto;
+	max-width: 500px
+}
+
+#feedback-response {
+	align-self: auto;
+}
 
 @media screen and (max-width: 340px){
 	.timeline{
