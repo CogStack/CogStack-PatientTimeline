@@ -16,32 +16,8 @@ var DEFAULT_THUMBNAIL_HEIGHT = 250;
 /**Variable responsible for toggling debug mode for printing debug messages to the console*/
 var debug = true;
 
-
-/**
- * Checks if user is using Internet Explorer
- * @returns {Boolean} determines if user is using Internet Explorer
- */
-var checkBrowser = function() {
-
-	/**Code for checking if IE 11 or below: */
-	// var ms_ie = false;
-	// var ua = window.navigator.userAgent;
-	// var old_ie = ua.indexOf('MSIE ');
-	// var new_ie = ua.indexOf('Trident/');
-	// var new_ie = -1
-
-	// if((old_ie > -1) || (new_ie > -1)) {
-	// 	ms_ie = true;
-	// }
-	var ms_ie = !-[1,]; // this hack detects if browser is IE5, 6, 7 or 8. It was fixed in IE9 and above. Explanation on how it works: http://stackoverflow.com/questions/5574842/
-
-	if(ms_ie) {
-		$(".pwmodal-container").text("Sorry, this application does not support Microsoft Internet Explorer 8 or below. This application is best viewed on Chrome, Firefox, MS Edge or Safari.");
-		$(".uil-default-css").remove();
-		showLoading();
-		return true;
-	}
-}
+/**Variable specifying address of the server to which feedback form is sent*/
+var feedbackURL = "TODO"
 
 /**
 * Fired when the document is finished loading.
@@ -60,8 +36,8 @@ $(document).ready(function() {
 
 	/**Listener required by the lightbox library*/
 	$(document).delegate("*[data-toggle='lightbox']", "click", function(event) {
-	    event.preventDefault();
-	    $(this).ekkoLightbox();
+		event.preventDefault();
+		$(this).ekkoLightbox();
 	}); 
 
 	$("#thumbnailSizeSlider").on("change", function(){
@@ -84,7 +60,7 @@ $(document).ready(function() {
 		if(!($(this).hasClass("disabled")))
 			changePage.previousPage();
 	});
-	
+
 	$(document).keyup(function(e) {
 		if(e.which == 38) {
 			e.preventDefault();
@@ -95,7 +71,115 @@ $(document).ready(function() {
 			scrollOneDown()
 		}
 	});
+
+
+	setupFeedbackMechanism()
+    $('[data-toggle="tooltip"]').tooltip(); 
+
 });
+
+/**
+ * Checks if user is using Internet Explorer
+ * @returns {Boolean} determines if user is using Internet Explorer
+ */
+var checkBrowser = function() {
+	/**Code for checking if IE 11 or below: */
+	// var ms_ie = false;
+	// var ua = window.navigator.userAgent;
+	// var old_ie = ua.indexOf('MSIE ');
+	// var new_ie = ua.indexOf('Trident/');
+	// var new_ie = -1
+
+	// if((old_ie > -1) || (new_ie > -1)) {
+	// 	ms_ie = true;
+	// }
+	var ms_ie = !-[1,]; // this hack detects if browser is IE5, 6, 7 or 8. It was fixed in IE9 and above. Explanation on how it works: http://stackoverflow.com/questions/5574842/
+
+	if(ms_ie) {
+		$(".pwmodal-container").text("Sorry, this application does not support Microsoft Internet Explorer 8 or below. This application is best viewed on Chrome, Firefox, MS Edge or Safari.");
+		$(".uil-default-css").remove();
+		showLoading();
+		return true;
+	}
+}
+
+/**
+ * Setups listeners on the 'Report problem' and 'send feedback' buttons to act appropriately.
+ * Code for that part was taken from the previous version written by Ismail Kartoglu
+ */
+var setupFeedbackMechanism = function() {
+	$("#feedback-button").click(function() {
+		var $feedbackDialog = $("#feedback-dialog");
+		$feedbackDialog.jqm({
+			modal:true
+
+		});
+		$feedbackDialog.jqmShow();
+		$("#send-feedback-button").prop("disabled", false);
+		$("#feedback-response").html("");
+	});
+
+
+	$(".jqmWindow").on("keydown", function(e){
+		if (e.keyCode == 27) {
+			e.preventDefault();
+			$(".jqmWindow").jqmHide();
+		}
+	});
+
+
+	$("#send-feedback-button").click(function() {
+		var request = [];
+
+		var containingKeywords = $("#containingKeywords").val();
+		var patientId = $("#patientID").val();
+		var startDate = $("#datePickerFrom").data("date");
+		var endDate = $("#datePickerTo").data("date");
+
+		request.push({
+			"patientId" : patientId,
+			"startDate" : startDate,
+			"endDate" : endDate,
+			"containingKeywords" : containingKeywords,
+		})	
+
+        var $questions = $(".questionnaire");
+		$questions.each(function() {
+			var $question = $(this);
+			var $p = $question.find("p");
+			var question = $p.html();
+			var $textarea = $question.find("textarea");
+			var answer = $textarea.val();
+
+			request.push({
+				"question" : question,
+				"answer" : answer,
+			});
+		});
+
+		$("#feedback-response").html("<b>Please wait...</b>");
+		$("#send-feedback-button").prop("disabled", true);
+
+		if(debug)
+			console.log(request)
+
+		showLoading();
+		$.ajax({
+			type: "POST",
+			url: feedbackURL,
+			dataType: "json",
+			contentType: 'application/json',
+			data: request,
+			success: function() {
+				$("#feedback-response").html('<b>We have received your feedback, thanks.</b>');
+			},
+			error: function() {
+				$("#feedback-response").html('<b>There was an issue when sending your request. If this problem persist, please contact us via email.</b>');
+			}
+		});
+		hideLoading();
+	});
+}
 
 /**
  * Function called by $(document).ready. It is responsible for setting properties of the form,
@@ -207,3 +291,4 @@ var hideLoading = function() {
 	$("#waitMessage").fadeOut(300);
 }
 
+	
