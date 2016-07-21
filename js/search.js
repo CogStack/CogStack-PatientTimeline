@@ -4,12 +4,9 @@
  * @author Ali Aliyev 
  */
 
-/**Variable specifying the address of the ElasticSearch server*/
-var url = "http://timeline2016-silverash.rhcloud.com";
-
 /**ElasticSearch client definition*/
 var client = new $.es.Client({
-	host: url,
+	host: elasticSearchURL,
 	log: "info"
 });
 
@@ -107,8 +104,8 @@ var prepareESObject = function(patientID, resultsPerPage, startingIndex, startDa
 	}
 
 	var searchParams = {
-		size : parseInt(resultsPerPage) + 1, // temp
-		from : startingIndex, // TODO
+		size : parseInt(resultsPerPage) + 1, // gets 1 more result than specified in order to determine if there should be displayed another page in pagination
+		from : startingIndex, 
 		index : "mock", // temp
 		type : "doc", //temp
 		body : {

@@ -4,21 +4,6 @@
  * @author Ali Aliyev 
  */
 
-/**Constant specifying length of the initial text snippet*/
-var SHORT_SNIPPET_LENGTH = 100;
-
-/**Constant specifying length of the expanded text snippet*/
-var LONG_SNIPPET_LENGTH = 1000;
-
-/**Constant specifying height(in px) of medium thumbnail/icon*/
-var DEFAULT_THUMBNAIL_HEIGHT = 250;
-
-/**Variable responsible for toggling debug mode for printing debug messages to the console*/
-var debug = true;
-
-/**Variable specifying address of the server to which feedback form is sent*/
-var feedbackURL = "TODO"
-
 /**
 * Fired when the document is finished loading.
 * Responsible for settng initial components, such as hiding the timeline, collapse button, etc.
@@ -34,12 +19,13 @@ $(document).ready(function() {
 	setFormProperties();
 	$(".paginationContainer").hide();
 
-	/**Listener required by the lightbox library*/
+	// Listener required by the lightbox library
 	$(document).delegate("*[data-toggle='lightbox']", "click", function(event) {
 		event.preventDefault();
 		$(this).ekkoLightbox();
 	}); 
 
+	// Resizes all thumbnails on slider change
 	$("#thumbnailSizeSlider").on("change", function(){
 		var thumbIconHandles = $("[id^=" + "thumbIcon" + "]"); 
 		$.each(thumbIconHandles, function(index, img) {
@@ -47,21 +33,34 @@ $(document).ready(function() {
 		});
 	});
 
-	/**Listener for the next-page button*/
+	// Starts search on button click
+	$("#searchButton").on("click", function(e) {
+		e.preventDefault();
+		startSearch();
+	});
+
+	// Collapses all entries on button click
+	$("#collapseButton").on("click", function(e) {
+		e.preventDefault();
+		toggleCollapse();
+	})
+
+	// Listener for the next-page button
 	$("#nextPage").on("click", function(e){
 		e.preventDefault();
 		if(!($(this).hasClass("disabled")))
 			changePage.nextPage();
 	});
 
-	/**Listener for the next-page button*/
+	// Listener for the next-page button
 	$("#prevPage").on("click", function(e){
 		e.preventDefault();
 		if(!($(this).hasClass("disabled")))
 			changePage.previousPage();
 	});
 
-	$(document).keyup(function(e) {
+	// Moves between documents on arrow up and arrow down
+	$(document).on("keyup", function(e) {
 		if(e.which == 38) {
 			e.preventDefault();
 			scrollOneUp();
@@ -75,7 +74,6 @@ $(document).ready(function() {
 
 	setupFeedbackMechanism()
     $('[data-toggle="tooltip"]').tooltip(); 
-
 });
 
 /**
@@ -165,7 +163,7 @@ var setupFeedbackMechanism = function() {
 
 		$.ajax({
 			type: "POST",
-			url: feedbackURL,
+			url: feedbackURL, // specified in config.js
 			dataType: "json",
 			contentType: 'application/json',
 			data: request,
@@ -235,7 +233,7 @@ var setFormProperties = function() {
 
 	// Properties of the thumbnail size selector slider
 	$("#thumbnailSizeSlider").slider({
-		ticks: [0.05, 0.5, 1.0, 1.5],
+		ticks: scalingTicks, // specified in config.js
 		ticks_labels: ["Tiny", "Small", "Medium", "Big"],
 		ticks_snap_bounds: 0.05,
 		step: 0.025,

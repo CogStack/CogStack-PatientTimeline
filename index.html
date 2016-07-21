@@ -29,6 +29,7 @@
 		<script src="js/ekko-lightbox.min.js"></script>
 		<script src="js/bootstrap-slider.js"></script>
 		<script src="js/jqModal.js"></script>
+		<script src="js/config.js"></script>
 		<script src="js/pageControl.js"></script>
 		<script src="js/search.js"></script>
 		<script src="js/auxiliary.js"></script>
@@ -43,7 +44,7 @@
 				<div id="navbar" class="navbar-collapse">
 					<ul class="nav navbar-nav">
 						<li>
-							<a href="#" style="position:absolute;">Home</a>
+							<a href="#" id="homeRef">Home</a>
 						</li>
 					</ul>
 					<button class="btn btn-primary" id="feedback-button">Report a problem!</button>
@@ -128,7 +129,7 @@
 
 				<div class='col-md-10'>
 					<label for="searchButton">&nbsp;</label>
-					<button type="button" class="btn btn-primary" id="searchButton" onclick="startSearch()">Search Documents</button>
+					<button type="button" class="btn btn-primary" id="searchButton">Search Documents</button>
 				</div>
 			</div>
 		</form>
@@ -155,7 +156,7 @@
 			<div class="siteContainer">
 				<div class="timelineContainer">
 					<div class="timeline">
-						<button type="button" class="btn btn-secondary btn-sm" id="collapseButton" onclick="toggleCollapse()">Collapse all</button>
+						<button type="button" class="btn btn-secondary btn-sm" id="collapseButton">Collapse all</button>
 						<dl id=timelineList>
 						</dl>
 					</div>
@@ -164,7 +165,7 @@
 		</div>
 
 		<div class="jqmWindow" id="feedback-dialog">
-			<a href="#" class="btn btn-link btn-lg jqmClose" style="float:right;">Close</a>
+			<a href="#" class="btn btn-link btn-lg jqmClose">Close</a>
 			<div class="content">
 				<div class="questionnaire">
 					<b><p>Why do you think something went wrong?</p></b>

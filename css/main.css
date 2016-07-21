@@ -187,6 +187,10 @@ button#searchButton {
 	margin-right: 10px !important;
 }
 
+#homeRef {
+	position: absolute;
+}
+
 .questionnaire {
     margin-top: 15px;
 }
@@ -211,6 +215,10 @@ button#send-feedback-button {
 
 #feedback-response {
 	align-self: auto;
+}
+
+.btn.btn-link.btn-lg.jqmClose {
+	float: right;
 }
 
 @media screen and (max-width: 340px){

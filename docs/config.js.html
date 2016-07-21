@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: scrolling.js</title>
+    <title>JSDoc: Source: config.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: scrolling.js</h1>
+    <h1 class="page-title">Source: config.js</h1>
 
     
 
@@ -27,62 +27,35 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/**
- * @file Script file responsible for controlling scrolling between timeline entries on arrow up/down buttons
+ * @file File with the configurable variables that might require tweaking.
  * @author Jedrzej Stuczynski
  * @author Ali Aliyev 
  */
- 
- /**
- * Scrolls one entry up
- */
-var scrollOneUp = function() {
-	var windowYPos = $(window).scrollTop();
-	var collapsableHandle = $("[id^=" + "collapsableEntry" + "]");
-	var scrollToEntry = null;
-	var offsetToTop = 0;
-	$.each(collapsableHandle, function(index, entry) {
-		offsetToTop  = $(entry).offset().top;
-		if (windowYPos > offsetToTop &amp;&amp; $(entry).attr("aria-expanded") == "true") 
-			scrollToEntry = entry;
-		else 
-			return false;    
-	});
-	if(scrollToEntry != null) {
-		offsetToTop = $(scrollToEntry).offset().top;
-		scrollTo(scrollToEntry, offsetToTop);
-	}
-	else
-		scrollTo('#',0);
 
-}
+/**Variable specifying the address of the ElasticSearch server*/
+var elasticSearchURL = "http://timeline2016-silverash.rhcloud.com";
 
-/**
- * Scrolls one entry down
- */
-var scrollOneDown = function() {
-	var windowYPos = $(window).scrollTop();
-	var collapsableHandle = $("[id^=" + "collapsableEntry" + "]");
-	$.each(collapsableHandle, function(index, entry) {
-		var offsetToTop = $(entry).offset().top;
-		if(windowYPos &lt; offsetToTop) {
-			scrollTo(entry, offsetToTop);
-			return false;
-		}
-	});
-}
+/**Variable specifying address of the server to which feedback form is sent*/
+var feedbackURL = "TODO"
 
-/**
- * Handles scrolling to specific position with animation
- * @param {Object} entry single timeline entry
- * @param {Number} offsetToTop Y position of the element
- */
-var scrollTo = function(entry, offsetToTop) {
-	$("html, body").stop().animate({
-		"scrollTop": offsetToTop
-	}, 250, "swing", function () {
-		window.location.hash = entry;
-	});
-};
+/**Variable responsible for toggling debug mode for printing debug messages to the console*/
+var debug = true;
+
+/**Constant specifying length of the initial text snippet*/
+var SHORT_SNIPPET_LENGTH = 100;
+
+/**Constant specifying length of the expanded text snippet*/
+var LONG_SNIPPET_LENGTH = 1000;
+
+/**Constant specifying height(in px) of medium thumbnail/icon*/
+var DEFAULT_THUMBNAIL_HEIGHT = 250;
+
+/**Constant specifying maximum number of visible pagination pages*/
+var MAX_VISIBLE_PAGES = 3;
+
+/**Variable used in the thumbnail size slider. It rescales the original image by those factors. The initial value, i.e. of 1.0 is based on DEFAULT_THUMBNAIL_HEIGHT*/
+var scalingTicks = [0.05, 0.5, 1.0, 1.5]; 
+
 </code></pre>
         </article>
     </section>
