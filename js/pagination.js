@@ -231,9 +231,4 @@ var setPagination = function(resultsPerPage, startingIndex, numberOfEntriesFound
 		addNewPageEnd();
 		$("#nextPage").removeClass("disabled");
 	}
-
-	if(debug) {
-		console.log(resultsPerPage);
-		console.log(numberOfEntriesFound);
-	}
 }

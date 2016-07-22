@@ -22,8 +22,11 @@ var searchForEntries = function(searchParams) {
 		processResults(response.hits.hits, searchParams.size);
 	}, function(jqXHR, textStatus, errorThrown) {
 		if(debug) {
+			console.log("#####");
+			console.log("Search error: ")
 			console.log(textStatus);
 			console.log(errorThrown);
+			console.log("#####");
 		}
 	});
 	hideLoading();
@@ -98,9 +101,14 @@ var prepareESObject = function(patientID, resultsPerPage, startingIndex, startDa
 	endDate = new Date(endDate).getTime();
 
 	if(debug) {
+		console.log("#####");
+		console.log("Start Date: ");
 		console.log(startDate);
+		console.log("End Date: ");
 		console.log(endDate);
+		console.log("Containing Keywords: ");
 		console.log(containingKeywords);
+		console.log("#####");
 	}
 
 	var searchParams = {
