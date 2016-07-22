@@ -148,9 +148,12 @@ var createTimelineListeners = function(value, shortTextSnippet, longTextSnippet,
 var processResults = function(searchResult, size) {
 	$("#collapseButton").text("Collapse all");
 	
-	if(debug) 
+	if(debug) {
+		console.log("#####");
+		console.log("Search results: ");
 		console.log(searchResult);
-
+		console.log("#####");
+	}
 	// do not continue of the searchResult is empty
 	if($.isEmptyObject(searchResult))
 		return
@@ -164,9 +167,12 @@ var processResults = function(searchResult, size) {
 		presentMonths = createTimelineEntry(value, presentMonths);
 	});
 
-	if(debug)
+	if(debug){
+		console.log("#####");
+		console.log("Present Months: ");
 		console.log(presentMonths)
-
+		console.log("#####");
+	}
 	if(!($.isEmptyObject(searchResult)))
 		$(".paginationContainer").show();
 }

@@ -159,9 +159,13 @@ var setupFeedbackMechanism = function() {
 		$("#feedback-response").html("<b>Please wait...</b>");
 		$("#send-feedback-button").prop("disabled", true);
 
-		if(debug)
-			console.log(request)
-
+		if(debug) {
+			console.log("#####");
+			console.log("Feedback request: ");
+			console.log(request);
+			console.log("#####");
+		}
+		
 		$.ajax({
 			type: "POST",
 			url: feedbackURL, // specified in config.js
