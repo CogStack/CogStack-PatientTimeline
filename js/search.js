@@ -120,7 +120,7 @@ var prepareESObject = function(patientID, resultsPerPage, startingIndex, startDa
 			query : {
 				bool : {
 					must : [
-						//{term : {patientId : patientID} },
+						{term : {patientId : patientID} },
 						{range:	{
 							timestamp : {
 								"gte" : startDate,
