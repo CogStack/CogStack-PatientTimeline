@@ -52,7 +52,7 @@ var createPDF = function(patientID, timestamp, source) {
 var createTimelineEntry = function(value, presentMonths) {
 	var timelineEntry = "";
 
-	var exactDate = new Date(value._source.timestamp);
+	var exactDate = new Date(value._source.documenttimestamp);
 	var monthYear = getShortMonth(exactDate.getMonth()) + " " + exactDate.getFullYear();
 	var monthYearNoSpaces = monthYear.replace(/ /g,"");
 	var pdfTimestamp = exactDate.getDate()+monthYearNoSpaces;
@@ -67,12 +67,16 @@ var createTimelineEntry = function(value, presentMonths) {
 
 	var imageSource = "";
 	var PDFSource = "#";
-	if(value._source.thumbnail) {
-		imageSource = thumbnailSource + value._source.thumbnail;
-		PDFSource = thumbnailSource + value._source.thumbnail.slice(0, -3) + "pdf";
-	}
-	else
-		imageSource = "img/Icon-Placeholder.png";
+        var TMP_STATIC_PATH = "http://localhost:8081/"
+        var fileName = value._source.tlsrctablename + "_" + value._source.tlsrccolumnfieldname + "_" + value._source.documentid;
+        imageSource = TMP_STATIC_PATH + "thumbnail/" + fileName + ".png";
+        PDFSource = TMP_STATIC_PATH + "binary/" + fileName + ".pdf";
+	//if(value._source.thumbnail) {
+	//	imageSource = thumbnailSource + value._source.thumbnail;
+	//	PDFSource = thumbnailSource + value._source.thumbnail.slice(0, -3) + "pdf";
+	//}
+	//else
+	//	imageSource = "img/Icon-Placeholder.png";
 
 	timelineEntry += "<div class='collapse in' aria-expanded=true id=collapsableEntry" + value._id + ">";   
 	timelineEntry += "<dd class='pos-right clearfix'><div class='circ'></div><div class='time'>" + getShortMonth(exactDate.getMonth()) + " " + exactDate.getDate() + "</div><div class='events'>"; // circle with exact date on the side
@@ -121,14 +125,14 @@ var createTimelineListeners = function(value, shortTextSnippet, longTextSnippet,
 
 
 	// download pdf when the link is clicked
-	if(!value._source.thumbnail) {
-		$("#PDF"+value._id).on("click",function(e) {
-			window.alert("If you see this window, contact the developer saying which entry you tried to view.");
-			e.preventDefault();
-			createPDF(value._source.docId, pdfTimestamp, value._source.html);
-			return false; 
-		});
-	}
+	//if(!value._source.thumbnail) {
+	//	$("#PDF"+value._id).on("click",function(e) {
+	//		window.alert("If you see this window, contact the developer saying which entry you tried to view.");
+	//		e.preventDefault();
+	//		createPDF(value._source.docId, pdfTimestamp, value._source.html);
+	//		return false; 
+	//	});
+	//}
 
 	// when thumbnails are loaded, they are resized to target size
 	$("#thumbIcon"+value._id).load(function(){

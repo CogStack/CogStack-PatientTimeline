@@ -113,16 +113,16 @@ var prepareESObject = function(patientID, resultsPerPage, startingIndex, startDa
 	var searchParams = {
 		size : parseInt(resultsPerPage) + 1, // temp
 		from : startingIndex,
-		index : "time2016", //temp
-		type : "doc", //temp
+		index : "turbolaser_dev", //temp
+		type : "test_type1", //temp
 		body : {
-			sort : {"timestamp" : {order : "desc"}},
+			sort : {"documenttimestamp" : {order : "desc"}},
 			query : {
 				bool : {
 					must : [
-						{term : {patientId : patientID} },
+						{term : {patientid : patientID} },
 						{range:	{
-							timestamp : {
+							documenttimestamp : {
 								"gte" : startDate,
 								"lte" : endDate
 							}
