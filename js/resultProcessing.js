@@ -4,44 +4,6 @@
  * @author Ali Aliyev 
  */
 
-/** 
- * Create PDF of given text/document 
- * @param {String} patientID associated with the source ID of patient
- * @param {String} timestamp associated with the source timestamp
- * @param {String} source text to create the PDF from
- */
-var createPDF = function(patientID, timestamp, source) {
-	var pdf = new jsPDF("p", "pt", "a4");  // create new jsPDF object
-	specialElementHandlers = {
-		"#bypassme": function(element, renderer) {
-			return true
-		}
-	}
-	margins = {
-		top: 50,
-		left: 60,
-		width: 480
-	};
-	pdf.fromHTML(
-		source,
-		margins.left,
-		margins.top,
-		{
-			"width": margins.width, // max width of content on PDF 
-			"elementHandlers": specialElementHandlers
-		},
-		
-		function (dispose) {
-			// dispose: object with X, Y of the last line add to the PDF
-			//          this allow the insertion of new lines after html
-			pdf.save(timestamp+"_"+patientID+".pdf");
-		},
-		{
-			top : 70,
-			bottom : 70
-		}
-	)		
-}
 
 /**
  * Creates entry for on the timeline for given parameter object

@@ -166,6 +166,7 @@ var setupFeedbackMechanism = function() {
 			console.log("#####");
 		}
 		
+		//TODO: send to ES instance?
 		$.ajax({
 			type: "POST",
 			url: feedbackURL, // specified in config.js
@@ -173,7 +174,7 @@ var setupFeedbackMechanism = function() {
 			contentType: 'application/json',
 			data: request,
 			success: function() {
-				$("#feedback-response").html('<b>We have received your feedback, thanks.</b>');
+				$("#feedback-response").html('<b>We have received your feedback, thank you!</b>');
 			},
 			error: function() {
 				$("#feedback-response").html('<b>There was an issue when sending your request. If this problem persists, please contact us via email.</b>');
@@ -213,7 +214,7 @@ var setFormProperties = function() {
 	// When return key is pressed in the "containing" box, initialise search
 	$("#containingKeywords").on("keydown", function(e){
 		if (e.keyCode == 13) {
-			e.preventDefault();
+			e.preventDefault();log
 			$("#searchButton").click();
 		}
 	});

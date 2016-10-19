@@ -15,7 +15,7 @@ var thumbnailSource = "http://localhost:8081/"
 var feedbackURL = "TODO"
 
 /**Variable responsible for toggling debug mode for printing debug messages to the console*/
-var debug = true;
+var debug = false;
 
 /**Constant specifying length of the initial text snippet*/
 var SHORT_SNIPPET_LENGTH = 100;

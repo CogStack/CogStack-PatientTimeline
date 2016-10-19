@@ -25,7 +25,6 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
 		<script src="js/elasticsearch.js"></script>
 		<script src="js/elasticsearch.jquery.js"></script>   
-		<script src="js/jspdf.js"></script>
 		<script src="js/ekko-lightbox.min.js"></script>
 		<script src="js/bootstrap-slider.js"></script>
 		<script src="js/jqModal.js"></script>
@@ -36,6 +35,7 @@
 		<script src="js/resultProcessing.js"></script>
 		<script src="js/pagination.js"></script>
 		<script src="js/scrolling.js"></script>
+		<script src="js/logging.js"></script>
 	</head>
 	<body>
 
@@ -166,26 +166,27 @@
 		<div class="jqmWindow" id="feedback-dialog">
 			<a href="#" class="btn btn-link btn-lg jqmClose">Close</a>
 			<div class="content">
+				<b><p>Oops! We are sorry that something went wrong. Let us know what the problem is and we'll get it fixed.</p></b>
 				<div class="questionnaire">
-					<b><p>Why do you think something went wrong?</p></b>
+					<b><p>Your name: </p></b>
+					<textarea cols="50" rows="1"></textarea>
+				</div>
+
+				<div class="questionnaire">
+					<b><p>What did you aim to do?</p></b>
 					<textarea cols="50" rows="3"></textarea>
 				</div>
 
 				<div class="questionnaire">
-					<b><p>What were you trying to achieve?</p></b>
+					<b><p>How did you aim to do this?</p></b>
 					<textarea cols="50" rows="3"></textarea>
 				</div>
 
 				<div class="questionnaire">
-					<b><p>How were you trying to achieve it?</p></b>
+					<b><p>What went wrong when you were doing this?/p></b>
 					<textarea cols="50" rows="3"></textarea>
 				</div>
-
-				<div class="questionnaire">
-					<b><p>What were you expecting to happen?</p></b>
-					<textarea cols="50" rows="3"></textarea>
-				</div>
-				<button class="btn btn-secondary" id="send-feedback-button">Send</button>
+				<button class="btn btn-secondary" id="send-feedback-button">Submit</button>
 				<p id="feedback-response"></p>
 			</div>
 		</div>

@@ -16,6 +16,7 @@ var client = new $.es.Client({
  */
 var searchForEntries = function(searchParams) {
 	showLoading();
+	logQueryData(searchParams);
 	client.search(searchParams).then(function(response) {
 		setPagination(parseInt(searchParams.size) - 1, searchParams.from, response.hits.hits.length)
 		processResults(response.hits.hits, searchParams.size);
@@ -105,7 +106,7 @@ var prepareESObject = function(patientID, resultsPerPage, startingIndex, startDa
 		console.log(startDate);
 		console.log("End Date: ");
 		console.log(endDate);
-		console.log("Containing Keywords:" );
+		console.log("Containing Keywords: ");
 		console.log(containingKeywords);
 		console.log("#####");
 	}

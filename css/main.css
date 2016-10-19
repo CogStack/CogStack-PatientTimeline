@@ -197,7 +197,7 @@ button#searchButton {
 
 button#feedback-button {
 	top: 5px; 
-	left: 85%;
+	left: 80%;
 	position: absolute; 
 }
 
@@ -210,7 +210,8 @@ button#send-feedback-button {
 	top: 5px;
 	padding: 25px 25px 25px 25px;
 	width: auto;
-	max-width: 500px
+	max-width: 500px;
+	transform: translate(10%, 0%);
 }
 
 #feedback-response {
@@ -238,6 +239,11 @@ button#send-feedback-button {
 	button.downloadButton{
 		margin-bottom: 5px;
 	}
+
+	button#feedback-button {
+		left: auto;
+		right: 5%;
+	}
 }
 
 @media screen and (max-width: 450px) and (min-width: 341px){
@@ -256,6 +262,11 @@ button#send-feedback-button {
 
 	button.downloadButton{
 		margin-bottom: 5px;
+	}
+
+	button#feedback-button {
+		left: auto;
+		right: 5%;
 	}
 }
 
@@ -276,6 +287,11 @@ button#send-feedback-button {
 	.downloadButton {
 		margin-top: 15px;
 		margin-bottom: 5px;
+	}
+
+	button#feedback-button {
+		left: auto;
+		right: 5%;
 	}
 }
 
