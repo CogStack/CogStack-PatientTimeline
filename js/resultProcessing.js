@@ -82,6 +82,13 @@ var createTimelineListeners = function(value, shortTextSnippet, longTextSnippet,
 			$(textHandle).text(longTextSnippet);
 	});
 
+	$("#PDF"+value._id).on("click",function() {
+		logDocumentDownload(value._source.documentid);
+	});
+
+	$("#thumbIcon"+value._id).on("click", function() {
+		logThumbnailView(value._source.documentid);
+	});
 
 	// download pdf when the link is clicked
 /*	if(!value._source.thumbnail) {

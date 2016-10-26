@@ -5,14 +5,16 @@
  */
 
 /**Variable specifying the address of the ElasticSearch server*/
-var elasticSearchURL = "http://192.168.99.47:9200";
+var elasticSearchURL = "http://localhost:9200/"; //"http://192.168.99.47:9200";
 
 /**Variable specyfying address of the server with the thumbnails and PDFs of the documents*/
 // var thumbnailSource = "http://192.168.99.42:8080/thumbs/"
-var thumbnailSource = "http://localhost:8081/"
+var thumbnailSource = "tempdummy/";//"http://localhost:8081/";
+
+var elasticSearchLogURL = "http://localhost:9200/"
 
 /**Variable specifying address of the server to which feedback form is sent*/
-var feedbackURL = "TODO"
+var feedbackURL = "TODO";
 
 /**Variable responsible for toggling debug mode for printing debug messages to the console*/
 var debug = false;

@@ -75,6 +75,8 @@ $(document).ready(function() {
 
 	setupFeedbackMechanism()
     $('[data-toggle="tooltip"]').tooltip(); 
+
+    logSessionInfo();
 });
 
 /**

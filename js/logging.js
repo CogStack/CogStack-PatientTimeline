@@ -1,9 +1,20 @@
 
-var tempLogESClient = new $.es.Client({
-	host: "http://localhost:9200",
+var logESClient = new $.es.Client({
+	host: elasticSearchLogURL,
 	log: "info"
 });
 
+
+var sendLogToElasticSearch = function(estype, data) {
+	logESClient.create({
+		index : 'templogindex',
+		type : estype,
+		body : data
+	}, function (error, response) {
+		console.log(error);
+		console.log(response);
+	});
+}
 
 // logs query information
 var logQueryData = function(sourceQuery) {
@@ -16,27 +27,40 @@ var logQueryData = function(sourceQuery) {
 		keywords : null,
 	};
 
+	// checks if any search keywords exist in the original query data
 	if (sourceQuery.body.query.bool.must[2] !== undefined && sourceQuery.body.query.bool.must[2] !== null) 
 		queryData.keywords = sourceQuery.body.query.bool.must[2].match._all;
 
-	tempLogESClient.create({
-		index : 'templogindex',
-		type: 'temp_log',
-		queryData
-	}, function (error, response) {
-		console.log(error);
-		console.log(response);
-	});
+	sendLogToElasticSearch('query_log', queryData);
 }
 
+// logs user browser and os details
 var logSessionInfo = function() {
-	console.log("test")
+	var sysInfo = $.pgwBrowser();
+	sessionInfo = {
+		sessionTimestamp : new Date().getTime(),
+		browser : sysInfo.browser,
+		OS : sysInfo.os,
+	}
+	sendLogToElasticSearch('session_log', sessionInfo)
 }
 
-var logDocumentDownload = function() {
-
+var logContentView = function(estype, documentId) {
+	viewInfo = {
+		viewTimestamp : new Date().getTime(),
+		documentid : documentId
+	}
+	sendLogToElasticSearch(estype, viewInfo)
 }
 
-var logThumbnailView = function() {
-	
+var logDocumentDownload = function(documentId) {
+	logContentView('doc_download_log', documentId);
 }
+
+
+var logThumbnailView = function(documentId) {
+	logContentView('thumbnail_view_log', documentId);
+}
+
+
+
