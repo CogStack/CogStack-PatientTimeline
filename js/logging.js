@@ -34,7 +34,7 @@ var logQueryData = function(sourceQuery) {
 	sendLogToElasticSearch('query_log', queryData);
 }
 
-// logs user browser and os details
+// logs user browser and os details (using the pgwBrowser library that just parses window navigator)
 var logSessionInfo = function() {
 	var sysInfo = $.pgwBrowser();
 	sessionInfo = {
@@ -42,15 +42,16 @@ var logSessionInfo = function() {
 		browser : sysInfo.browser,
 		OS : sysInfo.os,
 	}
-	sendLogToElasticSearch('session_log', sessionInfo)
+	sendLogToElasticSearch('session_log', sessionInfo);
 }
 
+// logs data on whenever user tried to view thumbnail or downloadPDF
 var logContentView = function(estype, documentId) {
 	viewInfo = {
 		viewTimestamp : new Date().getTime(),
 		documentid : documentId
 	}
-	sendLogToElasticSearch(estype, viewInfo)
+	sendLogToElasticSearch(estype, viewInfo);
 }
 
 var logDocumentDownload = function(documentId) {

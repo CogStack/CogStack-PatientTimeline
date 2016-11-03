@@ -10,6 +10,7 @@
 * @function "$(document).ready"
 */
 $(document).ready(function() {
+	// Doesn't complete load if user uses IE8 or older
 	var checkIE = checkBrowser();
 	if(checkIE)
 		return;
@@ -73,7 +74,7 @@ $(document).ready(function() {
 	});
 
 
-	setupFeedbackMechanism()
+	setupFeedbackMechanism() //TODO: create server for it + test
     $('[data-toggle="tooltip"]').tooltip(); 
 
     logSessionInfo();
@@ -113,7 +114,6 @@ var setupFeedbackMechanism = function() {
 		var $feedbackDialog = $("#feedback-dialog");
 		$feedbackDialog.jqm({
 			modal:true
-
 		});
 		$feedbackDialog.jqmShow();
 		$("#send-feedback-button").prop("disabled", false);
@@ -138,6 +138,7 @@ var setupFeedbackMechanism = function() {
 		var endDate = $("#datePickerTo").data("date");
 
 		request.push({
+			"feedbackTimestamp" : new Date().getTime(),
 			"patientId" : patientId,
 			"startDate" : startDate,
 			"endDate" : endDate,
@@ -168,22 +169,40 @@ var setupFeedbackMechanism = function() {
 			console.log("#####");
 		}
 		
+		// "converts" to a proper JSON
+		request = {
+			"feedback" : request
+		}
+
 		//TODO: send to ES instance?
 		$.ajax({
 			type: "POST",
 			url: feedbackURL, // specified in config.js
-			dataType: "json",
+			dataType: "text/plain",
 			contentType: 'application/json',
 			data: request,
-			success: function() {
-				$("#feedback-response").html('<b>We have received your feedback, thank you!</b>');
-			},
-			error: function() {
-				$("#feedback-response").html('<b>There was an issue when sending your request. If this problem persists, please contact us via email.</b>');
-			}
-		});
+
+		})
+			.complete(function(response) {
+				if(response.status === 200) {
+					$("#feedback-response").html('<b>We have received your feedback, thank you!</b>');
+				}
+				else {
+					$("#feedback-response").html('<b>There was an issue when sending your request. If this problem persists, please contact us via email.</b>');
+				}
+			});
 	});
 }
+
+/*
+			success: function(e) {
+				console.log(e)
+			},
+			error: function(e) {
+				console.log(e)
+			}
+			*/
+
 
 /**
  * Function called by $(document).ready. It is responsible for setting properties of the form,
