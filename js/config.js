@@ -14,7 +14,7 @@ var thumbnailSource = "tempdummy/";//"http://localhost:8081/";
 /**Address of ES instance responsible for getting log data*/
 var elasticSearchLogURL = "http://localhost:9200/"
 
-/**Variable specifying address of the server to which feedback form is sent*/
+/**Variable specifying address of the server receiving answers from the feedback form*/
 var feedbackURL = "http://localhost:81";
 
 /**Variable responsible for toggling debug mode for printing debug messages to the console*/
@@ -34,4 +34,3 @@ var MAX_VISIBLE_PAGES = 3;
 
 /**Variable used in the thumbnail size slider. It rescales the original image by those factors. The initial value, i.e. of 1.0 is based on DEFAULT_THUMBNAIL_HEIGHT*/
 var scalingTicks = [0.5, 1.25, 2.0, 3.0]; 
-

@@ -222,6 +222,31 @@ button#send-feedback-button {
 	float: right;
 }
 
+/*Adjusted bootflat timeline css*/
+.timeline dl dt {
+	margin: 0 10% 30px;
+}
+
+.timeline dl:before {
+	left: 10%;
+}
+
+.timeline dl dd .circ {
+	left: 10%;
+}
+
+.timeline dl dd.pos-right .time {
+	padding: 10px 0;
+	margin-left: -60px;
+	left: 10%;
+	text-align: left;
+}
+.timeline dl dd.pos-right .events {
+	float: right;
+	width: 84%;
+}
+
+
 @media screen and (max-width: 340px){
 	.timeline{
 	margin-left: 30px;

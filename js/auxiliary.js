@@ -82,3 +82,15 @@ var getSnippet = function(text, length) {
 		return text.substring(bodyLocation,bodyLocation+length)+"...";
 	}
 }
+
+// TODO: 
+// probability of generating non-unique GUID is so low, that it is not worth checking for it
+var generateGUID = function() {
+  var s4 = function() {
+    return Math.floor((1 + Math.random()) * 0x10000)
+      .toString(16)
+      .substring(1);
+  }
+  return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+    s4() + '-' + s4() + s4() + s4();
+}

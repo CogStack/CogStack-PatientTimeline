@@ -37,23 +37,21 @@ file that allows adjusting particular settings one might want to change. The fol
     
     ```json
     {
-        "docId" : "12345",
-        "html" : "some xhtml code",
-        "patientId" : "67890",
-        "srcCol": "Attachment_File_Body",
-        "srcTable" : "tblAttachmentFile",
-        "thumbnail" : "67890_tblAttachmentFile_12345.png",
-        "timestamp" : 0,
-        "updateTime" : "1970-01-01 00:00:00"
+        "patientid" : "12345",
+        "tikaOutput" : "some xhtml code",
+        "documentid" : "67890",
+        "tlsrctablename" : "tblAttachment",
+        "documenttimestamp" : "1970-01-01 00:00:00"
+        "tlsrccolumnfieldname": "Attachment_File_Body",
     }
     ```
     
 make sure the appropriate files are available at:
-`http://192.168.99.42:8080/thumbs/67890_tblAttachmentFile_12345.png` and `http://192.168.99.42:8080/thumbs/67890_tblAttachmentFile_12345.pdf`
+`$thumbnailSource/thumbnail/tblAttachment_Attachment_File_Body_67890.png` and `$thumbnailSource/binary/tblAttachment_Attachment_File_Body_67890.pdf`
 
 * `feedbackURL`
-    + **Default value**: `"TODO"`
-    + **Purpose**: This feature is not fully implemented yet due to server not being setup, however, once it is done, the user feedback will be sent to it. The JSON sent will be an array of objects where first of them will contain patientId, startDate, endDate and any keywords inputed (if user decides to send feedback before filling any of those fields, the feedback will contain default data, ex. 1970-01-01 for starting data or today's date for ending date). The next objects will simply contain "question" field and "answer" field for each question in the questionnaire. 
+    + **Default value**: `"http://localhost:81"`
+    + **Purpose**: This feature is not fully implemented yet due to server not being setup (currently I have written a simple python server that takes those requests and writes it to a file), however, once it is done, the user feedback will be sent to it. The JSON sent will be an array of objects where first of them will contain patientId, startDate, endDate and any keywords inputed (if user decides to send feedback before filling any of those fields, the feedback will contain default data, ex. 1970-01-01 for starting data or today's date for ending date). The next objects will simply contain "question" field and "answer" field for each question in the questionnaire. 
 
 * `debug`
     + **Default value**: `true`

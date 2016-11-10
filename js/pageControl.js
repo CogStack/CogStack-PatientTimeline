@@ -74,7 +74,7 @@ $(document).ready(function() {
 	});
 
 
-	setupFeedbackMechanism() //TODO: create server for it + test
+	setupFeedbackMechanism() //In logging.js
     $('[data-toggle="tooltip"]').tooltip(); 
 
     logSessionInfo();
@@ -104,105 +104,6 @@ var checkBrowser = function() {
 		return true;
 	}
 }
-
-/**
- * Setups listeners on the 'Report problem' and 'send feedback' buttons to act appropriately.
- * Code for that part was taken from the previous version written by Ismail Kartoglu
- */
-var setupFeedbackMechanism = function() {
-	$("#feedback-button").click(function() {
-		var $feedbackDialog = $("#feedback-dialog");
-		$feedbackDialog.jqm({
-			modal:true
-		});
-		$feedbackDialog.jqmShow();
-		$("#send-feedback-button").prop("disabled", false);
-		$("#feedback-response").html("");
-	});
-
-
-	$(".jqmWindow").on("keydown", function(e){
-		if (e.keyCode == 27) {
-			e.preventDefault();
-			$(".jqmWindow").jqmHide();
-		}
-	});
-
-
-	$("#send-feedback-button").click(function() {
-		var request = [];
-
-		var containingKeywords = $("#containingKeywords").val();
-		var patientId = $("#patientID").val();
-		var startDate = $("#datePickerFrom").data("date");
-		var endDate = $("#datePickerTo").data("date");
-
-		request.push({
-			"feedbackTimestamp" : new Date().getTime(),
-			"patientId" : patientId,
-			"startDate" : startDate,
-			"endDate" : endDate,
-			"containingKeywords" : containingKeywords,
-		})	
-
-        var $questions = $(".questionnaire");
-		$questions.each(function() {
-			var $question = $(this);
-			var $p = $question.find("p");
-			var question = $p.html();
-			var $textarea = $question.find("textarea");
-			var answer = $textarea.val();
-
-			request.push({
-				"question" : question,
-				"answer" : answer,
-			});
-		});
-
-		$("#feedback-response").html("<b>Please wait...</b>");
-		$("#send-feedback-button").prop("disabled", true);
-
-		if(debug) {
-			console.log("#####");
-			console.log("Feedback request: ");
-			console.log(request);
-			console.log("#####");
-		}
-		
-		// "converts" to a proper JSON
-		request = {
-			"feedback" : request
-		}
-
-		//TODO: send to ES instance?
-		$.ajax({
-			type: "POST",
-			url: feedbackURL, // specified in config.js
-			dataType: "text/plain",
-			contentType: 'application/json',
-			data: request,
-
-		})
-			.complete(function(response) {
-				if(response.status === 200) {
-					$("#feedback-response").html('<b>We have received your feedback, thank you!</b>');
-				}
-				else {
-					$("#feedback-response").html('<b>There was an issue when sending your request. If this problem persists, please contact us via email.</b>');
-				}
-			});
-	});
-}
-
-/*
-			success: function(e) {
-				console.log(e)
-			},
-			error: function(e) {
-				console.log(e)
-			}
-			*/
-
 
 /**
  * Function called by $(document).ready. It is responsible for setting properties of the form,
