@@ -14,13 +14,16 @@ var client = new $.es.Client({
  * Function responsible for querying the ElasticSearch server. It uses the provided ElasticSearch library for JavaScript to wrap AJAX functionalities
  * @param {Object} searchParams Object specifying query properties formatted in a way required by the ElasticSearch engine.
  */
-var searchForEntries = function(searchParams) {
+var searchForEntries = function(searchParams, isFirstSearch) {
+	isFirstSearch = typeof isFirstSearch !== "undefined" ? isFirstSearch : false; // to prevent undefined behaviour
 	showLoading();
 	logQueryData(searchParams);
 	client.search(searchParams).then(function(response) {
 		setPagination(parseInt(searchParams.size) - 1, searchParams.from, response.hits.hits.length)
 		processResults(response.hits.hits, searchParams.size);
-		insertKibanaGraph(searchParams);
+		if(isFirstSearch) { // so after page change it wouldn't reload the graph
+			insertKibanaGraph(searchParams);
+		}
 	}, function(jqXHR, textStatus, errorThrown) {
 		if(debug) {
 			console.log("#####");
@@ -36,13 +39,13 @@ var searchForEntries = function(searchParams) {
 /** 
  * Function initialising the search. If there are no valid search parameters, it does not commence the actual search.
  */
-var startSearch = function(startingIndex) {
+var startSearch = function(startingIndex, isFirstSearch) {
 	startingIndex = typeof startingIndex !== "undefined" ? startingIndex : 0;
 	clearTimeline();
 	var searchParams = prepareSearchData(startingIndex);
 	if(searchParams) {
 		$(".paginationContainer").show();
-		searchForEntries(searchParams);	
+		searchForEntries(searchParams, isFirstSearch);
 	}
 }
 

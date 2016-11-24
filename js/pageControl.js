@@ -47,7 +47,7 @@ $(document).ready(function() {
 	// Starts search on button click
 	$("#searchButton").on("click", function(e) {
 		e.preventDefault();
-		startSearch();
+		startSearch(void 0, true);
 	});
 
 	// Collapses all entries on button click
@@ -128,7 +128,7 @@ var setFormProperties = function() {
 		viewMode: 'years',
 		format: 'YYYY-MM-DD',
 		useCurrent: false,
-		defaultDate : new Date(0), // default displayed date: 1-1-1970 (user can still manually choose date before that)
+		defaultDate : new Date("2000-1-1"), // default displayed date: 1-1-2000 (user can still manually choose date before that)
 		maxDate : new Date(), // default maximum date: todays date
 		allowInputToggle : true // allows for displaying the calendar when the text box is clicked
 	});
