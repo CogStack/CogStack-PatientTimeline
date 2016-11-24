@@ -35,7 +35,7 @@ var sendLogToElasticSearch = function(estype, data) {
  */
 var logQueryData = function(sourceQuery) {
 	queryData = {
-		queryTimestamp : new Date().getTime(),
+		date : new Date().getTime(),
 		patientId : sourceQuery.body.query.bool.must[0].term.patientid,
 		startDate : sourceQuery.body.query.bool.must[1].range.documenttimestamp.gte,
 		endDate : sourceQuery.body.query.bool.must[1].range.documenttimestamp.lte,
@@ -57,7 +57,7 @@ var logQueryData = function(sourceQuery) {
  var logSessionInfo = function() {
 	var sysInfo = $.pgwBrowser();
 	sessionInfo = {
-		sessionTimestamp : new Date().getTime(),
+		date : new Date().getTime(),
 		browser : sysInfo.browser,
 		OS : sysInfo.os,
 	}
@@ -72,7 +72,7 @@ var logQueryData = function(sourceQuery) {
  */
  var logContentView = function(estype, documentId) {
 	viewInfo = {
-		viewTimestamp : new Date().getTime(),
+		date : new Date().getTime(),
 		documentid : documentId
 	}
 	sendLogToElasticSearch(estype, viewInfo);

@@ -144,6 +144,8 @@ var processResults = function(searchResult, size) {
 		console.log(presentMonths)
 		console.log("#####");
 	}
-	if(!($.isEmptyObject(searchResult)))
+	if(!($.isEmptyObject(searchResult))) {
 		$(".paginationContainer").show();
+	}
+
 }

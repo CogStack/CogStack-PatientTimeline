@@ -246,6 +246,11 @@ button#send-feedback-button {
 	width: 84%;
 }
 
+#kibanaGraph {
+	display: table;
+	margin: 0 auto;
+}
+
 
 @media screen and (max-width: 340px){
 	.timeline{

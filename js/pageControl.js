@@ -35,6 +35,15 @@ $(document).ready(function() {
 		});
 	});
 
+	$("#kibanaVisualisationSwitch").on("switchChange.bootstrapSwitch", function(event, state){
+		if(state) {
+			$("#kibanaGraph").show();	
+		}
+		else {
+			$("#kibanaGraph").hide();	
+		}
+	});
+
 	// Starts search on button click
 	$("#searchButton").on("click", function(e) {
 		e.preventDefault();
@@ -74,7 +83,7 @@ $(document).ready(function() {
 	});
 
 
-	setupFeedbackMechanism() //In logging.js
+	setupFeedbackMechanism(); //In logging.js
     $('[data-toggle="tooltip"]').tooltip(); 
 
     logSessionInfo();
@@ -168,6 +177,27 @@ var setFormProperties = function() {
 		value: 0.5,
 		tooltip : "hide"
 	});
+
+	// var kibanaToggleHandle = $("#kibanaVisualisationSwitch");
+	// kibanaToggleHandle.attr({
+	// 	"data-size" : "small",
+	// 	"onText" : "Yes",
+	// 	"offText" : "No",
+	// 	"checked" : true
+	// }) 
+
+	var kibanaSwitchOptions = {
+		onText : "Yes",
+		offText : "No",
+		size : "mini",
+		animate : true,
+		// state : true,
+
+	}
+
+	$("#kibanaVisualisationSwitch").bootstrapSwitch(kibanaSwitchOptions);
+    // kibanaToggleHandle.bootstrapSwitch();
+
 }
 
 /**

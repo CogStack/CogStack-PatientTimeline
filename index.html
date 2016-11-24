@@ -15,6 +15,7 @@
 		<link rel="stylesheet" type="text/css" href="css/ekko-lightbox.min.css" />
 		<link rel="stylesheet" type="text/css" href="css/loading-animation.min.css" />
 		<link rel="stylesheet" type="text/css" href="css/bootstrap-slider.min.css">
+		<link rel="stylesheet" type="text/css" href="css/bootstrap-switch.min.css">
 		<link rel="stylesheet" type="text/css" href="css/jqModal.css" />
 		<link rel="stylesheet" type="text/css" href="css/main.css" />
 
@@ -26,6 +27,7 @@
 		<script src="js/externalLibs/elasticsearch.jquery.min.js"></script>   
 		<script src="js/externalLibs/ekko-lightbox.min.js"></script>
 		<script src="js/externalLibs/bootstrap-slider.min.js"></script>
+		<script src="js/externalLibs/bootstrap-switch.min.js"></script>
 		<script src="js/externalLibs/jqModal.min.js"></script>
 		<script src="js/externalLibs/pgwbrowser.min.js"></script>
 		<script src="js/config.js"></script>
@@ -36,6 +38,7 @@
 		<script src="js/pagination.js"></script>
 		<script src="js/scrolling.js"></script>
 		<script src="js/logging.js"></script>
+		<script src="js/kibanaVisualisation.js"></script>
 	</head>
 	<body>
 
@@ -57,6 +60,7 @@
 				<h2><b>Timeliner Application</b></h2>
 			</div>
 		</div>
+
 		<form role ="form">
 			<div class="container">
 				<div class='col-md-5'>
@@ -115,15 +119,24 @@
 				</div>
 
 				<div class="col-md-5">
-					<div class="thumbSizeSel" id="thumbSizeSel">
-						<label for thumbSizeSel>Thumbnail Size:   </label>
-						<!--OLD RADIO BUTTON SELECTOR FOR THUMBNAILSIZE:
-						<label class="radio-inline"><input type="radio" value="small" name="thumbnailSize"checked >Small </label>
-						<label class="radio-inline"><input type="radio" value="medium" name="thumbnailSize">Medium </label>
-						<label class="radio-inline"><input type="radio" value="large" name="thumbnailSize">Large </label>
-						-->
-						<input id="thumbnailSizeSlider" type="text"/>
-					</div>				
+					<div class="form-group">
+						<div class="thumbSizeSel" id="thumbSizeSel">
+							<label for thumbSizeSel>Thumbnail Size:   </label>
+							<!--OLD RADIO BUTTON SELECTOR FOR THUMBNAILSIZE:
+							<label class="radio-inline"><input type="radio" value="small" name="thumbnailSize"checked >Small </label>
+							<label class="radio-inline"><input type="radio" value="medium" name="thumbnailSize">Medium </label>
+							<label class="radio-inline"><input type="radio" value="large" name="thumbnailSize">Large </label>
+							-->
+							<input id="thumbnailSizeSlider" type="text"/>
+						</div>		
+					</div>		
+				</div>
+
+				<div class="col-md-5">
+					<div class="form-group">
+						<label for="kibanaVisualisationSwitch">Display Documents Distribution:</label>
+						<input type="checkbox" id="kibanaVisualisationSwitch">
+					</div>
 				</div>
 
 				<div class='col-md-10'>
@@ -132,6 +145,7 @@
 				</div>
 			</div>
 		</form>
+
 		<div class="paginationContainer">
 			<div class="text-center">
 				<ul class="pagination">
@@ -151,6 +165,9 @@
 					</a>
 				</li>
 				</ul>
+			</div>
+			<div id="kibanaGraph">
+			
 			</div>
 			<div class="siteContainer">
 				<div class="timelineContainer">

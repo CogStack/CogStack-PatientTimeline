@@ -20,6 +20,7 @@ var searchForEntries = function(searchParams) {
 	client.search(searchParams).then(function(response) {
 		setPagination(parseInt(searchParams.size) - 1, searchParams.from, response.hits.hits.length)
 		processResults(response.hits.hits, searchParams.size);
+		insertKibanaGraph(searchParams);
 	}, function(jqXHR, textStatus, errorThrown) {
 		if(debug) {
 			console.log("#####");
@@ -50,6 +51,8 @@ var startSearch = function(startingIndex) {
  * If its value is empty, it displays an error in the box
  * @returns {Boolean|String} patientID (String) or false (Boolean) if it is empty
  */
+
+ //TO BE UPDATED WHEN APP IS LAUNCHED FROM EPJS
 var getPatientID = function() {
 	var patientID = $("#patientID").val();
 	if(!patientID){
