@@ -74,12 +74,15 @@ var getSnippet = function(text, length) {
 	var rxResult = rx.exec(text);
 	if(rxResult) {
 		console.log("returning regex");
-		return rxResult[0]+"...";
+		return rxResult[0].replace("\n", "<br>") + "...";
 	}
 	else {
 		console.log("returning substring");
 		var bodyLocation = text.indexOf("<body>") + 6;
-		return text.substring(bodyLocation,bodyLocation+length)+"...";
+		if(bodyLocation == 5) { // indexOf returned -1, so it did not find the substring
+			bodyLocation = 0;
+		}
+		return text.substring(bodyLocation,bodyLocation+length).replace("\n", "<br>") + "...";
 	}
 }
 

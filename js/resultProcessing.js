@@ -19,8 +19,8 @@ var createTimelineEntry = function(value, presentMonths) {
 	var monthYearNoSpaces = monthYear.replace(/ /g,"");
 	var pdfTimestamp = exactDate.getDate()+monthYearNoSpaces;
 
-	var shortTextSnippet = "Placeholder for snippet of the content once OCR quality is improved"; //getSnippet(value._source.html,SHORT_SNIPPET_LENGTH);
-	var longTextSnippet = "Longer version of the snippet of the content once OCR quality is improved"; //getSnippet(value._source.html,LONG_SNIPPET_LENGTH);
+	var shortTextSnippet = "Placeholder<br><br> for snippet of the content once OCR quality is improved"; //getSnippet(value._source.html,SHORT_SNIPPET_LENGTH);
+	var longTextSnippet = "Longer version of the snippet <br> of the content once OCR quality is improved"; //getSnippet(value._source.html,LONG_SNIPPET_LENGTH);
 
 	if(!(presentMonths[monthYearNoSpaces])) {
 		timelineEntry += "<dt id=" + monthYearNoSpaces + ">" + monthYear + "</dt>"; // Month-Year Tag
@@ -45,7 +45,7 @@ var createTimelineEntry = function(value, presentMonths) {
 	timelineEntry += "<div class='events-body' id='entry" + value._id + "''>"; 
 	timelineEntry += "<div class='help-tip'><p>Double click to expand/minimize the text</p></div>";
     //timelineEntry += '<h4 class="events-heading">Sample Document</h4>'; // heading
-	timelineEntry += "<p style='width:90%' id=text" + value._id + ">" + shortTextSnippet + "</p>"; // BODY
+	timelineEntry += "<p style='width:90%' id=text" + value._id + ">" + shortTextSnippet + "<p>"; // BODY
 	timelineEntry += "</div></div></div></dd>"; // closing tags
 
 	$("#timelineList").append(timelineEntry);
@@ -76,10 +76,10 @@ var createTimelineListeners = function(value, shortTextSnippet, longTextSnippet,
 	// when the text of the entry is double clicked, it is changed between short and longer version
 	$("#collapsableEntry"+value._id).on("dblclick",function() {
 		var textHandle = "#text" + value._id;
-		if($(textHandle).text().length > shortTextSnippet.length)
-			$(textHandle).text(shortTextSnippet);
+		if($(textHandle).html().length > shortTextSnippet.length)
+			$(textHandle).html(shortTextSnippet);
 		else
-			$(textHandle).text(longTextSnippet);
+			$(textHandle).html(longTextSnippet);
 	});
 
 	$("#PDF"+value._id).on("click",function() {
