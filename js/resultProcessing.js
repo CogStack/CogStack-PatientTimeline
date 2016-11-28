@@ -74,7 +74,7 @@ var createTimelineListeners = function(value, shortTextSnippet, longTextSnippet,
 	});
 
 	// when the text of the entry is double clicked, it is changed between short and longer version
-	$("#entry"+value._id).on("dblclick",function() {
+	$("#collapsableEntry"+value._id).on("dblclick",function() {
 		var textHandle = "#text" + value._id;
 		if($(textHandle).text().length > shortTextSnippet.length)
 			$(textHandle).text(shortTextSnippet);
