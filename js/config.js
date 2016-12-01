@@ -5,11 +5,11 @@
  */
 
 /**Variable specifying the address of the ElasticSearch server*/
-var elasticSearchURL = "http://localhost:9200/"; //"http://192.168.99.47:9200";
+var elasticSearchURL = "http://192.168.99.47:9200";
 
 /**Variable specyfying address of the server with the thumbnails and PDFs of the documents*/
 // var thumbnailSource = "http://192.168.99.42:8080/thumbs/"
-var thumbnailSource = "tempdummy/";//"http://localhost:8114/";
+var thumbnailSource = "http://localhost:8114/";
 
 /**Address of ES instance responsible for getting log data*/
 var elasticSearchLogURL = "http://localhost:9200/"
@@ -27,7 +27,7 @@ var debug = false;
 var SHORT_SNIPPET_LENGTH = 100;
 
 /**Constant specifying length of the expanded text snippet*/
-var LONG_SNIPPET_LENGTH = 1000;
+var LONG_SNIPPET_LENGTH = 500;
 
 /**Constant specifying height(in px) of medium thumbnail/icon*/
 var DEFAULT_THUMBNAIL_HEIGHT = 250;

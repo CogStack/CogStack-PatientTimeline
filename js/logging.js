@@ -18,7 +18,7 @@ var logESClient = new $.es.Client({
  * @param {Object} data JSON Object containing the log data for ES instance
  */
 var sendLogToElasticSearch = function(estype, data) {
-	logESClient.create({
+/*	logESClient.create({
 		index : 'templogindex',
 		type : estype,
 		id : generateGUID(), // after updating the elasticsearch api library, this field became mandatory
@@ -26,7 +26,7 @@ var sendLogToElasticSearch = function(estype, data) {
 	}, function (error, response) {
 		console.log(error);
 		console.log(response);
-	});
+	});*/
 }
 
 /**

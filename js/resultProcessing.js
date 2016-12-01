@@ -19,8 +19,8 @@ var createTimelineEntry = function(value, presentMonths) {
 	var monthYearNoSpaces = monthYear.replace(/ /g,"");
 	var pdfTimestamp = exactDate.getDate()+monthYearNoSpaces;
 
-	var shortTextSnippet = "Placeholder<br><br> for snippet of the content once OCR quality is improved"; //getSnippet(value._source.html,SHORT_SNIPPET_LENGTH);
-	var longTextSnippet = "Longer version of the snippet <br> of the content once OCR quality is improved"; //getSnippet(value._source.html,LONG_SNIPPET_LENGTH);
+	var shortTextSnippet = getSnippet(value._source.tikaOutput, SHORT_SNIPPET_LENGTH);
+	var longTextSnippet = getSnippet(value._source.tikaOutput, LONG_SNIPPET_LENGTH);
 
 	if(!(presentMonths[monthYearNoSpaces])) {
 		timelineEntry += "<dt id=" + monthYearNoSpaces + ">" + monthYear + "</dt>"; // Month-Year Tag
@@ -32,7 +32,7 @@ var createTimelineEntry = function(value, presentMonths) {
 	if(true) { //value._source.thumbnail) { // used to check if thumbnail source was present in the ES index
 		var fileName = value._source.tlsrctablename + "_" + value._source.tlsrccolumnfieldname + "_" + value._source.documentid;
 		imageSource = thumbnailSource + "thumbnail/" + fileName + ".png";
-		PDFSource = thumbnailSource + "binary/" + fileName + ".pdf";
+		PDFSource = thumbnailSource + "pdf/" + fileName + ".pdf";
 	}
 	else
 		imageSource = "img/Icon-Placeholder.png";
@@ -76,10 +76,12 @@ var createTimelineListeners = function(value, shortTextSnippet, longTextSnippet,
 	// when the text of the entry is double clicked, it is changed between short and longer version
 	$("#collapsableEntry"+value._id).on("dblclick",function() {
 		var textHandle = "#text" + value._id;
-		if($(textHandle).html().length > shortTextSnippet.length)
+		if($(textHandle).html().length > 1.1 * shortTextSnippet.length) { // to compensate for any ovehead added by changing newlines to <br>
 			$(textHandle).html(shortTextSnippet);
-		else
+		}
+		else {
 			$(textHandle).html(longTextSnippet);
+		}
 	});
 
 	$("#PDF"+value._id).on("click",function() {

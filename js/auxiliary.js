@@ -68,22 +68,16 @@ var getShortMonth = function(num) {
  * @return {String} shortened text
  */
 var getSnippet = function(text, length) {
-	if (text.length < length)
-		return text;
-	var rx = new RegExp("^.{" + length + "}[^ ]*");
-	var rxResult = rx.exec(text);
-	if(rxResult) {
-		console.log("returning regex");
-		return rxResult[0].replace("\n", "<br>") + "...";
-	}
-	else {
-		console.log("returning substring");
-		var bodyLocation = text.indexOf("<body>") + 6;
-		if(bodyLocation == 5) { // indexOf returned -1, so it did not find the substring
-			bodyLocation = 0;
-		}
-		return text.substring(bodyLocation,bodyLocation+length).replace("\n", "<br>") + "...";
-	}
+	var newText = text.substr(0, text.lastIndexOf(" ", length));
+
+	var regex1 = new RegExp("\\s*\\n\\s*\\n+\\s*", "g");
+	var regex2 = new RegExp("\\n", "g");
+
+	newText = newText.trim(); // removes leading spaces/newlines/etc
+	newText = newText.replace(regex1, "<br><br>");
+	newText = newText.replace(regex2, "<br>");
+
+	return newText
 }
 
 // TODO: 
