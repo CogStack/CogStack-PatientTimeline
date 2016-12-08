@@ -4,6 +4,8 @@ var prepareKibanaGraph = function(patientId, startDate, endDate) {
 	var dateFieldName = "documenttimestamp";
 	var searchQuery = "patientid:" + patientId; // possibly search by more fields
 
+	//TODO: insert into search query keywords
+
 	var dynamicGraph = '<iframe src ="'
 	dynamicGraph += kibanaURL;
 	dynamicGraph += '/app/kibana#/visualize/create?embed=true&type=histogram&indexPattern=';
@@ -14,13 +16,14 @@ var prepareKibanaGraph = function(patientId, startDate, endDate) {
 	dynamicGraph += "'" + endDate + "'";
 	dynamicGraph += "))&_a=(filters:!(),linked:!f,query:(query_string:(analyze_wildcard:!t,query:";
 	dynamicGraph += "'" + searchQuery + "'";
-	dynamicGraph += ")),uiState:(vis:(legendOpen:!f)),vis:(aggs:!((id:'1',params:(),schema:metric,type:count),(id:'2',params:(customInterval:'2h',extended_bounds:(),field:";
+	dynamicGraph += ")),uiState:(vis:(legendOpen:!f)),vis:(aggs:!((id:'1',params:(),schema:metric,type:count),(id:'2',params:(customInterval:'2h',customLabel:'Start%20of%20Interval',extended_bounds:(),field:";
 	dynamicGraph += dateFieldName;
 
-	// TODO: CHANGE NAME(make it unique somehow) IF WON'T WORK CONCURRENTLY, I.E. ANOTHER SESSION OVERWRITES PREVIOUS GRAPH (use guid generation):
+	//todo: possibly unique name for each graph, not sure if needed at this point
 	dynamicGraph += ",interval:auto,min_doc_count:1),schema:segment,type:date_histogram)),listeners:(),params:(addLegend:!t,addTimeMarker:!f,addTooltip:!t,defaultYExtents:!f,mode:stacked,scale:linear,setYExtents:!f,shareYAxis:!t,times:!(),yAxis:()),title:'Document%20Distribution',type:histogram))";
 	dynamicGraph += '" height="300" width="600"></iframe>';
 
+	console.log(dynamicGraph);
 	return dynamicGraph;
 }
 

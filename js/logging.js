@@ -44,8 +44,12 @@ var logQueryData = function(sourceQuery) {
 	};
 
 	// checks if any search keywords exist in the original query data
-	if (sourceQuery.body.query.bool.must[2] !== undefined && sourceQuery.body.query.bool.must[2] !== null) 
-		queryData.keywords = sourceQuery.body.query.bool.must[2].match._all;
+	
+
+
+	if (sourceQuery.body.query.bool.must[2] !== undefined && sourceQuery.body.query.bool.must[2] !== null) {
+		queryData.keywords = sourceQuery.body.query.bool.must[2].query_string.query;
+	}
 
 	sendLogToElasticSearch('query_log', queryData);
 }

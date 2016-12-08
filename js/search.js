@@ -25,6 +25,9 @@ var searchForEntries = function(searchParams, isFirstSearch) {
 			insertKibanaGraph(searchParams);
 		}
 	}, function(jqXHR, textStatus, errorThrown) {
+		console.log(jqXHR);
+		console.log(textStatus);
+		console.log(errorThrown);
 		if(debug) {
 			console.log("#####");
 			console.log("Search error: ");
@@ -135,6 +138,11 @@ var prepareESObject = function(patientID, resultsPerPage, startingIndex, startDa
 							}
 						 }	
 					   },
+					   {query_string : {
+					   		query : ""
+					   	}
+
+					   }
 					],
 				}
 			}
@@ -142,8 +150,13 @@ var prepareESObject = function(patientID, resultsPerPage, startingIndex, startDa
 	}
 
 	// adds to the search conditions match for the keywords if the user inputted any. Otherwise this field is ignored
-	if(containingKeywords)
-		searchParams.body.query.bool.must.push({ match: {"_all" : containingKeywords}})
-
+	if(containingKeywords) {
+		searchParams.body.query.bool.must[2].query_string.query = containingKeywords;
+	}
+	else {
+		searchParams.body.query.bool.must.splice(2,1);
+		// searchParams.body.query.bool.must.push({ match: {"query_string" : {"query" : containingKeywords}}})
+	}
+	
 	return searchParams;
 }

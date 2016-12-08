@@ -145,7 +145,7 @@ var setFormProperties = function() {
 	// When return key is pressed in the "containing" box, initialise search
 	$("#containingKeywords").on("keydown", function(e){
 		if (e.keyCode == 13) {
-			e.preventDefault();log
+			e.preventDefault();
 			$("#searchButton").click();
 		}
 	});
@@ -196,8 +196,6 @@ var setFormProperties = function() {
 	}
 
 	$("#kibanaVisualisationSwitch").bootstrapSwitch(kibanaSwitchOptions);
-    // kibanaToggleHandle.bootstrapSwitch();
-
 }
 
 /**

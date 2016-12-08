@@ -77,7 +77,7 @@ var getSnippet = function(text, length) {
 	newText = newText.replace(regex1, "<br><br>");
 	newText = newText.replace(regex2, "<br>");
 
-	return newText
+	return newText + "...";
 }
 
 // TODO: 

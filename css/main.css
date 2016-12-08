@@ -167,6 +167,10 @@ button#collapseButton {
 	margin-bottom:5px;
 }
 
+.pageParagraph {
+	text-align: center;
+}
+
 button#searchButton {
 	margin-top:10px;
 }

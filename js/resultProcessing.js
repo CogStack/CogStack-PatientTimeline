@@ -1,3 +1,5 @@
+//TODO: indicate document was OCR'd
+
 /**
  * @file Script file responsible for processing the search results
  * @author Jedrzej Stuczynski
@@ -21,6 +23,7 @@ var createTimelineEntry = function(value, presentMonths) {
 
 	var shortTextSnippet = getSnippet(value._source.tikaOutput, SHORT_SNIPPET_LENGTH);
 	var longTextSnippet = getSnippet(value._source.tikaOutput, LONG_SNIPPET_LENGTH);
+	var pageCount = value._source["X-TL-PAGE-COUNT"];
 
 	if(!(presentMonths[monthYearNoSpaces])) {
 		timelineEntry += "<dt id=" + monthYearNoSpaces + ">" + monthYear + "</dt>"; // Month-Year Tag
@@ -34,14 +37,16 @@ var createTimelineEntry = function(value, presentMonths) {
 		imageSource = thumbnailSource + "thumbnail/" + fileName + ".png";
 		PDFSource = thumbnailSource + "pdf/" + fileName + ".pdf";
 	}
-	else
+	else {
 		imageSource = "img/Icon-Placeholder.png";
+	}
 
 	timelineEntry += "<div class='collapse in' aria-expanded=true id=collapsableEntry" + value._id + ">";   
 	timelineEntry += "<dd class='pos-right clearfix'><div class='circ'></div><div class='time'>" + getShortMonth(exactDate.getMonth()) + " " + exactDate.getDate() + "</div><div class='events'>"; // circle with exact date on the side
-	timelineEntry += "<div class='pull-left'><div class='thumbIcon'><a href=" + imageSource + " data-toggle='lightbox'>";
+	timelineEntry += "<div class='pull-left'><div class='entryThumbPDFContainer'><div class='thumbIcon'><a href=" + imageSource + " data-toggle='lightbox' data-footer='Total Number of Pages: " + pageCount + "'>";
 	timelineEntry += "<img class='events-object img-rounded' id=thumbIcon" + value._id + " src=" + imageSource + "></a></div>";
-	timelineEntry += "<div class='downloadButton'><a href='" + PDFSource + "' class='btn btn-info' role='button' target='_blank' id=PDF" + value._id + ">Download Full PDF</a></div></div>";
+	timelineEntry += "<div class='pageParagraph'><h6><b>Page Count: " + pageCount + "</b></h6></div>";
+	timelineEntry += "<div class='downloadButton'><a href='" + PDFSource + "' class='btn btn-info' role='button' target='_blank' id=PDF" + value._id + ">Download Full PDF</a></div></div></div>";
 	timelineEntry += "<div class='events-body' id='entry" + value._id + "''>"; 
 	timelineEntry += "<div class='help-tip'><p>Double click to expand/minimize the text</p></div>";
     //timelineEntry += '<h4 class="events-heading">Sample Document</h4>'; // heading
@@ -76,7 +81,7 @@ var createTimelineListeners = function(value, shortTextSnippet, longTextSnippet,
 	// when the text of the entry is double clicked, it is changed between short and longer version
 	$("#collapsableEntry"+value._id).on("dblclick",function() {
 		var textHandle = "#text" + value._id;
-		if($(textHandle).html().length > 1.1 * shortTextSnippet.length) { // to compensate for any ovehead added by changing newlines to <br>
+		if($(textHandle).html().length > 1.2 * shortTextSnippet.length) { // to compensate for any ovehead added by changing newlines to <br>
 			$(textHandle).html(shortTextSnippet);
 		}
 		else {
