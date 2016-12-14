@@ -69,26 +69,24 @@ var createTimelineEntry = function(value, presentMonths) {
 
 	dateLabel = getShortMonth(exactDate.getMonth()) + " " + exactDate.getDate();
 	// circle with exact date on the side
-	timelineEntry = "<div class='collapse in' aria-expanded=true id='collapsableEntrySet" + value._id + "'>\
+	timelineEntry += "<div class='collapse in' aria-expanded=true id='collapsableEntrySet" + value._id + "'>\
 						<dd class='pos-right clearfix'>\
 							<div class='circ'></div>\
 								<div class='time' id='time" + value._id + "'>\
 									" + dateLabel + "\
 								</div>\
 							<div class='events'>\
-								<div id='collapsableEntry" + value._id + "'>\
-									<div class='pull-left'>\
-										<div class='entryThumbPDFContainer'>\
-											" + thumbnailDiv + "\
-											" + pageCountDiv + "\
-											" + downloadPDFButtonDiv + "\
-										</div>\
+								<div class='pull-left'>\
+									<div class='entryThumbPDFContainer'>\
+										" + thumbnailDiv + "\
+										" + pageCountDiv + "\
+										" + downloadPDFButtonDiv + "\
 									</div>\
-									<div class='events-body' id='entry" + value._id + "''>\
-										" + helpTipDiv + "\
-										" + entryHeaderName + "\
-										" + snippetDiv + "\
-									</div>\
+								</div>\
+								<div class='events-body' id='entry" + value._id + "''>\
+									" + helpTipDiv + "\
+									" + entryHeaderName + "\
+									" + snippetDiv + "\
 								</div>\
 							</div>\
 						</dd>\
@@ -122,11 +120,11 @@ var createTimelineListeners = function(value, shortTextSnippet, longTextSnippet,
 
 
 //WIP
-	$("#time" + value._id).on("click", function() {
-		var collapsableEntrySetHandle = $("#collapsableEntrySet" + value._id);
-		console.log("CLICKED")
-		collapsableEntrySetHandle.collapse("toggle");
-	});
+	// $("#time" + value._id).on("click", function() {
+	// 	var collapsableEntrySetHandle = $("#collapsableEntrySet" + value._id);
+	// 	console.log("CLICKED")
+	// 	collapsableEntrySetHandle.collapse("toggle");
+	// });
 
 
 	// when the text of the entry is double clicked, it is changed between short and longer version
