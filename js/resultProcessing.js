@@ -41,17 +41,59 @@ var createTimelineEntry = function(value, presentMonths) {
 		imageSource = "img/Icon-Placeholder.png";
 	}
 
-	timelineEntry += "<div class='collapse in' aria-expanded=true id=collapsableEntry" + value._id + ">";   
-	timelineEntry += "<dd class='pos-right clearfix'><div class='circ'></div><div class='time'>" + getShortMonth(exactDate.getMonth()) + " " + exactDate.getDate() + "</div><div class='events'>"; // circle with exact date on the side
-	timelineEntry += "<div class='pull-left'><div class='entryThumbPDFContainer'><div class='thumbIcon'><a href=" + imageSource + " data-toggle='lightbox' data-footer='Total Number of Pages: " + pageCount + "'>";
-	timelineEntry += "<img class='events-object img-rounded' id=thumbIcon" + value._id + " src=" + imageSource + "></a></div>";
-	timelineEntry += "<div class='pageParagraph'><h6><b>Page Count: " + pageCount + "</b></h6></div>";
-	timelineEntry += "<div class='downloadButton'><a href='" + PDFSource + "' class='btn btn-info' role='button' target='_blank' id=PDF" + value._id + ">Download Full PDF</a></div></div></div>";
-	timelineEntry += "<div class='events-body' id='entry" + value._id + "''>"; 
-	timelineEntry += "<div class='help-tip'><p>Double click to expand/minimize the text</p></div>";
-    //timelineEntry += '<h4 class="events-heading">Sample Document</h4>'; // heading
-	timelineEntry += "<p style='width:90%' id=text" + value._id + ">" + shortTextSnippet + "<p>"; // BODY
-	timelineEntry += "</div></div></div></dd>"; // closing tags
+	pageCountDiv = "<div class='pageCount'>\
+						<h6><b>Page Count: " + pageCount + "</b></h6>\
+					</div>";
+
+	helpTipDiv = "<div class='help-tip'>\
+					<p>Double click to expand/minimize the text</p>\
+				</div>";
+
+	entryHeaderName = "";//"<h4 class="events-heading">Sample Document</h4>";
+
+	downloadPDFButtonDiv = "<div class='downloadButton'>\
+								<a href='" + PDFSource + "' class='btn btn-info' role='button' target='_blank' id=PDF" + value._id + ">\
+									Download Full PDF\
+								</a>\
+							</div>";
+
+	snippetDiv = "<div class='textSnippet'>\
+					<p id=text" + value._id + ">" + shortTextSnippet + "<p>\
+				</div>";
+
+	thumbnailDiv = "<div class='thumbIcon'>\
+						<a href=" + imageSource + " data-toggle='lightbox' data-footer='Total Number of Pages: " + pageCount + "'>\
+							<img class='events-object img-rounded' id=thumbIcon" + value._id + " src=" + imageSource + ">\
+						</a>\
+					</div>";
+
+	dateLabel = getShortMonth(exactDate.getMonth()) + " " + exactDate.getDate();
+	// circle with exact date on the side
+	timelineEntry = "<div class='collapse in' aria-expanded=true id='collapsableEntrySet" + value._id + "'>\
+						<dd class='pos-right clearfix'>\
+							<div class='circ'></div>\
+								<div class='time' id='time" + value._id + "'>\
+									" + dateLabel + "\
+								</div>\
+							<div class='events'>\
+								<div id='collapsableEntry" + value._id + "'>\
+									<div class='pull-left'>\
+										<div class='entryThumbPDFContainer'>\
+											" + thumbnailDiv + "\
+											" + pageCountDiv + "\
+											" + downloadPDFButtonDiv + "\
+										</div>\
+									</div>\
+									<div class='events-body' id='entry" + value._id + "''>\
+										" + helpTipDiv + "\
+										" + entryHeaderName + "\
+										" + snippetDiv + "\
+									</div>\
+								</div>\
+							</div>\
+						</dd>\
+					</div>";
+
 
 	$("#timelineList").append(timelineEntry);
 
@@ -73,13 +115,22 @@ var createTimelineEntry = function(value, presentMonths) {
 var createTimelineListeners = function(value, shortTextSnippet, longTextSnippet, pdfTimestamp, monthYearNoSpaces) {
 	
 	// when month-year element is clicked, given set of entries are collapsed/expanded
-	$("#"+monthYearNoSpaces).on("click", function() {
-		var collapsableEntryHandle = $("#collapsableEntry" + value._id);
-		collapsableEntryHandle.collapse("toggle");
+	$("#" + monthYearNoSpaces).on("click", function() {
+		var collapsableEntrySetHandle = $("#collapsableEntrySet" + value._id);
+		collapsableEntrySetHandle.collapse("toggle");
 	});
 
+
+//WIP
+	$("#time" + value._id).on("click", function() {
+		var collapsableEntrySetHandle = $("#collapsableEntrySet" + value._id);
+		console.log("CLICKED")
+		collapsableEntrySetHandle.collapse("toggle");
+	});
+
+
 	// when the text of the entry is double clicked, it is changed between short and longer version
-	$("#collapsableEntry"+value._id).on("dblclick",function() {
+	$("#collapsableEntrySet" + value._id).on("dblclick",function() {
 		var textHandle = "#text" + value._id;
 		if($(textHandle).html().length > 1.2 * shortTextSnippet.length) { // to compensate for any ovehead added by changing newlines to <br>
 			$(textHandle).html(shortTextSnippet);
@@ -89,11 +140,11 @@ var createTimelineListeners = function(value, shortTextSnippet, longTextSnippet,
 		}
 	});
 
-	$("#PDF"+value._id).on("click",function() {
+	$("#PDF" + value._id).on("click",function() {
 		logDocumentDownload(value._source.documentid);
 	});
 
-	$("#thumbIcon"+value._id).on("click", function() {
+	$("#thumbIcon" + value._id).on("click", function() {
 		logThumbnailView(value._source.documentid);
 	});
 
@@ -109,7 +160,7 @@ var createTimelineListeners = function(value, shortTextSnippet, longTextSnippet,
 */
 
 	// when thumbnails are loaded, they are resized to target size
-	$("#thumbIcon"+value._id).load(function(){
+	$("#thumbIcon" + value._id).load(function(){
 		var imageHeight = $(this).height();
 		var imageWidth = $(this).width();
 		var targetThumbnailHeight = getThumbnailHeight();

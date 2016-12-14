@@ -167,8 +167,12 @@ button#collapseButton {
 	margin-bottom:5px;
 }
 
-.pageParagraph {
+.pageCount {
 	text-align: center;
+}
+
+.textSnippet {
+	width:90%;
 }
 
 button#searchButton {
