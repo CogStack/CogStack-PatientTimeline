@@ -16,14 +16,13 @@
 var createTimelineEntry = function(value, presentMonths) {
 	var timelineEntry = "";
 
+
+	// those labels are used regardless of whether processing have failed or not
 	var exactDate = new Date(value._source.documenttimestamp);
 	var monthYear = getShortMonth(exactDate.getMonth()) + " " + exactDate.getFullYear();
 	var monthYearNoSpaces = monthYear.replace(/ /g,"");
-	var pdfTimestamp = exactDate.getDate()+monthYearNoSpaces;
+	var dateLabel = getShortMonth(exactDate.getMonth()) + " " + exactDate.getDate();
 
-	var shortTextSnippet = getSnippet(value._source.tikaOutput, SHORT_SNIPPET_LENGTH);
-	var longTextSnippet = getSnippet(value._source.tikaOutput, LONG_SNIPPET_LENGTH);
-	var pageCount = value._source["X-TL-PAGE-COUNT"];
 
 	if(!(presentMonths[monthYearNoSpaces])) {
 		timelineEntry += "<dt id=" + monthYearNoSpaces + ">" + monthYear + "</dt>"; // Month-Year Tag
@@ -32,42 +31,61 @@ var createTimelineEntry = function(value, presentMonths) {
 
 	var imageSource = "";
 	var PDFSource = "#";
-	if(true) { //value._source.thumbnail) { // used to check if thumbnail source was present in the ES index
+	var pageCount = "";
+	var shortTextSnippet = "";
+	var longTextSnippet = "";""
+	var headerName = "";
+
+
+	//TODO: replace with the flag in ES about whether the document was successfully processed
+
+	if(true) { // was processed successfully; there is all required metadata
 		var fileName = value._source.tlsrctablename + "_" + value._source.tlsrccolumnfieldname + "_" + value._source.documentid;
 		imageSource = thumbnailSource + "thumbnail/" + fileName + ".png";
 		PDFSource = thumbnailSource + "pdf/" + fileName + ".pdf";
-	}
-	else {
-		imageSource = "img/Icon-Placeholder.png";
+		shortTextSnippet = getSnippet(value._source.tikaOutput, SHORT_SNIPPET_LENGTH);
+		longTextSnippet = getSnippet(value._source.tikaOutput, LONG_SNIPPET_LENGTH);
+		pageCount = value._source["X-TL-PAGE-COUNT"];
 	}
 
-	pageCountDiv = "<div class='pageCount'>\
+	//TODO: log failure?
+	else { // processing have failed
+		imageSource = "img/Icon-Placeholder.png";
+		shortTextSnippet = PROCESSING_ERROR_TEXT;
+		longTextSnippet = PROCESSING_ERROR_TEXT;
+
+		// TODO when metadata available:
+		// headerName = fileName
+	}
+
+	var pageCountDiv = "<div class='pageCount'>\
 						<h6><b>Page Count: " + pageCount + "</b></h6>\
 					</div>";
 
-	helpTipDiv = "<div class='help-tip'>\
+	var helpTipDiv = "<div class='help-tip'>\
 					<p>Double click to expand/minimize the text</p>\
 				</div>";
 
-	entryHeaderName = "";//"<h4 class="events-heading">Sample Document</h4>";
+	var entryHeaderName = "<h4 class='events-heading'>\
+						" + headerName + "\
+						</h4>";
 
-	downloadPDFButtonDiv = "<div class='downloadButton'>\
+	var downloadPDFButtonDiv = "<div class='downloadButton'>\
 								<a href='" + PDFSource + "' class='btn btn-info' role='button' target='_blank' id=PDF" + value._id + ">\
 									Download Full PDF\
 								</a>\
 							</div>";
 
-	snippetDiv = "<div class='textSnippet'>\
+	var snippetDiv = "<div class='textSnippet'>\
 					<p id=text" + value._id + ">" + shortTextSnippet + "<p>\
 				</div>";
 
-	thumbnailDiv = "<div class='thumbIcon'>\
+	var thumbnailDiv = "<div class='thumbIcon'>\
 						<a href=" + imageSource + " data-toggle='lightbox' data-footer='Total Number of Pages: " + pageCount + "'>\
 							<img class='events-object img-rounded' id=thumbIcon" + value._id + " src=" + imageSource + ">\
 						</a>\
 					</div>";
 
-	dateLabel = getShortMonth(exactDate.getMonth()) + " " + exactDate.getDate();
 	// circle with exact date on the side
 	timelineEntry += "<div class='collapse in' aria-expanded=true id='collapsableEntrySet" + value._id + "'>\
 						<dd class='pos-right clearfix'>\
@@ -95,7 +113,9 @@ var createTimelineEntry = function(value, presentMonths) {
 
 	$("#timelineList").append(timelineEntry);
 
-	createTimelineListeners(value, shortTextSnippet, longTextSnippet, pdfTimestamp, monthYearNoSpaces);
+
+	//TODO in listeners: if processing failed no point in having listener that changes the text on dbclick
+	createTimelineListeners(value, shortTextSnippet, longTextSnippet, monthYearNoSpaces);
 	return presentMonths
 }
 
@@ -104,13 +124,12 @@ var createTimelineEntry = function(value, presentMonths) {
  * @param {Object} value given object that needs to be put on the timeline
  * @param {String} shortTextSnippet short snippet of the text that is going to be put on the timeline
  * @param {String} longTextSnippet longer version of the snippet of the text that is going to be put on the timeline
- * @param {String} pdfTimestamp month-year timestamp for the PDF
  * @param {String} monthYearNoSpaces representation of given month and year
  * @listens event:"click" on month-Year element
  * @listens event:"dbclick" on entry
  * @listens event:"click" on 'Download PDF'
  */
-var createTimelineListeners = function(value, shortTextSnippet, longTextSnippet, pdfTimestamp, monthYearNoSpaces) {
+var createTimelineListeners = function(value, shortTextSnippet, longTextSnippet, monthYearNoSpaces) {
 	
 	// when month-year element is clicked, given set of entries are collapsed/expanded
 	$("#" + monthYearNoSpaces).on("click", function() {
@@ -182,15 +201,17 @@ var processResults = function(searchResult, size) {
 		console.log("#####");
 	}
 	// do not continue of the searchResult is empty
-	if($.isEmptyObject(searchResult))
+	if($.isEmptyObject(searchResult)) {
 		return
+	}
 
 	// very simple HashMap-like structure to check if given month-year is already present
 	var presentMonths = {};
 
 	$.each(searchResult, function(index, value) {
-		if((index == searchResult.length - 1) && (searchResult.length == size))
+		if((index == searchResult.length - 1) && (searchResult.length == size)) {
 			return true;
+		}
 		presentMonths = createTimelineEntry(value, presentMonths);
 	});
 

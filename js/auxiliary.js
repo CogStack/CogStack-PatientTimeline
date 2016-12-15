@@ -5,18 +5,18 @@
  */
 
 /** 
- * Get width of thumbnail/icon 
+ * Wrapper for getting width of thumbnail/icon 
  * @param {Number} targetHeight provided constant height value
  * @param {Number} naturalHeight original height of thumbnail/icon
  * @param {Number} naturalWidth original width of thumbnail/icon
  * @return {Number} desired width
  */
 var getThumbnailWidth = function(targetHeight, naturalHeight, naturalWidth) {
-	return targetHeight*naturalWidth/naturalHeight;
+	return targetHeight * naturalWidth / naturalHeight;
 }
 
 /** 
- * Get height of thumbnail/icon from the user selection
+ * Wrapper for getting height of thumbnail/icon from the user selection
  * @return {Number} The desired height
 */
 var getThumbnailHeight = function() {
@@ -39,7 +39,7 @@ var getThumbnailHeight = function() {
 /** 
  * Provides shortened names of months 
  * @param {Number} num number between 0-11
- * @return {String} desired motnh name
+ * @return {String} desired month name
  */
 var getShortMonth = function(num) {
 	switch(num) {

@@ -40,3 +40,6 @@ var MAX_KIBANA_WIDTH = 768; // 768 seems to be safe for tablets that are apparen
 
 /**Variable used in the thumbnail size slider. It rescales the original image by those factors. The initial value, i.e. of 1.0 is based on DEFAULT_THUMBNAIL_HEIGHT*/
 var scalingTicks = [0.5, 1.25, 2.0, 3.0];
+
+/**Variable specifying the text used for the snippet in case the processing have failed*/
+var PROCESSING_ERROR_TEXT = "Unfortunately this document was not processed successfully and it is impossible to display in on the timeline. Try to view it using the legacy application instead and please contact us about it, so we could try to fix it.";
