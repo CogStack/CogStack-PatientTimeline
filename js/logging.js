@@ -34,6 +34,8 @@ var sendLogToElasticSearch = function(estype, data) {
  * @param {Object} sourceQuery JSON Object containing query that was sent to the main ES instance
  */
 var logQueryData = function(sourceQuery) {
+	// TODO: UPDATE WITH VARIABLE FIELD NAMES
+	return;
 	queryData = {
 		date : new Date().getTime(),
 		patientId : sourceQuery.body.query.bool.must[0].term.patientid,

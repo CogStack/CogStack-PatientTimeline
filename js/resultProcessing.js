@@ -18,7 +18,8 @@ var createTimelineEntry = function(value, presentMonths) {
 
 
 	// those labels are used regardless of whether processing have failed or not
-	var exactDate = new Date(value._source.documenttimestamp);
+	var exactDate = new Date(value._source[ES_TIME_FIELD]);
+
 	var monthYear = getShortMonth(exactDate.getMonth()) + " " + exactDate.getFullYear();
 	var monthYearNoSpaces = monthYear.replace(/ /g,"");
 	var dateLabel = getShortMonth(exactDate.getMonth()) + " " + exactDate.getDate();
@@ -33,33 +34,58 @@ var createTimelineEntry = function(value, presentMonths) {
 	var PDFSource = "#";
 	var pageCount = "";
 	var shortTextSnippet = "";
-	var longTextSnippet = "";""
+	var longTextSnippet = "";
 	var headerName = "";
 
 
-	//TODO: replace with the flag in ES about whether the document was successfully processed
 
-	if(true) { // was processed successfully; there is all required metadata
-		var fileName = value._source.tlsrctablename + "_" + value._source.tlsrccolumnfieldname + "_" + value._source.documentid;
-		imageSource = thumbnailSource + "thumbnail/" + fileName + ".png";
-		PDFSource = thumbnailSource + "pdf/" + fileName + ".pdf";
-		shortTextSnippet = getSnippet(value._source.tikaOutput, SHORT_SNIPPET_LENGTH);
-		longTextSnippet = getSnippet(value._source.tikaOutput, LONG_SNIPPET_LENGTH);
+
+    var fileName = value._source.tlsrctablename + "_" + value._source.tlsrccolumnfieldname + "_" + value._source.documentid;
+
+    // tmp for mimic data:
+    fileName = "mimic_data_mimic_data_body_" + value._source.eprid;
+
+    imageSource = thumbnailSource + "thumbnail/" + fileName + ".png";
+    PDFSource = thumbnailSource + "pdf/" + fileName + ".pdf";
+
+    //TODO: replace with the flag in ES about whether the document was successfully processed
+    var wasProcessed = checkIfResourceExists(imageSource);
+
+    if(wasProcessed) { // was processed successfully; there is all required metadata
+
+        // shortTextSnippet = getSnippet(value._source.tikaOutput, SHORT_SNIPPET_LENGTH);
+		// longTextSnippet = getSnippet(value._source.tikaOutput, LONG_SNIPPET_LENGTH);
+
+		// tmp for mimic data:
+        shortTextSnippet = getSnippet(value._source.fulltext, SHORT_SNIPPET_LENGTH);
+        longTextSnippet = getSnippet(value._source.fulltext, LONG_SNIPPET_LENGTH);
+
 		pageCount = value._source["X-TL-PAGE-COUNT"];
 	}
 
 	//TODO: log failure?
 	else { // processing have failed
-		imageSource = "img/Icon-Placeholder.png";
-		shortTextSnippet = PROCESSING_ERROR_TEXT;
-		longTextSnippet = PROCESSING_ERROR_TEXT;
+		// imageSource = "img/Icon-Placeholder.png";
+        imageSource = "img/thumbnail_placeholder.png";
+        PDFSource = "#";
+
+        shortTextSnippet = getSnippet(value._source.fulltext, SHORT_SNIPPET_LENGTH);
+        longTextSnippet = getSnippet(value._source.fulltext, LONG_SNIPPET_LENGTH);
+
+        // not needed for mimic data as it will have the text
+		// shortTextSnippet = PROCESSING_ERROR_TEXT;
+		// longTextSnippet = PROCESSING_ERROR_TEXT;
 
 		// TODO when metadata available:
 		// headerName = fileName
 	}
 
-	var pageCountDiv = "<div class='pageCount'>\
-						<h6><b>Page Count: " + pageCount + "</b></h6>\
+	// for mimic data changed to doc type (because it is available)
+	// var pageCountDiv = "<div class='pageCount'>\
+	// 					<h6><b>Page Count: " + pageCount + "</b></h6>\
+	// 				</div>";
+    var pageCountDiv = "<div class='pageCount'>\
+						<h6><b>Type: " + value._source.docType + "</b></h6>\
 					</div>";
 
 	var helpTipDiv = "<div class='help-tip'>\
@@ -113,11 +139,9 @@ var createTimelineEntry = function(value, presentMonths) {
 
 	$("#timelineList").append(timelineEntry);
 
-
-	//TODO in listeners: if processing failed no point in having listener that changes the text on dbclick
-	createTimelineListeners(value, shortTextSnippet, longTextSnippet, monthYearNoSpaces);
+    createTimelineListeners(value, shortTextSnippet, longTextSnippet, monthYearNoSpaces);
 	return presentMonths
-}
+};
 
 /** 
  * Creates listeners for appropriate elements for each created entry
@@ -161,9 +185,6 @@ var createTimelineListeners = function(value, shortTextSnippet, longTextSnippet,
 		logDocumentDownload(value._source.documentid);
 	});
 
-	$("#thumbIcon" + value._id).on("click", function() {
-		logThumbnailView(value._source.documentid);
-	});
 
 	// download pdf when the link is clicked
 /*	if(!value._source.thumbnail) {
@@ -178,13 +199,15 @@ var createTimelineListeners = function(value, shortTextSnippet, longTextSnippet,
 
 	// when thumbnails are loaded, they are resized to target size
 	$("#thumbIcon" + value._id).load(function(){
-		var imageHeight = $(this).height();
+        logThumbnailView(value._source.documentid);
+
+        var imageHeight = $(this).height();
 		var imageWidth = $(this).width();
 		var targetThumbnailHeight = getThumbnailHeight();
 		var finalWidth = getThumbnailWidth(targetThumbnailHeight, imageHeight, imageWidth);
 		$(this).attr("style","width:" + finalWidth + "px;height:" + targetThumbnailHeight + "px");
 	});
-}
+};
 
 
 /** 
@@ -218,11 +241,18 @@ var processResults = function(searchResult, size) {
 	if(debug){
 		console.log("#####");
 		console.log("Present Months: ");
-		console.log(presentMonths)
+		console.log(presentMonths);
 		console.log("#####");
 	}
 	if(!($.isEmptyObject(searchResult))) {
 		$(".paginationContainer").show();
 	}
 
-}
+};
+
+var checkIfResourceExists = function(url) {
+    var http = new XMLHttpRequest();
+    http.open('HEAD', url, false);
+    http.send();
+    return http.status!=404;
+};

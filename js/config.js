@@ -1,30 +1,40 @@
 /**
  * @file File with the configurable variables that might require tweaking.
  * @author Jedrzej Stuczynski
- * @author Ali Aliyev 
+ * @author Ali Aliyev
  */
 
 /**Variable specifying the address of the ElasticSearch server*/
-var elasticSearchURL = "http://localhost:9200/"; //"http://192.168.99.47:9200";
+var elasticSearchURL = "http://10.200.102.23:9200/"; //"http://192.168.99.47:9200";
 
 /**Variable specyfying address of the server with the thumbnails and PDFs of the documents*/
 // var thumbnailSource = "http://192.168.99.42:8080/thumbs/"
-var thumbnailSource = "tempdummy/";//"http://localhost:8114/";
+var thumbnailSource = "http://10.200.102.45:8081/";//"http://localhost:8114/";
 
 /**Address of ES instance responsible for getting log data*/
-var elasticSearchLogURL = "http://localhost:9200/"
+var elasticSearchLogURL = "";//http://localhost:9200/";
 
 /**Variable specifying address of the server receiving answers from the feedback form*/
-var feedbackURL = "http://localhost:81";
+var feedbackURL = "";//http://localhost:81";
 
 /**Variable specyfing address of a Kibana Server (that is connected to the ElasticSearch instance) */
-var kibanaURL = "http://localhost:5601";
+var kibanaURL = "http://10.200.102.45:5601";
 
 /**Variable responsible for toggling debug mode for printing debug messages to the console*/
-var debug = false;
+var debug = true;
+
+var ES_TYPE = "eprdoc";
+
+var ES_INDEX = "mimic";
+
+var ES_TIME_FIELD = "chartdate";
+
+var ES_PATIENT_ID_FIELD = "patientId";
+
+var ES_VERSION = "5.3";
 
 /**Constant specifying length of the initial text snippet*/
-var SHORT_SNIPPET_LENGTH = 100;
+var SHORT_SNIPPET_LENGTH = 200;
 
 /**Constant specifying length of the expanded text snippet*/
 var LONG_SNIPPET_LENGTH = 500;

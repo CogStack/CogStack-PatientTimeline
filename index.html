@@ -1,231 +1,244 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-		<title>The Timeliner Application</title>
-		<link rel="icon" href="img/favicon.ico">
-
-
-		<link rel="stylesheet" type="text/css" href="css/bootflat.min.css" />
-		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css" />
-		<link rel="stylesheet" type="text/css" href="css/ekko-lightbox.min.css" />
-		<link rel="stylesheet" type="text/css" href="css/loading-animation.min.css" />
-		<link rel="stylesheet" type="text/css" href="css/bootstrap-slider.min.css">
-		<link rel="stylesheet" type="text/css" href="css/bootstrap-switch.min.css">
-		<link rel="stylesheet" type="text/css" href="css/jqModal.css" />
-		<link rel="stylesheet" type="text/css" href="css/main.css" />
+    <title>The Timeliner Application</title>
+    <link rel="icon" href="img/favicon.ico">
 
 
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>                       
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
-		<script src="js/externalLibs/elasticsearch.jquery.min.js"></script>   
-		<script src="js/externalLibs/ekko-lightbox.min.js"></script>
-		<script src="js/externalLibs/bootstrap-slider.min.js"></script>
-		<script src="js/externalLibs/bootstrap-switch.min.js"></script>
-		<script src="js/externalLibs/jqModal.min.js"></script>
-		<script src="js/externalLibs/pgwbrowser.min.js"></script>
-		<script src="js/config.js"></script>
-		<script src="js/pageControl.js"></script>
-		<script src="js/search.js"></script>
-		<script src="js/auxiliary.js"></script>
-		<script src="js/resultProcessing.js"></script>
-		<script src="js/pagination.js"></script>
-		<script src="js/scrolling.js"></script>
-		<script src="js/logging.js"></script>
-		<script src="js/kibanaVisualisation.js"></script>
-	</head>
-	<body>
+    <link rel="stylesheet" type="text/css" href="css/bootflat.min.css"/>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css"/>
+    <link rel="stylesheet" type="text/css" href="css/ekko-lightbox.min.css"/>
+    <link rel="stylesheet" type="text/css" href="css/loading-animation.min.css"/>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap-slider.min.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap-switch.min.css">
+    <link rel="stylesheet" type="text/css" href="css/jqModal.css"/>
+    <link rel="stylesheet" type="text/css" href="css/main.css"/>
 
-		<nav class="navbar navbar-default">
-		   <div class="container">
-				<div id="navbar" class="navbar-collapse">
-					<ul class="nav navbar-nav">
-						<li>
-							<a href="#" id="homeRef">Home</a>
-						</li>
-					</ul>
-					<button class="btn btn-primary" id="feedback-button">Report a problem!</button>
-				</div>
-		   </div>
-		</nav>
 
-		<div class="container">
-			<div class='col-md-5'>
-				<h2><b>Timeliner Application</b></h2>
-			</div>
-		</div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="js/externalLibs/elasticsearch.jquery.min.js"></script>
+    <script src="js/externalLibs/ekko-lightbox.min.js"></script>
+    <script src="js/externalLibs/bootstrap-slider.min.js"></script>
+    <script src="js/externalLibs/bootstrap-switch.min.js"></script>
+    <script src="js/externalLibs/jqModal.min.js"></script>
+    <script src="js/externalLibs/pgwbrowser.min.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/pageControl.js"></script>
+    <script src="js/search.js"></script>
+    <script src="js/auxiliary.js"></script>
+    <script src="js/resultProcessing.js"></script>
+    <script src="js/pagination.js"></script>
+    <script src="js/scrolling.js"></script>
+    <script src="js/logging.js"></script>
+    <script src="js/kibanaVisualisation.js"></script>
+</head>
+<body>
 
-		<form role ="form">
-			<div class="container">
-				<div class='col-md-5'>
-					<div class="form-group">
-						<span data-toggle="tooltip" title="The date is based on the last time the document was saved. You may want to be flexible with your search as it may not reflect the actual date of document." class="glyphicon glyphicon-info-sign"></span>
-						<label for="datePickerTo">Start Date:</label>
-						<div class='input-group date' id='datePickerFrom'>
-							<input type='text' class="form-control" placeholder="Date From..." />
-							<span class="input-group-addon">
+<nav class="navbar navbar-default">
+    <div class="container">
+        <div id="navbar" class="navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li>
+                    <a href="#" id="homeRef">Home</a>
+                </li>
+            </ul>
+            <button class="btn btn-primary" id="feedback-button">Report a problem!</button>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <div class='col-md-5'>
+        <h2><b>Timeliner Application</b></h2>
+    </div>
+</div>
+
+<form role="form">
+    <div class="container">
+        <div class='col-md-5'>
+            <div class="form-group">
+                <span data-toggle="tooltip"
+                      title="The date is based on the last time the document was saved. You may want to be flexible with your search as it may not reflect the actual date of document."
+                      class="glyphicon glyphicon-info-sign"></span>
+                <label for="datePickerTo">Start Date:</label>
+                <div class='input-group date' id='datePickerFrom'>
+                    <input type='text' class="form-control" placeholder="Date From..."/>
+                    <span class="input-group-addon">
 								<span class="glyphicon glyphicon-calendar"></span>
 							</span>
-						</div>
-					</div>
-				</div>
+                </div>
+            </div>
+        </div>
 
-				<div class='col-md-5'>
-					<div class="form-group">
-						<span data-toggle="tooltip" title="The date is based on the last time the document was saved. You may want to be flexible with your search as it may not reflect the actual date of document." class="glyphicon glyphicon-info-sign"></span>
-						<label for="datePickerTo">End Date:</label>
-						<div class='input-group date' id='datePickerTo'>
-							<input type='text' class="form-control" placeholder="Date To..."/>
-							<span class="input-group-addon">
+        <div class='col-md-5'>
+            <div class="form-group">
+                <span data-toggle="tooltip"
+                      title="The date is based on the last time the document was saved. You may want to be flexible with your search as it may not reflect the actual date of document."
+                      class="glyphicon glyphicon-info-sign"></span>
+                <label for="datePickerTo">End Date:</label>
+                <div class='input-group date' id='datePickerTo'>
+                    <input type='text' class="form-control" placeholder="Date To..."/>
+                    <span class="input-group-addon">
 								<span class="glyphicon glyphicon-calendar"></span>
 							</span>
-						</div>
-					</div>
-				</div>
+                </div>
+            </div>
+        </div>
 
-				<div class='col-md-5'>
-					<div class="form-group" id="patientIDBox">
-						<span data-toggle="tooltip" title="To access a different patient's documents via Timeline, please close the application and relaunch from the new patients record within ePJS." class="glyphicon glyphicon-info-sign"></span>
-						<label class ="control-label" for="patientID">Patient ID:</label>
-						<input class="form-control input-sm" id="patientID" type="text" placeholder="Enter patient ID">
-						<span class="" id=patientIDSpan></span>
-					</div>
-				</div>
+        <div class='col-md-5'>
+            <div class="form-group" id="patientIDBox">
+                <span data-toggle="tooltip"
+                      title="To access a different patient's documents via Timeline, please close the application and relaunch from the new patients record within ePJS."
+                      class="glyphicon glyphicon-info-sign"></span>
+                <label class="control-label" for="patientID">Patient ID:</label>
+                <input class="form-control input-sm" id="patientID" type="text" placeholder="Enter patient ID">
+                <span class="" id=patientIDSpan></span>
+            </div>
+        </div>
 
-				<div class='col-md-5'>
-					<div class="form-group">
-						<label for="numberResults">Number of Results per Page:</label>
-						<select class="form-control" id="numberResults">
-							<option>5</option>
-							<option>10</option>
-							<option>20</option>
-							<option>50</option>
-						</select>
-					</div>
-				</div>
+        <div class='col-md-5'>
+            <div class="form-group">
+                <label for="numberResults">Number of Results per Page:</label>
+                <select class="form-control" id="numberResults">
+                    <option>5</option>
+                    <option>10</option>
+                    <option>20</option>
+                    <option>50</option>
+                </select>
+            </div>
+        </div>
 
-				<div class='col-md-5'>
-					<div class="form-group">
-						<span data-toggle="tooltip" title="This function looks for documents containing the keyword(s) you enter.  Please note that the results may not be accurate, it is dependant on the quality of scanned document and whether the spelling within the document matches the word you entered." class="glyphicon glyphicon-info-sign"></span>
-						<label for="containingKeywords">Containing:</label>
-						<input class="form-control input-sm" id="containingKeywords" type="text" placeholder="Key words, phrases, etc.">
-					</div>
-				</div>
+        <div class='col-md-5'>
+            <div class="form-group">
+                <span data-toggle="tooltip"
+                      title="This function looks for documents containing the keyword(s) you enter.  Please note that the results may not be accurate, it is dependant on the quality of scanned document and whether the spelling within the document matches the word you entered."
+                      class="glyphicon glyphicon-info-sign"></span>
+                <label for="containingKeywords">Containing:</label>
+                <input class="form-control input-sm" id="containingKeywords" type="text"
+                       placeholder="Key words, phrases, etc.">
+            </div>
+        </div>
 
-				<div class="col-md-5">
-					<div class="form-group">
-						<div class="thumbSizeSel" id="thumbSizeSel">
-							<label for thumbSizeSel>Thumbnail Size:   </label>
-							<!--OLD RADIO BUTTON SELECTOR FOR THUMBNAILSIZE:
-							<label class="radio-inline"><input type="radio" value="small" name="thumbnailSize"checked >Small </label>
-							<label class="radio-inline"><input type="radio" value="medium" name="thumbnailSize">Medium </label>
-							<label class="radio-inline"><input type="radio" value="large" name="thumbnailSize">Large </label>
-							-->
-							<input id="thumbnailSizeSlider" type="text"/>
-						</div>		
-					</div>		
-				</div>
+        <div class="col-md-5">
+            <div class="form-group">
+                <div class="thumbSizeSel" id="thumbSizeSel">
+                    <label for thumbSizeSel>Thumbnail Size:   </label>
+                    <!--OLD RADIO BUTTON SELECTOR FOR THUMBNAILSIZE:
+                    <label class="radio-inline"><input type="radio" value="small" name="thumbnailSize"checked >Small </label>
+                    <label class="radio-inline"><input type="radio" value="medium" name="thumbnailSize">Medium </label>
+                    <label class="radio-inline"><input type="radio" value="large" name="thumbnailSize">Large </label>
+                    -->
+                    <input id="thumbnailSizeSlider" type="text"/>
+                </div>
+            </div>
+        </div>
 
-				<div class="col-md-5">
-					<div class="form-group">
-						<span data-toggle="tooltip" title="If enabled the search will also display a graph with distribution in time. It will have no effect on devices with small screen resolution." class="glyphicon glyphicon-info-sign"></span>
-						<label for="kibanaVisualisationSwitch">Display Documents Distribution:</label>
-						<input type="checkbox" id="kibanaVisualisationSwitch">
-					</div>
-				</div>
+        <div class="col-md-5">
+            <div class="form-group">
+                <span data-toggle="tooltip"
+                      title="If enabled the search will also display a graph with distribution in time. It will have no effect on devices with small screen resolution."
+                      class="glyphicon glyphicon-info-sign"></span>
+                <label for="kibanaVisualisationSwitch">Display Documents Distribution:</label>
+                <input type="checkbox" id="kibanaVisualisationSwitch">
+            </div>
+        </div>
 
-				<div class='col-md-10'>
-					<label for="searchButton">&nbsp;</label>
-					<button type="button" class="btn btn-primary" id="searchButton">Search Documents</button>
-				</div>
-			</div>
-		</form>
+        <div class='col-md-10'>
+            <label for="searchButton">&nbsp;</label>
+            <button type="button" class="btn btn-primary" id="searchButton">Search Documents</button>
+        </div>
+    </div>
+</form>
 
-		<div class="paginationContainer">
-			<div class="text-center">
-				<ul class="pagination">
-				<li class="page-item disabled" id="prevPage">
-					<a class="page-link" href="#" onClick="return false;" aria-label="Previous">
-						<span aria-hidden="true">&laquo;</span>
-						<span class="sr-only">Previous</span>
-					</a>
-				</li>
-				<li class="page-item active" id='page1'>
-					<a class="page-link" href="#" onClick="return false;">1</a>
-				</li>
-				<li class="page-item disabled" id="nextPage">
-					<a class="page-link" href="#" onClick="return false;" aria-label="Next">
-						<span aria-hidden="true">&raquo;</span>
-						<span class="sr-only">Next</span>
-					</a>
-				</li>
-				</ul>
-			</div>
-			<div id="kibanaGraph">
-			
-			</div>
-			<div class="siteContainer">
-				<div class="timelineContainer">
-					<div class="timeline">
-						<button type="button" class="btn btn-secondary btn-sm" id="collapseButton">Collapse all</button>
-						<dl id=timelineList>
-						</dl>
-					</div>
-				</div>
-			</div>
-		</div>
+<div class="paginationContainer">
+    <div class="text-center">
+        <ul class="pagination">
+            <li class="page-item disabled" id="prevPage">
+                <a class="page-link" href="#" onClick="return false;" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                    <span class="sr-only">Previous</span>
+                </a>
+            </li>
+            <li class="page-item active" id='page1'>
+                <a class="page-link" href="#" onClick="return false;">1</a>
+            </li>
+            <li class="page-item disabled" id="nextPage">
+                <a class="page-link" href="#" onClick="return false;" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div id="kibanaGraph">
 
-		<div class="jqmWindow" id="feedback-dialog">
-			<a href="#" class="btn btn-link btn-lg jqmClose">Close</a>
-			<div class="content">
-				<b><p>Oops! We are sorry that something went wrong. Let us know what the problem is and we'll get it fixed.</p></b>
-				<div class="questionnaire">
-					<b><p>Your name: </p></b>
-					<textarea cols="50" rows="1"></textarea>
-				</div>
+    </div>
+    <div class="siteContainer">
+        <div class="timelineContainer">
+            <div class="timeline">
+                <button type="button" class="btn btn-secondary btn-sm" id="collapseButton">Collapse all</button>
+                <dl id=timelineList>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
 
-				<div class="questionnaire">
-					<b><p>What did you aim to do?</p></b>
-					<textarea cols="50" rows="3"></textarea>
-				</div>
+<div class="jqmWindow" id="feedback-dialog">
+    <a href="#" class="btn btn-link btn-lg jqmClose">Close</a>
+    <div class="content">
+        <b><p>Oops! We are sorry that something went wrong. Let us know what the problem is and we'll get it fixed.</p>
+        </b>
+        <div class="questionnaire">
+            <b><p>Your name: </p></b>
+            <textarea cols="50" rows="1"></textarea>
+        </div>
 
-				<div class="questionnaire">
-					<b><p>How did you aim to do this?</p></b>
-					<textarea cols="50" rows="3"></textarea>
-				</div>
+        <div class="questionnaire">
+            <b><p>What did you aim to do?</p></b>
+            <textarea cols="50" rows="3"></textarea>
+        </div>
 
-				<div class="questionnaire">
-					<b><p>What went wrong when you were doing this?</p></b>
-					<textarea cols="50" rows="3"></textarea>
-				</div>
-				<button class="btn btn-secondary" id="send-feedback-button">Submit</button>
-				<p id="feedback-response"></p>
-			</div>
-		</div>
+        <div class="questionnaire">
+            <b><p>How did you aim to do this?</p></b>
+            <textarea cols="50" rows="3"></textarea>
+        </div>
+
+        <div class="questionnaire">
+            <b><p>What went wrong when you were doing this?</p></b>
+            <textarea cols="50" rows="3"></textarea>
+        </div>
+        <button class="btn btn-secondary" id="send-feedback-button">Submit</button>
+        <p id="feedback-response"></p>
+    </div>
+</div>
 
 
-		<div class="pwmodal-bg" id="waitMessage">
-			<div class="pwmodal-container">Please wait...</div>
-			<div class='uil-default-css' style='transform:scale(0.3);'>
-				<div style='top:80px;left:93px;width:14px;height:40px;background:#00b2ff;-webkit-transform:rotate(0deg) translate(0,-60px);transform:rotate(0deg) translate(0,-60px);border-radius:10px;position:absolute;'></div>
-				<div style='top:80px;left:93px;width:14px;height:40px;background:#00b2ff;-webkit-transform:rotate(30deg) translate(0,-60px);transform:rotate(30deg) translate(0,-60px);border-radius:10px;position:absolute;'></div>
-				<div style='top:80px;left:93px;width:14px;height:40px;background:#00b2ff;-webkit-transform:rotate(60deg) translate(0,-60px);transform:rotate(60deg) translate(0,-60px);border-radius:10px;position:absolute;'></div>
-				<div style='top:80px;left:93px;width:14px;height:40px;background:#00b2ff;-webkit-transform:rotate(90deg) translate(0,-60px);transform:rotate(90deg) translate(0,-60px);border-radius:10px;position:absolute;'></div>
-				<div style='top:80px;left:93px;width:14px;height:40px;background:#00b2ff;-webkit-transform:rotate(120deg) translate(0,-60px);transform:rotate(120deg) translate(0,-60px);border-radius:10px;position:absolute;'></div>
-				<div style='top:80px;left:93px;width:14px;height:40px;background:#00b2ff;-webkit-transform:rotate(150deg) translate(0,-60px);transform:rotate(150deg) translate(0,-60px);border-radius:10px;position:absolute;'></div>
-				<div style='top:80px;left:93px;width:14px;height:40px;background:#00b2ff;-webkit-transform:rotate(180deg) translate(0,-60px);transform:rotate(180deg) translate(0,-60px);border-radius:10px;position:absolute;'></div>
-				<div style='top:80px;left:93px;width:14px;height:40px;background:#00b2ff;-webkit-transform:rotate(210deg) translate(0,-60px);transform:rotate(210deg) translate(0,-60px);border-radius:10px;position:absolute;'></div>
-				<div style='top:80px;left:93px;width:14px;height:40px;background:#00b2ff;-webkit-transform:rotate(240deg) translate(0,-60px);transform:rotate(240deg) translate(0,-60px);border-radius:10px;position:absolute;'></div>
-				<div style='top:80px;left:93px;width:14px;height:40px;background:#00b2ff;-webkit-transform:rotate(270deg) translate(0,-60px);transform:rotate(270deg) translate(0,-60px);border-radius:10px;position:absolute;'></div>
-				<div style='top:80px;left:93px;width:14px;height:40px;background:#00b2ff;-webkit-transform:rotate(300deg) translate(0,-60px);transform:rotate(300deg) translate(0,-60px);border-radius:10px;position:absolute;'></div>
-				<div style='top:80px;left:93px;width:14px;height:40px;background:#00b2ff;-webkit-transform:rotate(330deg) translate(0,-60px);transform:rotate(330deg) translate(0,-60px);border-radius:10px;position:absolute;'></div>
-			</div>
-		</div>
-	</body>
+<div class="pwmodal-bg" id="waitMessage">
+    <div class="pwmodal-container">Please wait...</div>
+    <div class='uil-default-css' style='transform:scale(0.3);'>
+        <div style='top:80px;left:93px;width:14px;height:40px;background:#00b2ff;-webkit-transform:rotate(0deg) translate(0,-60px);transform:rotate(0deg) translate(0,-60px);border-radius:10px;position:absolute;'></div>
+        <div style='top:80px;left:93px;width:14px;height:40px;background:#00b2ff;-webkit-transform:rotate(30deg) translate(0,-60px);transform:rotate(30deg) translate(0,-60px);border-radius:10px;position:absolute;'></div>
+        <div style='top:80px;left:93px;width:14px;height:40px;background:#00b2ff;-webkit-transform:rotate(60deg) translate(0,-60px);transform:rotate(60deg) translate(0,-60px);border-radius:10px;position:absolute;'></div>
+        <div style='top:80px;left:93px;width:14px;height:40px;background:#00b2ff;-webkit-transform:rotate(90deg) translate(0,-60px);transform:rotate(90deg) translate(0,-60px);border-radius:10px;position:absolute;'></div>
+        <div style='top:80px;left:93px;width:14px;height:40px;background:#00b2ff;-webkit-transform:rotate(120deg) translate(0,-60px);transform:rotate(120deg) translate(0,-60px);border-radius:10px;position:absolute;'></div>
+        <div style='top:80px;left:93px;width:14px;height:40px;background:#00b2ff;-webkit-transform:rotate(150deg) translate(0,-60px);transform:rotate(150deg) translate(0,-60px);border-radius:10px;position:absolute;'></div>
+        <div style='top:80px;left:93px;width:14px;height:40px;background:#00b2ff;-webkit-transform:rotate(180deg) translate(0,-60px);transform:rotate(180deg) translate(0,-60px);border-radius:10px;position:absolute;'></div>
+        <div style='top:80px;left:93px;width:14px;height:40px;background:#00b2ff;-webkit-transform:rotate(210deg) translate(0,-60px);transform:rotate(210deg) translate(0,-60px);border-radius:10px;position:absolute;'></div>
+        <div style='top:80px;left:93px;width:14px;height:40px;background:#00b2ff;-webkit-transform:rotate(240deg) translate(0,-60px);transform:rotate(240deg) translate(0,-60px);border-radius:10px;position:absolute;'></div>
+        <div style='top:80px;left:93px;width:14px;height:40px;background:#00b2ff;-webkit-transform:rotate(270deg) translate(0,-60px);transform:rotate(270deg) translate(0,-60px);border-radius:10px;position:absolute;'></div>
+        <div style='top:80px;left:93px;width:14px;height:40px;background:#00b2ff;-webkit-transform:rotate(300deg) translate(0,-60px);transform:rotate(300deg) translate(0,-60px);border-radius:10px;position:absolute;'></div>
+        <div style='top:80px;left:93px;width:14px;height:40px;background:#00b2ff;-webkit-transform:rotate(330deg) translate(0,-60px);transform:rotate(330deg) translate(0,-60px);border-radius:10px;position:absolute;'></div>
+    </div>
+</div>
+</body>
 </html>
