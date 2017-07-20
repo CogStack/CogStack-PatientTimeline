@@ -99,6 +99,13 @@ var prepareSearchData = function (startingIndex) {
     var containingKeywordsHandle = $("#containingKeywords");
     if (containingKeywordsHandle.val()) {
         containingKeywords = containingKeywordsHandle.val();
+        if (containingKeywords.charAt(0) !== '"') {
+            containingKeywords = '"' + containingKeywords;
+        }
+
+        if (containingKeywords.substr(-1) !== '"') {
+            containingKeywords = containingKeywords + '"';
+        }
     }
     return prepareESObject(patientID, resultsPerPage, startingIndex, startDate, endDate, containingKeywords);
 };
