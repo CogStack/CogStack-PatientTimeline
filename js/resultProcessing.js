@@ -62,8 +62,8 @@ var createTimelineEntry = function (value, presentMonths) {
 
     // check if there exists anything meaningful in tika output
     if (value._source.tikaOutput.length > 10) {
-        shortTextSnippet = getSnippet(value._source.fulltext, SHORT_SNIPPET_LENGTH);
-        longTextSnippet = getSnippet(value._source.fulltext, LONG_SNIPPET_LENGTH);
+        shortTextSnippet = getSnippet(value._source.tikaOutput, SHORT_SNIPPET_LENGTH);
+        longTextSnippet = getSnippet(value._source.tikaOutput, LONG_SNIPPET_LENGTH);
 
         pageCount = value._source["X-TL-PAGE-COUNT"];
     }
@@ -73,7 +73,9 @@ var createTimelineEntry = function (value, presentMonths) {
         longTextSnippet = PROCESSING_ERROR_TEXT;
     }
 
-    var pageCountDiv = "<div class='pageCount'>\
+    var disabled = PDFSource ? "disabled" : "";
+
+    var pageCountDiv = (pageCount === "TL_PAGE_COUNT_UNKNOWN") ? "" : "<div class='pageCount'>\
     					<h6><b>Page Count: " + pageCount + "</b></h6>\
     				</div>";
 
@@ -86,7 +88,7 @@ var createTimelineEntry = function (value, presentMonths) {
 						</h4>";
 
     var downloadPDFButtonDiv = "<div class='downloadButton'>\
-								<a href='" + PDFSource + "' class='btn btn-info' role='button' target='_blank' id=PDF" + value._id + ">\
+								<a href='" + PDFSource + "' class='btn btn-info' role='button' target='_blank' id=PDF" + value._id + " " + disabled + ">\
 									Download Full PDF\
 								</a>\
 							</div>";

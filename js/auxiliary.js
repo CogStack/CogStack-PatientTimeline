@@ -80,6 +80,9 @@ var getShortMonth = function (num) {
  * @return {String} shortened text
  */
 var getSnippet = function (text, length) {
+    if (text.length < length) {
+        return text;
+    }
     var newText = text.substr(0, text.lastIndexOf(" ", length));
 
     var regex1 = new RegExp("\\s*\\n\\s*\\n+\\s*", "g");
