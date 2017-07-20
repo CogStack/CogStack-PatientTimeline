@@ -131,7 +131,7 @@ var setFormProperties = function () {
         viewMode: 'years',
         format: 'YYYY-MM-DD',
         useCurrent: false,
-        defaultDate: new Date("1960-1-1"), // default displayed date: 1-1-2000 (user can still manually choose date before that)
+        defaultDate: new Date("2000-1-1"), // default displayed date: 1-1-2000 (user can still manually choose date before that)
         maxDate: new Date(), // default maximum date: todays date
         allowInputToggle: true // allows for displaying the calendar when the text box is clicked
     });
