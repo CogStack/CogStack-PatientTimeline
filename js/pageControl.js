@@ -181,21 +181,12 @@ var setFormProperties = function () {
         tooltip: "hide"
     });
 
-    // var kibanaToggleHandle = $("#kibanaVisualisationSwitch");
-    // kibanaToggleHandle.attr({
-    // 	"data-size" : "small",
-    // 	"onText" : "Yes",
-    // 	"offText" : "No",
-    // 	"checked" : true
-    // })
-
     var kibanaSwitchOptions = {
         onText: "Yes",
         offText: "No",
         size: "mini",
-        animate: true,
+        animate: true
         // state : true,
-
     };
 
     $("#kibanaVisualisationSwitch").bootstrapSwitch(kibanaSwitchOptions);

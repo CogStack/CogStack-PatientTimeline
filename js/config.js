@@ -34,6 +34,8 @@ var ES_PATIENT_ID_FIELD = "patientid";
 
 var ES_VERSION = "5.3";
 
+var KIBANA_INDEX_PATTERN = "epjs*";
+
 /**Constant specifying length of the initial text snippet*/
 var SHORT_SNIPPET_LENGTH = 200;
 
