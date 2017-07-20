@@ -46,7 +46,7 @@ var createTimelineEntry = function (value, presentMonths) {
     headerName = value._source.documentname;
     extension = headerName.slice((headerName.lastIndexOf(".") - 1 >>> 0) + 2);
     if (extension.length) {
-        headerName = headerName.slice(0, -extension.length);
+        headerName = headerName.slice(0, -(extension.length + 1));
     }
 
     // turns out that the fields in elasticsearch (X-TL-PDF-GENERATION and X-TL-THUMBNAIL-GENERATION )
@@ -73,7 +73,7 @@ var createTimelineEntry = function (value, presentMonths) {
         longTextSnippet = PROCESSING_ERROR_TEXT;
     }
 
-    var disabled = PDFSource ? "disabled" : "";
+    var disabled = PDFSource ? "" : "disabled";
 
     var pageCountDiv = (pageCount === "TL_PAGE_COUNT_UNKNOWN") ? "" : "<div class='pageCount'>\
     					<h6><b>Page Count: " + pageCount + "</b></h6>\
@@ -87,11 +87,24 @@ var createTimelineEntry = function (value, presentMonths) {
 						" + headerName + "\
 						</h4>";
 
-    var downloadPDFButtonDiv = "<div class='downloadButton'>\
-								<a href='" + PDFSource + "' class='btn btn-info' role='button' target='_blank' id=PDF" + value._id + " " + disabled + ">\
-									Download Full PDF\
-								</a>\
-							</div>";
+    var downloadPDFButtonDiv = "";
+
+    // there exists the pdf file hence we can have normal Download pdf button
+    if (PDFSource) {
+        downloadPDFButtonDiv = "<div class='downloadButton'>\
+                                    <a href='" + PDFSource + "' class='btn btn-info' role='button' target='_blank' id=PDF" + value._id + ">\
+									    Download PDF\
+								    </a>\
+							    </div>";
+    }
+    else {
+        downloadPDFButtonDiv = "<div class='downloadButton'>\
+                                    <a class='btn btn-info' role='button' target='_blank' id=PDF" + value._id + " disabled>\
+									    PDF Unavailable\
+								    </a>\
+							    </div>";
+    }
+
 
     var snippetDiv = "<div class='textSnippet'>\
 					<p id=text" + value._id + ">" + shortTextSnippet + "<p>\
