@@ -75,17 +75,18 @@ var createTimelineEntry = function (value, presentMonths) {
 
     var disabled = PDFSource ? "" : "disabled";
 
-    var pageCountDiv = (pageCount === "TL_PAGE_COUNT_UNKNOWN") ? "" : "<div class='pageCount'>\
-    					<h6><b>Page Count: " + pageCount + "</b></h6>\
-    				</div>";
+    var pageCountDiv = (pageCount === "TL_PAGE_COUNT_UNKNOWN") ? "" :
+                        "<div class='pageCount'>\
+    					    <h6><b>Page Count: " + pageCount + "</b></h6>\
+    				    </div>";
 
     var helpTipDiv = "<div class='help-tip'>\
-					<p>Double click to expand/minimize the text</p>\
-				</div>";
+					    <p>Double click to expand/minimize the text</p>\
+				    </div>";
 
     var entryHeaderName = "<h4 class='events-heading'>\
-						" + headerName + "\
-						</h4>";
+						    " + headerName + "\
+						   </h4>";
 
     var downloadPDFButtonDiv = "";
 
@@ -97,6 +98,7 @@ var createTimelineEntry = function (value, presentMonths) {
 								    </a>\
 							    </div>";
     }
+
     else {
         downloadPDFButtonDiv = "<div class='downloadButton'>\
                                     <a class='btn btn-info' role='button' target='_blank' id=PDF" + value._id + " disabled>\
@@ -107,8 +109,8 @@ var createTimelineEntry = function (value, presentMonths) {
 
 
     var snippetDiv = "<div class='textSnippet'>\
-					<p id=text" + value._id + ">" + shortTextSnippet + "<p>\
-				</div>";
+					    <p id=text" + value._id + ">" + shortTextSnippet + "<p>\
+                    </div>";
 
     var thumbnailDiv = "<div class='thumbIcon'>\
 						<a href=" + imageSource + " data-toggle='lightbox' data-footer='Total Number of Pages: " + pageCount + "'>\
@@ -189,6 +191,10 @@ var createTimelineListeners = function (value, shortTextSnippet, longTextSnippet
     $("#thumbIcon" + value._id).load(function () {
         if (logging) {
             logThumbnailView(value._source.documentid);
+        }
+
+        if (value._source["X-TL-THUMBNAIL-GENERATION"] === "FAIL") {
+            return;
         }
 
         var imageHeight = $(this).height();
