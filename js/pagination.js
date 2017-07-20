@@ -10,7 +10,7 @@
  */
 var getCurrentActivePage = function() {
 	return parseInt($(".pagination").find("li.page-item.active").text());
-}
+};
 
 /**
  * Changes currently active page
@@ -19,7 +19,7 @@ var getCurrentActivePage = function() {
 var setNewActivePage = function(page) {
 	getCurrentActivePage().removeClass("active");
 	$("#page"+page).addClass("active");
-}
+};
 
 /**
  * Removes the first visible page (excluding 'prev' button which technically also belongs to the same class)
@@ -27,7 +27,7 @@ var setNewActivePage = function(page) {
 var removeFirstPage = function() {
 	var firstPageHandle = $(".pagination li.page-item").first().next();
 	$(firstPageHandle).remove();
-}
+};
 
 /**
  * Removes the last visible page (excluding 'next' button which technically also belongs to the same class)
@@ -35,7 +35,7 @@ var removeFirstPage = function() {
 var removeLastPage = function() {
 	var lastPageHandle = $(".pagination li.page-item").last().prev();
 	$(lastPageHandle).remove();
-}
+};
 
 /**
  * Adds new page with appropriate index at the end of the pagination
@@ -44,7 +44,7 @@ var addNewPageEnd = function() {
 	var lastPageHandle = $(".pagination li.page-item").last().prev();
 	var pageNumber = parseInt(lastPageHandle.text()) + 1;
 
-	var pageElement = "<li class='page-item' id='page" + pageNumber + "'><a class='page-link' href='#' onClick='return false;'>" + pageNumber + "</a></li>"
+	var pageElement = "<li class='page-item' id='page" + pageNumber + "'><a class='page-link' href='#' onClick='return false;'>" + pageNumber + "</a></li>";
 
 	$(lastPageHandle).after(pageElement);	
 
@@ -54,7 +54,7 @@ var addNewPageEnd = function() {
 
 	if(($(".pagination li.page-item").length - 2) > MAX_VISIBLE_PAGES)
 		removeFirstPage();
-}
+};
 
 /**
  * Adds new page with appropriate index at the beginning of the pagination
@@ -69,7 +69,7 @@ var addNewPageStart = function() {
 	else
 		pageNumber = 1;
 
-	var pageElement = "<li class='page-item' id='page" + pageNumber + "'><a class='page-link' href='#' onClick='return false;'>" + pageNumber + "</a></li>"
+	var pageElement = "<li class='page-item' id='page" + pageNumber + "'><a class='page-link' href='#' onClick='return false;'>" + pageNumber + "</a></li>";
 	$(firstPageHandle).after(pageElement);	
 
 	$("#page"+pageNumber).on("click", function() {
@@ -78,7 +78,7 @@ var addNewPageStart = function() {
 
 	if(($(".pagination li.page-item").length - 2) > MAX_VISIBLE_PAGES)
 		removeLastPage();
-}
+};
 
 /**
  * Checks the status of the "prev-button" (if it is disabled or enabled) and sets it appropriately
@@ -95,7 +95,7 @@ var checkPrevButton = function(targetPage) {
 		$(prevPageHandle).addClass("disabled");
 		return;
 	}
-}
+};
 
 /**
  * Checks the status of the "next-button" (if it is disabled or enabled) and sets it appropriately
@@ -115,7 +115,7 @@ var checkNextButton = function(targetPage) {
 		return;
 	}
 
-}
+};
 
 /** 
  * Handles going to previous page, next page and to a specific page.
@@ -179,11 +179,11 @@ var changePage = {
 		checkPrevButton($(targetPage).text());
 		checkNextButton($(targetPage).text());
 
-		var pageDifference = parseInt($(targetPage).text()) - parseInt(currentPageHandle.text())
+		var pageDifference = parseInt($(targetPage).text()) - parseInt(currentPageHandle.text());
 		startSearch(this.startingIndex + (pageDifference * this.resultsPerPage));
 
 	}
-}
+};
 
 /**
  * Recreates the whole pagination by removing every page apart from the starting page that should be visible and "next" + "prev" button as well as page 1
@@ -195,7 +195,7 @@ var recreatePagination = function(startingPage) {
 	$.each($(".pagination li.page-item"), function(index, value) {
 		if($(value)[0].id != "nextPage" && $(value)[0].id != "prevPage")
 			if($(value)[0].id == startingPage) {
-				exists = true
+				exists = true;
 				return true;
 			}
 			else
@@ -205,7 +205,7 @@ var recreatePagination = function(startingPage) {
 	checkPrevButton(startingPage);
 
 	if(!exists){
-		var firstPage = "<li class='page-item active' id='page" + startingPage + "'><a class='page-link' href='#' onClick='return false;'>" + startingPage +"</a></li>"
+		var firstPage = "<li class='page-item active' id='page" + startingPage + "'><a class='page-link' href='#' onClick='return false;'>" + startingPage +"</a></li>";
 		$("#prevPage").after(firstPage);
 		$("#page"+startingPage).on("click", function() {
 			changePage.gotoPage(this);
@@ -214,7 +214,7 @@ var recreatePagination = function(startingPage) {
 
 	if(startingPage > 1)
 		addNewPageStart();
-}
+};
 
 /**
  * Set the pagination appropriately to the query sent
@@ -223,7 +223,7 @@ var recreatePagination = function(startingPage) {
  * @param {Integer} numberOfEntriesFound number of entries the query has returned
  */
 var setPagination = function(resultsPerPage, startingIndex, numberOfEntriesFound) {
-	var startingPage = Math.ceil((startingIndex + 1) / resultsPerPage)
+	var startingPage = Math.ceil((startingIndex + 1) / resultsPerPage);
 	recreatePagination(startingPage);
 	changePage.startingIndex = startingIndex;
 	changePage.resultsPerPage = resultsPerPage;
@@ -231,4 +231,4 @@ var setPagination = function(resultsPerPage, startingIndex, numberOfEntriesFound
 		addNewPageEnd();
 		$("#nextPage").removeClass("disabled");
 	}
-}
+};

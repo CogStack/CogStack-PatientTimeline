@@ -26,7 +26,7 @@ var scrollOneUp = function() {
 	else
 		scrollTo('#',0);
 
-}
+};
 
 /**
  * Scrolls one entry down
@@ -41,7 +41,7 @@ var scrollOneDown = function() {
 			return false;
 		}
 	});
-}
+};
 
 /**
  * Handles scrolling to specific position with animation

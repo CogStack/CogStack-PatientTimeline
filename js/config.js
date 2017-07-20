@@ -5,11 +5,10 @@
  */
 
 /**Variable specifying the address of the ElasticSearch server*/
-var elasticSearchURL = "http://10.200.102.23:9200/"; //"http://192.168.99.47:9200";
+var elasticSearchURL = "http://10.16.31.59:9200/";
 
-/**Variable specyfying address of the server with the thumbnails and PDFs of the documents*/
-// var thumbnailSource = "http://192.168.99.42:8080/thumbs/"
-var thumbnailSource = "http://10.200.102.45:8081/";//"http://localhost:8114/";
+/**Variable specifying address of the server with the thumbnails and PDFs of the documents*/
+var thumbnailSource = "http://10.16.31.53:8081/";
 
 /**Address of ES instance responsible for getting log data*/
 var elasticSearchLogURL = "";//http://localhost:9200/";
@@ -18,18 +17,20 @@ var elasticSearchLogURL = "";//http://localhost:9200/";
 var feedbackURL = "";//http://localhost:81";
 
 /**Variable specyfing address of a Kibana Server (that is connected to the ElasticSearch instance) */
-var kibanaURL = "http://10.200.102.45:5601";
+var kibanaURL = "http://10.16.31.59:5601";
 
 /**Variable responsible for toggling debug mode for printing debug messages to the console*/
 var debug = true;
 
-var ES_TYPE = "eprdoc";
+var logging = false;
 
-var ES_INDEX = "mimic";
+var ES_TYPE = "";
 
-var ES_TIME_FIELD = "chartdate";
+var ES_INDEX = "epjs_documents";
 
-var ES_PATIENT_ID_FIELD = "patientId";
+var ES_TIME_FIELD = "documenttimestamp";
+
+var ES_PATIENT_ID_FIELD = "patientid";
 
 var ES_VERSION = "5.3";
 
