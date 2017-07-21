@@ -1,93 +1,122 @@
-# Timeliner Application
+# Timeline Application
 
-At its current state the application allows to search the database for documents related to particular patient in a chronological order. 
+At its current state the application allows to search for documents related to a particular patient in a chronological order. 
+Currently you have to manually enter the ID of the desired patient, however, it is expected that in the future the application
+is going to be instantiated for a previously specified patient without ability to change it in the runtime.
 
-**NOTE**: If you are running it on SLAM machine, make sure you clone **production** branch, **not** **master**. Master will work on local machine, as it pulls data from dummy *ElasticSearch* server and uses placeholder thumbnails.
+**NOTE**: There are two main branches of the application, **slam_staging** and **mimic_data**. They are configured to run on 
+SLAM staging environment and on the Rosalind cluster respectively. Please clone the appropriate branch.
+
+## Cogstack
+
+It is assumed that the desired documents were run through the cogstack pipeline described in the following: <https://github.com/CogStack/cogstack>
+It is expected the documents had PDFs and thumbnails generated as well as they were inserted into an appropriate ElasticSearch index.
 
 #### Configuring the Application
-The application contains a configurable 
+The application can be configured and adjusted by modifying the following file: 
 ```
-/js/config.js
+js/config.js
 ``` 
-file that allows adjusting particular settings one might want to change. The following options are available:
+
+The options available include:
 
 * `elasticSearchURL`
-    + **Default value**: `"http://timeline2016-silverash.rhcloud.com"` (dummy server)
-    + **Purpose**: This URL allows specifying the address of the *ElasticSearch* cluster from which the application is pulling the data. When changed, make sure the cluster is initialised correctly, i.e. on the main path has JSON similar to the following:
+    + **Purpose**: This URL allows specifying the address of the *ElasticSearch* cluster which the application is using for accessing the data.
+     When changed, make sure the cluster is formed correctly, all nodes have the same version of the ElasticSearch, etc. 
+     Consider creating a dedicated client node for the application to decrease the burden on your master nodes.
 
-    ```json
-    {
-        "status" : 200,
-        "name" : "576846b189f5cfe6d70000b1",
-        "cluster_name" : "elasticsearch-576846b189f5cfe6d70000b1",
-        "version" : {
-            "number" : "1.7.1",
-            "build_hash" : "b88f43fc40b0bcd7f173a1f9ee2e97816de80b19",
-            "build_timestamp" : "2015-07-29T09:54:16Z",
-            "build_snapshot" : false,
-            "lucene_version" : "4.10.4"
-        },
-        "tagline" : "You Know, for Search"
-    }
-    ```
 
 * `thumbnailSource`
-    + **Default value**: None on master
-    + **Purpose**: This URL allows specifying the address of the server hosting thumbnails and PDF versions of the indexed documents. Make sure the files are on the correct path as indexed on the *ElasticSearch* machine. For example, if *ElasticSearch* query returns the following result:
+    + **Purpose**: This URL allows specifying the address of the server hosting thumbnails and PDFs of the indexed documents.
+     Make sure the files have the correct paths according to data indexed in the ElasticSearch cluster.
+     For example, if *ElasticSearch* query returns the following result:
     
     ```json
     {
-        "docId" : "12345",
-        "html" : "some xhtml code",
-        "patientId" : "67890",
-        "srcCol": "Attachment_File_Body",
-        "srcTable" : "tblAttachmentFile",
-        "thumbnail" : "67890_tblAttachmentFile_12345.png",
-        "timestamp" : 0,
-        "updateTime" : "1970-01-01 00:00:00"
+        "patientid" : "12345",
+        "tikaOutput" : "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+        "tlprimarykeyfieldname" : "DocumentID",
+        "tlsrccolmnfieldname" : "Attachment_File_Body",
+        "tlsrctablename" : "tblAttachment",
+        ...
+        "documentid" : "67890",
+        "documenttimestamp" : "1970-01-01T00:00:00.000"
     }
     ```
     
-make sure the appropriate files are available at (the URL is taken from current thumbnailSource on the production branch):
-`http://192.168.99.42:8080/thumbs/67890_tblAttachmentFile_12345.png` and `http://192.168.99.42:8080/thumbs/67890_tblAttachmentFile_12345.pdf`
+    Make sure the following files are available:
+    `$thumbnailSource/tblAttachment/pdf/tblAttachment_Attachment_File_Body_67890.pdf` 
+    and
+    `$thumbnailSource/tblAttachment/thumbnail/tblAttachment_Attachment_File_Body_67890.png` 
+    
+    Generally the documents follow the following structure:
+    `$thumbnailSource/$tlsrctablename/pdf/$tlsrctablename_$tlsrccolumnfieldname_$documentid.pdf`
+    and
+    `$thumbnailSource/$tlsrctablename/thumbnail/$tlsrctablename_$tlsrccolumnfieldname_$documentid.png`
 
-* `feedbackURL`
-    + **Default value**: `"TODO"`
-    + **Purpose**: This feature is not fully implemented yet due to server not being setup, however, once it is done, the user feedback will be sent to it. The JSON sent will be an array of objects where first of them will contain patientId, startDate, endDate and any keywords inputed (if user decides to send feedback before filling any of those fields, the feedback will contain default data, ex. 1970-01-01 for starting data or today's date for ending date). The next objects will simply contain "question" field and "answer" field for each question in the questionnaire. 
+* `elasticSearchLogURL`
+    + **Purpose**: This URL allows specifying the address of the *ElasticSearch* cluster to which the application uploads logging
+    information regarding application usage, such as downloading particular document, making queries and so on. This feature has 
+    not been extensively tested, however, in principle should work.
+
+* `kibanaURL`
+    + **Purpose**: This URL allows specifying the address of the *Kibana* server that is connected to the same ElasticSearch cluster.
+    This allows for displaying document distribution histograms giving better view into patient history.
+
+* `ES_TYPE`
+    + **Default Value**: `""`
+    + **Purpose**: Optional setting allowing searching through only a single document type. In the case of mimic_data, 
+    this should be set to `eprdoc` as there are unrelated documents in the same index.
+    For slam_staging, this can be left blank as all documents (with different types) serve the same purpose.
+    
+* `ES_INDEX`
+    + **Purpose**: Name of the ElasticSearch index with the patient documents.
+
+* `ES_TIME_FIELD`
+    + **Purpose**: Name of the field in the ElasticSearch index specifying the documents date. For example, using sample json from `thumbnailSource`,
+    it can be `documenttimestamp`.
+
+* `ES_PATIENT_ID_FIELD`
+    + **Purpose**: Name of the field in the ElasticSearch index corresponding to the patients' id. For example, using sample json from `thumbnailSource`,
+   it can be `patientid`.
+
+* `ES_VERSION`
+    + **Purpose**: Version of the REST Api used to query ElasticSearch. It should not be changed unless you understand what you are trying to achieve.
+
+* `KIBANA_INDEX_PATTERN`
+    + **Purpose**: Name of the index pattern set in Kibana for accessing the documents.
+
+* `MAX_KIBANA_WIDTH`
+    + **Purpose**: Maximum width of the screen on which the Kibana histogram is going to be displayed.
 
 * `debug`
-    + **Default value**: `true`
-    + **Purpose**: Simple variable specyfing if debug information should be printed to the browser console.
+    + **Default value**: `false`
+    + **Purpose**: Flag specifying whether additional debug information should be printed to the browser's console.
 
 * `SHORT_SNIPPET_LENGTH` and `LONG_SNIPPET_LENGTH`
-    + **Default value**: `100` and `1000` (chars)
-    + **Purpose**: When data was pulled from a dummy *ElasticSearch* instance, where text field quality did not suffer from the precision of OCR, snippet of content was displayed. Initially it had length of `SHORT_SNIPPET_LENGTH` of chars(but ensured words are completed) and when double clicked it increased to length of `LONG_SNIPPET_LENGTH`
-
+    + **Default value**: `200` and `500` (chars)
+    + **Purpose**: Length of the text snippets displayed on timeline (SHORT and LONG versions are changed upon double click)
+    
 * `DEFAULT_THUMBNAIL_HEIGHT`
     + **Default value**: `250` (px)
     + **Purpose**: When thumbnail of a document is pulled from the server, it is resized in order to keep consistency among different documents. This variable specifies initial height of the thumbnail that is modified by `scalingTicks` explained below.
 
 * `scalingTicks`
-    + **Default value**: `[0.05, 0.5, 1.0, 1.5]`
-    + **Purpose**: Those values controls the 'Thumbnail Size' slider. The slider has four major 'ticks', i.e. : 'Tiny', 'Small', 'Medium', 'Big' which values are represented by the array. The final height of a thumbnail is simply product of `DEFAULT_THUMBNAIL_HEIGHT` and whatever an user has selected using the slider.
-
-* `MAX_VISIBLE_PAGES`
-    + **Default value**: `3`
-    + **Purpose**: This constant is directly related to pagination. It controls how many page 'links' can be visible at once.
-
+    + **Default value**: `[0.75, 1.25, 2.0, 3.0]`
+    + **Purpose**: Values used by "Thumbnail Size" slider. They represent ratio by which the image will be scaled (using `DEFAULT_THUMBNAIL_HEIGHT`)
 
 
 #### Searching the Data
 
-Currently, at the first iteration of the application, user must specify the following information when searching for documents:
-* ID of the patient (to be removed when the application is connected to the CDR)
-* Start Date; default: 1970-01-01; there are **no** found issues when searching for documents older than this. Also you cannot choose start date that is bigger than end date.
-* End Date; default: date when the search was performed; dates later than that are by default disabled, if neccessary it can be changed inside `/js/pageControl.js` by modifying or removing:
+Currently, at the first major iteration of the application, user must specify the following information when searching for documents:
+* ID of the patient (to be removed when the application is integrated with epjs frontend)
+* Start Date; default: 2000-01-01
+* End Date; default: date when the search was performed; dates later than that are by default disabled, if necessary it can be changed inside `js/pageControl.js` by modifying or removing:
 
 ```javascript
 var setFormProperties = function() {
     ...
-	$('#datePickerTo').datetimepicker({
+	datePickerToHandle.datetimepicker({
         ...
 		maxDate: new Date(), // this needs modifying/removing
         ...
@@ -95,17 +124,16 @@ var setFormProperties = function() {
 	...
 }
 ```
-Moreover you cannot end date that is smaller than start date.
-
-* Number of Results per Page; default: 5; options available are: 5, 10, 20 and 50. This still requires performance testing on target machines to determine most optimal choices. 
-* (Optional) Containing; default: empty; if user specifies any keyword he wants to include in the search conditions, *ElasticSearch* will only return documents that contain that phrase somewhere in their content. 
+* Number of Results per Page; default: 5; options available are: 5, 10, 20 and 50. User testing is required to adjust those values.
+* (Optional) Containing; default: empty; free text search on ElasticSearch index. It supports logical operators such as `OR`, `AND`, etc.
+For example, one might want to list all documents including word "male" and one of the following "HIV" or "AIDS" using: `male AND (HIV OR AIDS)`
 * Thumbnail Size;
 
 ### Additional Features
 
 * It is possible to collapse all documents from given month by clicking on given month tag, such as 'Nov 2015'
 * You can use arrow up and arrow down to quickly move between the documents
-* (Minor, yet helpful) You can press the return key when inside patientID or Containing box to initialise search rather than clicking the button
+* (Minor, yet helpful) You can press the return key when inside `patient ID` or `Containing` box to initialise search rather than having to click the search button
 * Clicking on thumbnail opens it in the centre of the screen
 
 ### Known Issues and Solutions:
