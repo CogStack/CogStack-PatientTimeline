@@ -1,12 +1,11 @@
 var prepareKibanaGraph = function (patientId, freeTextSearch, startDate, endDate) {
-    //TODO: UPDATE THOSE WHEN ON TARGET MACHINE/SERVER
     var indexPattern = KIBANA_INDEX_PATTERN;
 
     var dateFieldName = ES_TIME_FIELD;
     var searchQuery = ES_PATIENT_ID_FIELD + ":" + patientId; // possibly search by more fields
 
     if (freeTextSearch) {
-        searchQuery += encodeURI('AND ' + freeTextSearch);
+        searchQuery += encodeURI(' AND ' + freeTextSearch);
     }
 
     var dynamicGraph = '<iframe src ="';

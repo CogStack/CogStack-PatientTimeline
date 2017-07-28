@@ -52,18 +52,29 @@ var createTimelineEntry = function (value, presentMonths) {
     // turns out that the fields in elasticsearch (X-TL-PDF-GENERATION and X-TL-THUMBNAIL-GENERATION )
     // are insufficient as sometimes they said processing succeeded, yet documents are missing
     // so we explicitly check if the resources are available beforehand
-    if (!checkIfResourceExists(imageSource)) {
+    var doesThumbnailExist = checkIfResourceExists(imageSource);
+    if (!doesThumbnailExist) {
         imageSource = "img/thumbnail_placeholder.png";
     }
 
-    if (!checkIfResourceExists(PDFSource)) {
+    var doesPDFExist = checkIfResourceExists(PDFSource);
+
+    if (!doesPDFExist) {
         PDFSource = "";
     }
 
     // check if there exists anything meaningful in tika output
     if (value._source.tikaOutput.length > 10) {
         shortTextSnippet = getSnippet(value._source.tikaOutput, SHORT_SNIPPET_LENGTH);
-        longTextSnippet = getSnippet(value._source.tikaOutput, LONG_SNIPPET_LENGTH);
+
+        // there are cases where pdf and thumbnail don't exist, but there is a sensible Tika output;
+        // in that case, make longer snippet much longer to give the ability to read the document content
+        if(doesPDFExist) {
+            longTextSnippet = getSnippet(value._source.tikaOutput, LONG_SNIPPET_LENGTH);
+        }
+        else {
+            longTextSnippet = getSnippet(value._source.tikaOutput, 2.5 * LONG_SNIPPET_LENGTH);
+        }
 
         pageCount = value._source["X-TL-PAGE-COUNT"];
     }
@@ -75,7 +86,7 @@ var createTimelineEntry = function (value, presentMonths) {
 
     var disabled = PDFSource ? "" : "disabled";
 
-    var pageCountDiv = (pageCount === "TL_PAGE_COUNT_UNKNOWN") ? "" :
+    var pageCountDiv = (pageCount === "TL_PAGE_COUNT_UNKNOWN" || pageCount == null) ? "" :
                         "<div class='pageCount'>\
     					    <h6><b>Page Count: " + pageCount + "</b></h6>\
     				    </div>";
@@ -145,7 +156,7 @@ var createTimelineEntry = function (value, presentMonths) {
 
     $("#timelineList").append(timelineEntry);
 
-    createTimelineListeners(value, shortTextSnippet, longTextSnippet, monthYearNoSpaces);
+    createTimelineListeners(value, shortTextSnippet, longTextSnippet, monthYearNoSpaces, doesThumbnailExist);
     return presentMonths
 };
 
@@ -159,7 +170,7 @@ var createTimelineEntry = function (value, presentMonths) {
  * @listens event:"dbclick" on entry
  * @listens event:"click" on 'Download PDF'
  */
-var createTimelineListeners = function (value, shortTextSnippet, longTextSnippet, monthYearNoSpaces) {
+var createTimelineListeners = function (value, shortTextSnippet, longTextSnippet, monthYearNoSpaces, doesThumbnailExist) {
 
     // when month-year element is clicked, given set of entries are collapsed/expanded
     $("#" + monthYearNoSpaces).on("click", function () {
@@ -193,7 +204,8 @@ var createTimelineListeners = function (value, shortTextSnippet, longTextSnippet
             logThumbnailView(value._source.documentid);
         }
 
-        if (value._source["X-TL-THUMBNAIL-GENERATION"] === "FAIL") {
+        // to prevent placeholders resizing if there is no actual document there (otherwise it is rather annoying)
+        if (!doesThumbnailExist) {
             return;
         }
 
