@@ -1,3 +1,10 @@
+# Archived
+
+This repo is no longer maintained. 
+
+For viewing patient timelines we have been working with the South London and Maudsley NHS Foundation Trust on a new Case Load Management tool. For more details please email [contact@cogstack.org](mailto:contact@cogstack.org)
+
+
 # Timeline Application
 
 At its current state the application allows to search for documents related to a particular patient in a chronological order. 
